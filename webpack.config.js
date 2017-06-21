@@ -1,5 +1,6 @@
 var debug = process.env.NODE_ENV != "production";
 var webpack = require('webpack');
+const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
 
 module.exports = {
   context: __dirname + "/src",
@@ -27,4 +28,9 @@ module.exports = {
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
   ],
+  devServer: {
+    publicPath: __dirname,
+    contentBase:  __dirname,
+    hot: true
+  }
 };
