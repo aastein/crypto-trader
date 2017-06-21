@@ -25,10 +25,24 @@
     "webpack": "^2.6.1",
     "webpack-dev-server": "^2.4.5"
   },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "react",
+      "stage-0"
+    ]
+  },
   "description": "Aaron Stein",
   "license": "ISC",
   "main": "webpack.config.js",
-  "name": "aastein.github.io",
+  "name": "crypto-trader",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aastein/crypto-trader"

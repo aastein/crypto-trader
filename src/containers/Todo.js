@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Header from '../components/todo/Header'
 import MainSection from '../components/todo/MainSection'
-import Nav from '../components/nav/Nav'
+import Navigation from '../components/Navigation'
 import * as TodoActions from '../actions'
 
 class Main extends Component {
@@ -17,7 +17,7 @@ class Main extends Component {
     const { todos, actions } = this.props
     return (
       <div>
-        <Nav />
+        <Navigation />
         <h1>Main</h1>
         <Header addTodo={actions.addTodo} />
         <MainSection todos={todos} actions={actions} />

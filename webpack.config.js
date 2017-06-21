@@ -29,8 +29,8 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
   ],
   devServer: {
-    publicPath: __dirname,
-    contentBase:  __dirname,
+    publicPath: __dirname + "/public",
+    contentBase:  __dirname + "/public",
     hot: true
   }
 };

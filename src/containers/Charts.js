@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import Nav from '../components/nav/Nav'
+import Navigation from '../components/Navigation'
+import Chart from '../components/Chart'
 
 export default class Charts extends Component {
   render() {
     return (
       <div>
-        <Nav />
+        <Navigation />
         <h1>Charts</h1>
+        <Chart />
       </div>
     )
   }

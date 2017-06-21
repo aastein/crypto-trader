@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import Nav from '../components/nav/Nav'
+import Navigation from '../components/Navigation'
 
 export default class Profile extends Component {
   render() {
     return (
       <div>
-        <Nav />
+        <Navigation />
         <h1>Profile</h1>
       </div>
     )

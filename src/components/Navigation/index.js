@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-export default class Nav extends Component {
+export default class Navigation extends Component {
   render() {
     return (
       <header>
