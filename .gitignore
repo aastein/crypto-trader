@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+#notes
+notes.txt
+
+#datea
+*.csv
