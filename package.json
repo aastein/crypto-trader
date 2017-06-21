@@ -31,7 +31,7 @@
   "name": "aastein.github.io",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aastein/aastein.github.io.git"
+    "url": "git+https://github.com/aastein/crypto-trader"
   },
   "scripts": {
     "dev": "webpack-dev-server --content-base src --inline --hot",
