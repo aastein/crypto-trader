@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router'
 
 
 export default class Login extends Component {
@@ -6,12 +7,19 @@ export default class Login extends Component {
     super(props)
     this.state = {
       destinationAddress: '',
-      refundAddress: ''
+      refundAddress: '',
+      allFormsFilled: false
     }
 
     this.handleDestChange = this.handleDestChange.bind(this)
     this.handleRefChange = this.handleRefChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  checkAllFormsFilled(){
+    if(this.state.destinationAddress && this.state.refundAddress){
+      console.log('all forms filled')
+    }
   }
 
   handleDestChange(event) {
@@ -24,11 +32,16 @@ export default class Login extends Component {
 
   handleSubmit(event) {
     console.log('event')
-    alert('A form was submitted: ' + JSON.stringify(this.state, null, 2));
+    if(this.state.destinationAddress && this.state.refundAddress){
+      this.setState({allFormsFilled: true});
+    } else {
+      let stlye={ border: '1px solid #f00' }
+    }
     event.preventDefault();
   }
 
   render() {
+    const shouldRedirect = this.state.allFormsFilled
     return (
       <div className='login-background'>
         <div className='login'>
@@ -61,6 +74,9 @@ export default class Login extends Component {
               value="Submit" />
           </form>
         </div>
+        { shouldRedirect && (
+          <Redirect to={'/'} />
+        )}
       </div>
     )
   }
