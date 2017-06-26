@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 
-import logo from './logo.svg';
 import './App.css';
 import Login from './components/Login'
 import Navigation from './components/Navigation'
@@ -12,9 +11,6 @@ class App extends Component {
     return (
       <div className="App">
         <Navigation />
-        <p>
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
         <Switch>
           <Route exact path='/' component={Home} />
           <Route exact path='/login' component={Login} />

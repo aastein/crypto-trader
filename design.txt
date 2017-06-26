@@ -1,0 +1,26 @@
+login
+
+Before:
+  BTC will need to be sent from an address to an address
+  Users must deposit BTC to an address used only once per transaction
+  https://bitcoinjs.org/
+
+
+sample transaction:
+
+  Need:
+   - own deposit addr
+   - own refund addr
+   - 
+
+  supply destination address for ETH
+  supply refund address fror BTC
+  Define rule:
+    if d/dt(price ETH) > 1000
+      Transfer x BTC to ETH
+  Rule condition is true
+  Call shapeshift API
+    This generates a deposit address for the BTC
+  Send x BTC to deposit
+    https://blockchain.info/pushtx
+    POST tx=lkjlkjlkj
