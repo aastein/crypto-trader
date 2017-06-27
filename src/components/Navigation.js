@@ -6,16 +6,10 @@ export default class Navigation extends Component {
     return (
       <ul className='nav'>
         <li>
-          <NavLink exact activeClassName='active' to='/'>Home</NavLink>
+          <NavLink exact activeClassName='active' to='/'>Login</NavLink>
         </li>
         <li>
-          <NavLink activeClassName='active' to='/pageOne'>Charts</NavLink>
-        </li>
-        <li>
-          <NavLink activeClassName='active' to='/pageTwo'>Profile</NavLink>
-        </li>
-        <li>
-          <NavLink exact activeClassName='active' to='/login'>Login</NavLink>
+          <NavLink exact activeClassName='active' to='/dashboard'>Dashboard</NavLink>
         </li>
       </ul>
     )

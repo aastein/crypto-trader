@@ -75,7 +75,7 @@ export default class Login extends Component {
           </form>
         </div>
         { shouldRedirect && (
-          <Redirect to={'/'} />
+          <Redirect to={'/dashboard'} />
         )}
       </div>
     )
