@@ -43,36 +43,56 @@ export default class Login extends Component {
   render() {
     const shouldRedirect = this.state.allFormsFilled
     return (
-      <div className='login-background'>
-        <div className='login'>
-          <div>
-            <span>Temporary wallet address:</span>
-            <span className='temp-addr'>1ioCfmQ8ESNf9AbchuNkUKuCiXtspSYBm</span>
+      <div className='container'>
+        <div className='row vertical-center'>
+          <div className='col-md-6 col-md-offset-3'>
+            <div className='panel drop-shadow'>
+              <div className='panel-heading text-center'>
+                <div className='row'>
+                  <div className='col-xs-12'>
+                    <span>Temporary wallet address:</span>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-xs-12 col-sx-offset-6'>
+                    <span className='text-danger'>1ioCfmQ8ESNf9AbchuNkUKuCiXtspSYBm</span>
+                  </div>
+                </div>
+              </div>
+              <div className='panel-body'>
+                <div className='row'>
+                  <div className='col-lg-12'>
+                    <form onSubmit={this.handleSubmit}>
+                      <div className='form-group'>
+                        <input
+                          className='form-control'
+                          onChange={this.handleDestChange}
+                          placeholder='Destination Address'
+                          type='text'
+                          value={this.state.destinationAddress}
+                        />
+                      </div>
+                      <div className='form-group'>
+                        <input
+                          className='form-control'
+                          onChange={this.handleRefChange}
+                          placeholder='Refund Address'
+                          type='text'
+                          value={this.state.refundAddress}
+                        />
+                      </div>
+                      <div className='form-group'>
+                        <input
+                          className='form-control btn btn-primary'
+                          type="submit"
+                          value="Submit" />
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <form className='info-form' onSubmit={this.handleSubmit}>
-            <label>
-              Destination Address:
-              <input
-                className='dest-addr'
-                onChange={this.handleDestChange}
-                type='text'
-                value={this.state.destinationAddress}
-              />
-            </label>
-            <label>
-              Refund Address:
-              <input
-                className='ref-addr'
-                onChange={this.handleRefChange}
-                type='text'
-                value={this.state.refundAddress}
-              />
-            </label>
-            <input
-              className='submit-bttn'
-              type="submit"
-              value="Submit" />
-          </form>
         </div>
         { shouldRedirect && (
           <Redirect to={'/dashboard'} />
