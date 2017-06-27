@@ -39,3 +39,11 @@ textarea {
   height: 30%;
   display: flex;
 }
+
+.btn-save {
+  float: right;
+  position: relative;
+  top: 48px;
+  right: 2%;
+  z-index: 10;
+}

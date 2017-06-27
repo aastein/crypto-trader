@@ -14,7 +14,6 @@ function ExpandableButton(props){
   )
 }
 
-
 export default class Scratchpad extends Component {
   constructor(props) {
     super(props)
@@ -34,14 +33,19 @@ export default class Scratchpad extends Component {
   }
 
   handleChange = (event) => {
-    console.log(event.keyCode);
-    this.setState({code: event.target.value});
     event.preventDefault()
+    this.setState({code: event.target.value});
   }
 
   handleSubmit = (event) => {
-    console.log('handle submit')
     event.preventDefault()
+    try {
+      eval(this.state.code)
+      console.log('script is valid')
+    }
+    catch(err) {
+        alert('Script is invalid. Must evaluate to true or false.\n\nMessage:\n\n' + err.message)
+    }
   }
 
   handleVariableClick = (name) => {
@@ -76,7 +80,7 @@ export default class Scratchpad extends Component {
         <div className='col-md-8'>
           <form onSubmit={this.handleSubmit}>
             <input
-              className='form-group btn btn-primary'
+              className='btn btn-primary btn-save'
               type="submit"
               value="Save"
             />
