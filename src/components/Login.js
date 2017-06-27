@@ -34,8 +34,6 @@ export default class Login extends Component {
     console.log('event')
     if(this.state.destinationAddress && this.state.refundAddress){
       this.setState({allFormsFilled: true});
-    } else {
-      let stlye={ border: '1px solid #f00' }
     }
     event.preventDefault();
   }
@@ -85,7 +83,8 @@ export default class Login extends Component {
                         <input
                           className='form-control btn btn-primary'
                           type="submit"
-                          value="Submit" />
+                          value="Submit"
+                        />
                       </div>
                     </form>
                   </div>

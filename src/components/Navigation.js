@@ -5,9 +5,9 @@ export default class Navigation extends Component {
   render() {
     return (
       <nav className='navbar navbar-inverse navbar-fixed-top'>
-        <div className='container'>
+        <div className='container nav-container'>
           <div className='navbar-header'>
-            <img className='navbar-brand-img' height='50' src='https://avatars0.githubusercontent.com/u/18291415?v=3&s=460'/>
+            <img alt='logo' className='navbar-brand-img' height='50' src='https://avatars0.githubusercontent.com/u/18291415?v=3&s=460'/>
           </div>
           <div className='navbar'>
             <ul className='nav navbar-nav'>
