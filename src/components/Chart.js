@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
 import ReactHighstock from 'react-highcharts/ReactHighstock.src'
 //import Highlight from 'react-highlight'
+import { Loader } from './Loader'
 import { tryGetHistoricalData } from '../utils/api'
-
+// 1498700000
+// 1277942400000
 export default class Chart extends Component {
   constructor(props) {
     super(props)
     this.state = {
       btc: {
         product: 'BTC-USD',
-        start: '2016-06-29T20:08:43.347Z',
+        start: '2017-05-29T20:08:43.347Z',
         end: '2017-06-29T20:15:15.175Z'
       }
     }
@@ -41,22 +43,23 @@ export default class Chart extends Component {
        selected: 1
      },
      title: {
-       text: 'AAPL Stock Price'
+       text: this.state.btc.product
      },
      series: [{
-       name: 'AAPL',
+       name: this.state.btc.product,
        data: !this.state.btc.data ? [] : this.state.btc.data.map(d => (
          [
+           d.time,
            d.open,
            d.high,
            d.low,
            d.close
          ]
-       )),
-       type: 'candlestick',
-       tooltip: {
+        )),
+        type: 'candlestick',
+        tooltip: {
          valueDecimals: 2
-       }
+        }
      }]
     }
 
@@ -64,8 +67,8 @@ export default class Chart extends Component {
        <div>
          { this.state.btc.data ?
          <ReactHighstock config={config} /> :
-          <div>
-            Loading
+          <div style={{width: 897,height: 400}}>
+            <Loader />
           </div>
         }
        </div>

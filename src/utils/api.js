@@ -17,6 +17,8 @@ let handleError = callBack => {
   return null;
 }
 
+// 1498700000000
+// 1277942400000
 export let getHistorialData = (product, start, end, granularity) => {
   granularity = Math.floor(granularity)
   if (!isFetching){
@@ -25,7 +27,7 @@ export let getHistorialData = (product, start, end, granularity) => {
     return axios.get(url).then(res => (
       res.data.map(d => (
         {
-          time : d[0],
+          time : d[0] * 1000,
           low: d[1],
           high: d[2],
           open: d[3],
