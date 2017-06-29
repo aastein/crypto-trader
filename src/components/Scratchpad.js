@@ -48,22 +48,26 @@ const ExpandableButtonList = ( { docs, onClick} ) => (
 )
 
 const ScriptList = ({ activeId, addNew, scripts, onClick }) => (
-  <div>
-    <button
-      className='list-group-item list-group-item-action btn-success'
-      key='add-new'
-      onClick={() => addNew()}>
-      Add New
-    </button>
-    { scripts.map( script => (
-        <button
-          className={`list-group-item list-group-item-action ${ activeId === script.id ? ' active' : ''}`}
-          key={script.id}
-          onClick={() => onClick(script.id)}
-        >
-          {script.name}
-        </button>
-    ))}
+  <div className='script-list list-group col-md-2'>
+    <div>
+      <button
+        className='list-group-item list-group-item-action btn-primary'
+        key='add-new'
+        onClick={() => addNew()}>
+        Add New
+      </button>
+    </div>
+    <div className='scripts'>
+      { scripts.map( script => (
+          <button
+            className={`list-group-item list-group-item-action ${ activeId === script.id ? ' active' : ''}`}
+            key={script.id}
+            onClick={() => onClick(script.id)}
+          >
+            {script.name}
+          </button>
+      ))}
+    </div>
   </div>
 )
 
@@ -203,13 +207,11 @@ export default class Scratchpad extends Component {
   render() {
     return (
       <div>
-        <div className='script-list list-group col-md-2'>
-          <ScriptList
-            activeId={this.state.activeScript.id}
-            addNew={this.handleAddNewScript}
-            scripts={this.state.scripts}
-            onClick={this.handleScriptClick} />
-        </div>
+        <ScriptList
+          activeId={this.state.activeScript.id}
+          addNew={this.handleAddNewScript}
+          scripts={this.state.scripts}
+          onClick={this.handleScriptClick} />
         <div className='code-editor col-md-6'>
           <CodeEditor
             activeScript={this.state.activeScript}
@@ -219,7 +221,7 @@ export default class Scratchpad extends Component {
             handleSubmit={this.handleSave}
           />
         </div>
-        <div className='doc-list list-group col-md-3'>
+        <div className='doc-list list-group col-md-4'>
           <ExpandableButtonList docs={this.state.docs} onClick={this.handleDocClick}/>
         </div>
       </div>

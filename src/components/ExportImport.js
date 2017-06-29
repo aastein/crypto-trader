@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
 export const ExportImport = ({ handleExport, handleImport }) => (
   <div className='navbar-right'>

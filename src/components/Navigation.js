@@ -8,7 +8,7 @@ export default class Navigation extends Component {
       <nav className='navbar navbar-inverse navbar-fixed-top'>
         <div className='container nav-container'>
           <div className='navbar-header'>
-            <a className="navbar-brand" href='https://github.com/aastein'>
+            <a className="navbar-brand" href='https://github.com/aastein/crypto-trader'>
               <img alt='logo' className='navbar-brand-img' height='50' src='https://avatars0.githubusercontent.com/u/18291415?v=3&s=460'/>
             </a>
           </div>

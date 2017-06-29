@@ -51,15 +51,15 @@ textarea {
   display: flex;
 }
 
-.list-group {
-  overflow-y: scroll;
-  min-height: 100%;
+.list-group-item.list-group-item-action.btn-primary {
+  color: #000;
+  background-color: #eee;
+  border-color: #ccc;
 }
 
-.list-group-item.list-group-item-action.btn-success {
-  color: #fff;
-  background-color: #5cb85c;
-  border-color: #4cae4c;
+.list-group-item.list-group-item-action.btn-primary:active {
+  background-color: #e5e5e5;
+  border-color: #ccc;
 }
 
 button p {
@@ -84,17 +84,23 @@ form button.btn {
 }
 
 .name-group {
-  width: 50%;
+  width: 80%;
+  display: inline;
   float: left;
 }
 
-.script-list {
-  padding-right: 0px;
+.script-list .scripts {
+  overflow-y: scroll;
+  max-height: 200px;
 }
 
 .navbar-right {
   position: relative;
   right: -15px;
+}
+
+.script-list .btn-primary {
+  border-top: none;
 }
 
 .code-editor {
@@ -110,6 +116,11 @@ button.list-group-item {
   border-radius: 0px;
 }
 
+.save-input {
+  float: right;
+  display: inline;
+}
+
 .save-input .btn {
   border-radius: 0px;
 }
@@ -117,11 +128,13 @@ button.list-group-item {
 .list-group-item:last-child {
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
+    border-bottom: none;
 }
 
 .list-group-item:first-child {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
+    border-top: none;
 }
 
 .input-group-addon {
@@ -130,4 +143,13 @@ button.list-group-item {
 
 .input-group .form-control {
   border-radius: 0px;
+}
+
+
+.list-group {
+  min-height: 234px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: grey;
+  padding-right: 0px;
 }
