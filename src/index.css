@@ -4,9 +4,14 @@
     }
 }
 
+button {
+    outline: none;
+}
+
 textarea {
   resize: none;
   height: 200px;
+  padding: 0px;
 }
 
 .navbar {
@@ -46,15 +51,83 @@ textarea {
   display: flex;
 }
 
-.btn-save {
-  float: right;
-  position: relative;
-  top: 48px;
-  right: 2%;
-  z-index: 10;
-}
-
 .list-group {
   overflow-y: scroll;
   min-height: 100%;
+}
+
+.list-group-item.list-group-item-action.btn-success {
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+
+button p {
+  background-color: rgba(0, 0, 0, 0.05)
+}
+
+form.export-import{
+  display: inline;
+}
+
+.export-import {
+  border-radius: 0px;
+}
+
+form button.btn {
+  padding: 15px;
+}
+
+.navbar-brand {
+  margin: 0px;
+  padding: 0px;
+}
+
+.name-group {
+  width: 50%;
+  float: left;
+}
+
+.script-list {
+  padding-right: 0px;
+}
+
+.navbar-right {
+  position: relative;
+  right: -15px;
+}
+
+.code-editor {
+  padding: 0px;
+}
+
+.editor-form {
+  margin: 0px;
+}
+
+button.list-group-item {
+  padding: 6px 12px;
+  border-radius: 0px;
+}
+
+.save-input .btn {
+  border-radius: 0px;
+}
+
+.list-group-item:last-child {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.input-group-addon {
+  border-radius: 0px;
+}
+
+.input-group .form-control {
+  border-radius: 0px;
 }

@@ -1,17 +1,29 @@
 import React, { Component } from 'react'
 
 
-const CodeEditor = ({ activeScript, handleTextAreaChange, handleInputChange, handleSubmit }) => (
+const CodeEditor = ({ activeScript, handleTextAreaChange, handleInputChange, handleSubmit, handleDelete }) => (
   <form onSubmit={handleSubmit}>
-    <label>
-      Script Name:
-      <input className='form-group' type='input' value={activeScript.name} onChange={handleInputChange}/>
-    </label>
-    <input
-      className='btn btn-primary btn-save'
-      type="submit"
-      value="Save"
-    />
+    <div className='editor-form row'>
+      <div className='name-group'>
+        <div className='input-group'>
+          <div className='input-group-addon'>Script Name:</div>
+          <input className='form-control' type='input' value={activeScript.name} onChange={handleInputChange}/>
+        </div>
+      </div>
+      <div className='save-input'>
+        <input
+          className='btn btn-primary btn-save'
+          type="submit"
+          value="Save"
+        />
+        <input
+          className='btn btn-danger'
+          type="button"
+          value="Delete"
+          onClick={() => handleDelete(activeScript.id)}
+        />
+      </div>
+    </div>
     <textarea className='form-group col-md-12' rows={'3'} cols={'30'} value={activeScript.script} onChange={handleTextAreaChange} />
   </form>
 )
@@ -35,18 +47,17 @@ const ExpandableButtonList = ( { docs, onClick} ) => (
   </div>
 )
 
-const ScriptList = ({ scripts, onClick, addNew }) => (
+const ScriptList = ({ activeId, addNew, scripts, onClick }) => (
   <div>
     <button
-      className='list-group-item list-group-item-action'
+      className='list-group-item list-group-item-action btn-success'
       key='add-new'
       onClick={() => addNew()}>
       Add New
     </button>
-    { console.log(scripts)}
     { scripts.map( script => (
         <button
-          className='list-group-item list-group-item-action'
+          className={`list-group-item list-group-item-action ${ activeId === script.id ? ' active' : ''}`}
           key={script.id}
           onClick={() => onClick(script.id)}
         >
@@ -86,6 +97,7 @@ export default class Scratchpad extends Component {
     this.handleDocClick = this.handleDocClick.bind(this)
     this.handleScriptClick = this.handleScriptClick.bind(this)
     this.handleAddNewScript = this.handleAddNewScript.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
   }
 
   handleTextAreaChange = (event) => {
@@ -115,7 +127,6 @@ export default class Scratchpad extends Component {
         ), 0);
         newScript.script=''
         newScript.name='New Script'
-        console.log(newScript)
         return { scripts: [ ...prevState.scripts, newScript ] }
       }
       alert('Script already exists with name "New Script"')
@@ -126,33 +137,46 @@ export default class Scratchpad extends Component {
   handleSave = (event) => {
     if(event) event.preventDefault()
     let activeScript = this.state.activeScript
-    try {
-      eval(activeScript.script)
-      this.setState((prevState) => {
-        if(!prevState.scripts.filter( s => (s.name === activeScript.name && s.id !== activeScript.id))[0]){
-          let newScripts
-          if (activeScript.id) {
-            newScripts = prevState.scripts.map( script => {
-              if(script.id === activeScript.id ) {
-                script = activeScript
-              }
-              return script
-            })
-          } else {
-            activeScript.id = 1 + prevState.scripts.reduce((max, script) => (
-              Math.max(max, script.id)
-            ), 0);
-            newScripts = [ ...prevState.scripts, activeScript ]
+    if(activeScript.name.trim().length > 0){
+      try {
+        eval(activeScript.script)
+        this.setState((prevState) => {
+          if(!prevState.scripts.filter( s => (s.name === activeScript.name && s.id !== activeScript.id))[0]){
+            let newScripts
+            if (activeScript.id) {
+              newScripts = prevState.scripts.map( script => {
+                if(script.id === activeScript.id ) {
+                  script = activeScript
+                }
+                return script
+              })
+            } else {
+              activeScript.id = 1 + prevState.scripts.reduce((max, script) => (
+                Math.max(max, script.id)
+              ), 0);
+              newScripts = [ ...prevState.scripts, activeScript ]
+            }
+            return { scripts: newScripts }
           }
-          return { scripts: newScripts }
-        }
-        alert('Script already exists with name ' + activeScript.name)
-        return prevState
-      })
+          alert('Script already exists with name ' + activeScript.name)
+          return prevState
+        })
+      }
+      catch(err) {
+        alert('Script is invalid. Must evaluate to true or false.\n\nMessage:\n\n' + err.message)
+      }
     }
-    catch(err) {
-      alert('Script is invalid. Must evaluate to true or false.\n\nMessage:\n\n' + err.message)
-    }
+  }
+
+  handleDelete = (id) => {
+    console.log('deleting' + id)
+    this.setState((prevState) => (
+        { scripts: prevState.scripts.filter((s) => (
+          s.id !== id
+        )),
+        activeScript: { ...prevState.activeScript, name : '', script: '', id: '' }
+      }
+    ))
   }
 
   handleDocClick = (name) => {
@@ -179,21 +203,23 @@ export default class Scratchpad extends Component {
   render() {
     return (
       <div>
-        <div className='list-group col-md-2'>
+        <div className='script-list list-group col-md-2'>
           <ScriptList
+            activeId={this.state.activeScript.id}
             addNew={this.handleAddNewScript}
             scripts={this.state.scripts}
             onClick={this.handleScriptClick} />
         </div>
-        <div className='col-md-6'>
+        <div className='code-editor col-md-6'>
           <CodeEditor
             activeScript={this.state.activeScript}
+            handleDelete={this.handleDelete}
             handleInputChange={this.handleInputChange}
             handleTextAreaChange={this.handleTextAreaChange}
             handleSubmit={this.handleSave}
           />
         </div>
-        <div className='list-group col-md-3'>
+        <div className='doc-list list-group col-md-3'>
           <ExpandableButtonList docs={this.state.docs} onClick={this.handleDocClick}/>
         </div>
       </div>
