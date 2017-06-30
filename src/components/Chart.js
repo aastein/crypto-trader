@@ -1,29 +1,40 @@
 import React, { Component } from 'react'
 import ReactHighstock from 'react-highcharts/ReactHighstock.src'
+import moment from 'moment'
+
 //import Highlight from 'react-highlight'
 import { Loader } from './Loader'
+import { Datepicker } from './Datepicker'
 import { tryGetHistoricalData } from '../utils/api'
-// 1498700000
-// 1277942400000
+
+
 export default class Chart extends Component {
   constructor(props) {
     super(props)
     this.state = {
       btc: {
         product: 'BTC-USD',
-        start: '2017-05-29T20:08:43.347Z',
-        end: '2017-06-29T20:15:15.175Z'
+        startDate: '2017-05-29T20:08:43.347Z',
+        endDate: '2017-06-29T20:15:15.175Z'
+      },
+      datePicker: {
+        focusedInput: null,
+        startDate: '2017-05-29T20:08:43.347Z',
+        endDate: '2017-06-29T20:15:15.175Z'
       }
     }
   }
 
-  componentDidMount(){
+  fetchData = () => {
+
     let product = this.state.btc.product
-    let start = this.state.btc.start
-    let end = this.state.btc.end
-    tryGetHistoricalData(product, start, end).then((data) => {
+    let startDate = this.state.btc.startDate
+    let endDate = this.state.btc.endDate
+
+    console.log('fetchData: ', startDate, endDate)
+    tryGetHistoricalData(product, startDate, endDate).then((data) => {
       this.setState((prevState) => {
-        let n = {
+        let currencyData = {
           ...prevState.btc,
           data: data[0].sort((a, b) => {
             if(a.time < b.time) return -1;
@@ -31,13 +42,43 @@ export default class Chart extends Component {
             return 0;
           })
         }
-        return { btc: n }
+        return { btc: currencyData }
       })
     })
   }
 
-  render() {
+  componentDidMount(){
+    this.fetchData()
+  }
 
+  onFocusChange = (focusedInput) => {
+    focusedInput = focusedInput.focusedInput
+    this.setState((prevState) => {
+      let datePicker = { ...prevState.datePicker, focusedInput }
+      return { datePicker }
+    })
+  }
+
+  onDatesChange = ({ startDate, endDate }) => {
+    this.setState((prevState) => {
+      startDate = startDate ? startDate.toISOString() : null
+      endDate = endDate ? endDate.toISOString() : startDate
+      let datePicker = { ...prevState.datePicker, startDate, endDate }
+      return { datePicker }
+    })
+  }
+
+  onApply = (event) => {
+    event.preventDefault()
+    this.setState((prevState) => {
+      let startDate = prevState.datePicker.startDate
+      let endDate = prevState.datePicker.endDate
+      let btc = { ...prevState.btc, startDate, endDate}
+      return { btc }
+    })
+  }
+
+  render() {
     let config = {
      rangeSelector: {
        selected: 1
@@ -64,10 +105,20 @@ export default class Chart extends Component {
     }
 
     return (
-       <div>
+       <div style={{width: 897,height: 470}}>
+         <div className='date-picker'>
+           <Datepicker
+              startDate={moment(this.state.datePicker.startDate)}
+              endDate={moment(this.state.datePicker.endDate)}
+              focusedInput={this.state.datePicker.focusedInput}
+              onFocusChange={this.onFocusChange}
+              onDatesChange={this.onDatesChange}
+              onApply={this.onApply}
+            />
+         </div>
          { this.state.btc.data ?
-         <ReactHighstock config={config} /> :
-          <div style={{width: 897,height: 400}}>
+          <ReactHighstock config={config} />
+         :<div>
             <Loader />
           </div>
         }

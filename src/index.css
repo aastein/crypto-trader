@@ -153,3 +153,31 @@ button.list-group-item {
   border-color: grey;
   padding-right: 0px;
 }
+
+.date-picker {
+  float: right;
+}
+
+.DateRangePickerInput {
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+
+.DateInput {
+  font-size: 14px;
+  line-height: 8px;
+  width: 100px;
+}
+
+.date-range-button {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+
+.spinner {
+  position: relative;
+  top: 200px;
+  left: 400px;
+}

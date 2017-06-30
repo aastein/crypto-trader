@@ -19,11 +19,11 @@ let handleError = callBack => {
 
 // 1498700000000
 // 1277942400000
-export let getHistorialData = (product, start, end, granularity) => {
+export let getHistorialData = (product, startDate, endDate, granularity) => {
   granularity = Math.floor(granularity)
   if (!isFetching){
     isFetching = true
-    let url = `https://api.gdax.com/products/${product}/candles?start=${start}&end=${end}&granularity=${granularity}`
+    let url = `https://api.gdax.com/products/${product}/candles?start=${startDate}&end=${endDate}&granularity=${granularity}`
     return axios.get(url).then(res => (
       res.data.map(d => (
         {
