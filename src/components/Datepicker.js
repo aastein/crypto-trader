@@ -2,7 +2,7 @@ import React from 'react'
 import { DateRangePicker } from 'react-dates'
 import 'react-dates/lib/css/_datepicker.css'
 
-export let Datepicker = ({startDate, endDate, focusedInput, onFocusChange, onDatesChange, onApply }) => {
+export let Datepicker = ({startDate, endDate, focusedInput, onFocusChange, onDatesChange, onApply, isFetching }) => {
   return (
     <div>
       <DateRangePicker
@@ -13,7 +13,7 @@ export let Datepicker = ({startDate, endDate, focusedInput, onFocusChange, onDat
         onFocusChange={(focusedInput) => onFocusChange({ focusedInput })} // PropTypes.func.isRequired,
         isOutsideRange={() => false}
       />
-      <button className="date-range-button btn btn-primary" onClick={onApply}>Apply</button>
+      <button className="date-range-button btn btn-primary" onClick={onApply} disabled={isFetching}>Apply</button>
     </div>
   )
 }

@@ -155,7 +155,9 @@ button.list-group-item {
 }
 
 .date-picker {
-  float: right;
+  position: absolute;
+  right: 0px;
+  z-index: 10;
 }
 
 .DateRangePickerInput {
@@ -180,4 +182,8 @@ button.list-group-item {
   position: relative;
   top: 200px;
   left: 400px;
+}
+
+.highcharts-input-group {
+  display:none
 }

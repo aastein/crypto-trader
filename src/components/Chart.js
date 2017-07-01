@@ -20,6 +20,7 @@ export default class Chart extends Component {
       },
       datePicker: {
         focusedInput: null,
+        isFetching: false,
         startDate: '2017-05-29T20:08:43.347Z',
         endDate: '2017-06-29T20:15:15.175Z'
       }
@@ -39,7 +40,8 @@ export default class Chart extends Component {
           startDate,
           endDate
         }
-        return { btc: currencyData }
+        let datePicker = { ...prevState.datePicker, isFetching: false }
+        return { btc: currencyData, datePicker }
       })
     })
   }
@@ -74,6 +76,10 @@ export default class Chart extends Component {
     let startDate = this.state.datePicker.startDate
     let endDate = this.state.datePicker.endDate
     this.fetchData(product, startDate, endDate)
+    this.setState((prevState) => {
+      let datePicker = { ...prevState.datePicker, isFetching: true }
+      return { datePicker }
+    })
   }
 
   render() {
@@ -114,6 +120,7 @@ export default class Chart extends Component {
               onFocusChange={this.onFocusChange}
               onDatesChange={this.onDatesChange}
               onApply={this.onApply}
+              isFetching={this.state.datePicker.isFetching}
             />
          </div>
          { this.state.btc.data ?
