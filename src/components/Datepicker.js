@@ -2,7 +2,7 @@ import React from 'react'
 import { DateRangePicker } from 'react-dates'
 import 'react-dates/lib/css/_datepicker.css'
 
-export let Datepicker = ({startDate, endDate, focusedInput, onFocusChange, onDatesChange, onApply}) => {
+export let Datepicker = ({startDate, endDate, focusedInput, onFocusChange, onDatesChange, onApply }) => {
   return (
     <div>
       <DateRangePicker

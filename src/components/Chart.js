@@ -6,6 +6,7 @@ import moment from 'moment'
 import { Loader } from './Loader'
 import { Datepicker } from './Datepicker'
 import { tryGetHistoricalData } from '../utils/api'
+import PriceChart from './PriceChart'
 
 
 export default class Chart extends Component {
@@ -25,13 +26,7 @@ export default class Chart extends Component {
     }
   }
 
-  fetchData = () => {
-
-    let product = this.state.btc.product
-    let startDate = this.state.btc.startDate
-    let endDate = this.state.btc.endDate
-
-    console.log('fetchData: ', startDate, endDate)
+  fetchData = (product, startDate, endDate) => {
     tryGetHistoricalData(product, startDate, endDate).then((data) => {
       this.setState((prevState) => {
         let currencyData = {
@@ -40,7 +35,9 @@ export default class Chart extends Component {
             if(a.time < b.time) return -1;
             if(a.time > b.time) return 1;
             return 0;
-          })
+          }),
+          startDate,
+          endDate
         }
         return { btc: currencyData }
       })
@@ -48,7 +45,10 @@ export default class Chart extends Component {
   }
 
   componentDidMount(){
-    this.fetchData()
+    let product = this.state.btc.product
+    let startDate = this.state.datePicker.startDate
+    let endDate = this.state.datePicker.endDate
+    this.fetchData(product, startDate, endDate)
   }
 
   onFocusChange = (focusedInput) => {
@@ -70,15 +70,15 @@ export default class Chart extends Component {
 
   onApply = (event) => {
     event.preventDefault()
-    this.setState((prevState) => {
-      let startDate = prevState.datePicker.startDate
-      let endDate = prevState.datePicker.endDate
-      let btc = { ...prevState.btc, startDate, endDate}
-      return { btc }
-    })
+    let product = this.state.btc.product
+    let startDate = this.state.datePicker.startDate
+    let endDate = this.state.datePicker.endDate
+    this.fetchData(product, startDate, endDate)
   }
 
   render() {
+
+    let dateRange = { startDate: this.state.btc.startDate, endDate: this.state.btc.endDate }
     let config = {
      rangeSelector: {
        selected: 1
@@ -117,7 +117,7 @@ export default class Chart extends Component {
             />
          </div>
          { this.state.btc.data ?
-          <ReactHighstock config={config} />
+          <PriceChart dateRange={dateRange} config={config} />
          :<div>
             <Loader />
           </div>
