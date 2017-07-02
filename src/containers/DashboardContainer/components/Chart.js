@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import ReactHighstock from 'react-highcharts/ReactHighstock.src'
 import moment from 'moment'
 
 //import Highlight from 'react-highlight'
-import { Loader } from './Loader'
+import { Loader } from '../../../components/Loader'
 import { Datepicker } from './Datepicker'
-import { tryGetHistoricalData } from '../utils/api'
+import { tryGetHistoricalData } from '../../../utils/api'
 import PriceChart from './PriceChart'
 
 

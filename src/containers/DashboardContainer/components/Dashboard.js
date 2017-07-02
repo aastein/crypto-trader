@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Chart from './Chart'
 import Scratchpad from './Scratchpad'
-const log = 'Trade initated:\nTo: rn34tv34t3232v4t3b4345\nFrom: 2avw4tw4ra3ra3wrawb3raw3wrw\nTrade complete: Sold 3.53 mBTC for 1.2 LTC\n\n'
+const log = 'Logging goes here'
 
 export default class Dashboard extends Component {
 

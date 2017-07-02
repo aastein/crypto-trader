@@ -197,9 +197,10 @@ button.list-group-item {
 }
 
 .navbar-inverse.live {
-  background-color: #c61919
+  background-color: #c61919;
+  border-color: #d31717;
 }
 
 .navbar-inverse.live .navbar-nav > li > a{
-  color: #fff
+  color: #fff;
 }
