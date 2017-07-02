@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
-import { ExportImport } from './ExportImport'
 
 export default class Navigation extends Component {
   render() {
     return (
-      <nav className='navbar navbar-inverse navbar-fixed-top'>
+      <nav className={`navbar navbar-inverse navbar-fixed-top ${this.props.live ? 'live' : ''}`}>
         <div className='container nav-container'>
           <div className='navbar-header'>
             <a className="navbar-brand" href='https://github.com/aastein/crypto-trader'>
@@ -21,7 +20,6 @@ export default class Navigation extends Component {
                 <NavLink exact activeClassName='active' to='/profile'>Profile</NavLink>
               </li>
             </ul>
-            <ExportImport />
           </div>
         </div>
       </nav>
