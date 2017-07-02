@@ -2,6 +2,7 @@ import React, { Component }from 'react'
 import PropTypes from 'prop-types'
 import ToggleSwitch from 'react-toggle-switch';
 import { Input } from '../../../components/Input'
+import { getAccounts } from '../../../utils/api'
 
 export default class ProfileForm extends Component {
   constructor(props){
@@ -30,6 +31,7 @@ export default class ProfileForm extends Component {
 
   handleSave = (event) => {
     event.preventDefault()
+    getAccounts(this.state.apiKey, this.state.secret, this.state.passoword)
     this.props.onClick(this.state)
   }
 

@@ -19,13 +19,15 @@ export default class Chart extends Component {
   }
 
   initData = () => {
-    getProducts().then(products => {
-      this.props.setProducts(products)
-      let product = products[0].id
-      let startDate = this.props.chart.startDate
-      let endDate = this.props.chart.endDate
-      this.fetchProductData(product, startDate, endDate)
-    })
+    if(!this.props.chart.product){
+      getProducts().then(products => {
+        this.props.setProducts(products)
+        let product = products[0].id
+        let startDate = this.props.chart.startDate
+        let endDate = this.props.chart.endDate
+        this.fetchProductData(product, startDate, endDate)
+      })
+    }  
   }
 
   fetchProductData = (product, startDate, endDate) => {
@@ -47,9 +49,10 @@ export default class Chart extends Component {
   }
 
   onChange = (event) => {
-    console.log(event)
-    this.props.onSelect(event.value)
-    this.fetchProductData(event.value, this.props.chart.startDate, this.props.chart.endDate)
+    if (event.value) {
+      this.props.onSelect(event.value)
+      this.fetchProductData(event.value, this.props.chart.startDate, this.props.chart.endDate)
+    }
   }
 
   render() {
@@ -90,7 +93,7 @@ export default class Chart extends Component {
     })
 
     return (
-       <div style={{width: 897,height: 470}}>
+       <div style={{width: 897,height: 420}}>
          <div className='dropdown'>
            <Dropdown
             options={dropdownOptions}
@@ -103,7 +106,7 @@ export default class Chart extends Component {
               startDate={this.props.chart.startDate}
               endDate={this.props.chart.endDate}
               onApply={this.onApply}
-              isFetching={this.props.chart.isFetching}
+              isFetching={this.state.isFetching}
             />
          </div>
          { selectedProductHasData ?

@@ -1,13 +1,31 @@
 import axios from 'axios'
+import crypto from 'crypto'
 
-/* Epoch to ISO
-    Price data comes in epoch time, but requests must be made with ISO format
-    var date = new Date();
-    date.toISOString();
+axios.defaults.baseURL = 'https://api.gdax.com'
 
-    var myDate = new Date("2012-02-10T13:19:11+0000");
-    var result = myDate.getTime();
-*/
+const authRequest = (uri, params, method, body, apiKey, secret, passphrase) => {
+  let timestamp = Date.now() / 1000;
+  let requestPath = uri;
+  body = JSON.stringify(body);
+  let what = timestamp + method + requestPath + body ? body : '';
+  let secretKey = Buffer(secret, 'base64');
+  let hmac = crypto.createHmac('sha256', secretKey);
+  let sign = hmac.update(what).digest('base64');
+  // let headers = {
+  //   'CB-ACCESS-KEY': apiKey,
+  //   'CB-ACCESS-SIGN': sign,
+  //   'CB-ACCESS-TIMESTAMP': timestamp,
+  //   'CB-ACCESS-PASSPHRASE': passphrase
+  // }
+  let headers = { 'CB-SESSION': 'sessionid'}
+  let options = { method, headers,  url: uri + params, data: body}
+  return axios(options)
+}
+
+export const getAccounts = (apiKey, secret, passphrase) => {
+  let uri ='/accounts'
+  return authRequest(uri, '', 'get', '', apiKey, secret, passphrase)
+}
 
 let isFetching = false
 
@@ -26,7 +44,7 @@ export let getHistorialData = (product, startDate, endDate, granularity) => {
   granularity = Math.floor(granularity)
   if (!isFetching){
     isFetching = true
-    let url = `https://api.gdax.com/products/${product}/candles?start=${startDate}&end=${endDate}&granularity=${granularity}`
+    let url = `/products/${product}/candles?start=${startDate}&end=${endDate}&granularity=${granularity}`
     return axios.get(url).then(res => (
       res.data.map(d => (
         {
@@ -69,7 +87,7 @@ export const tryGetHistoricalData = (product, start, end, granularity = 1) => {
 
 
 export const getProducts = () => {
-  let url = 'https://api.gdax.com/products'
+  let url = '/products'
   return axios.get(url).then(res => {
     return res.data
   }).catch(handleError)
