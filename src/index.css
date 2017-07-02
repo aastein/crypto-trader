@@ -160,6 +160,17 @@ button.list-group-item {
   z-index: 10;
 }
 
+.Select-clear{
+  display: none;
+}
+
+.dropdown {
+  position: absolute;
+  left: 20px;
+  width: 150px;
+  z-index: 10;
+}
+
 .DateRangePickerInput {
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
@@ -203,4 +214,8 @@ button.list-group-item {
 
 .navbar-inverse.live .navbar-nav > li > a{
   color: #fff;
+}
+
+.highcharts-tooltip {
+  z-index: 20;
 }

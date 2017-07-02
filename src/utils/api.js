@@ -11,14 +11,17 @@ import axios from 'axios'
 
 let isFetching = false
 
-let handleError = callBack => {
+let handleError = (error) => {
+  console.warn(error)
+  return null;
+}
+
+let handleGetHistoricalDataError = callBack => {
   isFetching = false
   setTimeout(() => callBack(), 350);
   return null;
 }
 
-// 1498700000000
-// 1277942400000
 export let getHistorialData = (product, startDate, endDate, granularity) => {
   granularity = Math.floor(granularity)
   if (!isFetching){
@@ -39,15 +42,35 @@ export let getHistorialData = (product, startDate, endDate, granularity) => {
   }
 }
 
-export let tryGetHistoricalData = (product, start, end, granularity = 1) => {
-  let rateConstantBTC = 350000
+export const tryGetHistoricalData = (product, start, end, granularity = 1) => {
+  let rateConstant
+  if(product.includes('LTC')){
+    rateConstant = 267879
+  } else if (product.includes('BTC')){
+    rateConstant = 350000
+  } else if (product.includes('ETH')){
+    rateConstant = 1
+  }
   let epochDiff = new Date(end).getTime() - new Date(start).getTime()
-  granularity = granularity <= epochDiff / rateConstantBTC ? epochDiff / rateConstantBTC : granularity
+  granularity = Math.max(( epochDiff / rateConstant ), granularity)
   let nextGranularity = granularity === 1 ? 2 : granularity * 1.1
   return axios.all(
     [getHistorialData(product, start, end, granularity)]
   ).then( data => {
     isFetching = false
+    data = !data[0] ? [] : data[0].sort((a, b) => {
+        if(a.time < b.time) return -1;
+        if(a.time > b.time) return 1;
+        return 0;
+      })
     return data
-  }).catch(() => handleError(() => tryGetHistoricalData(product, start, end, nextGranularity)))
+  }).catch(() => handleGetHistoricalDataError(() => tryGetHistoricalData(product, start, end, nextGranularity)))
+}
+
+
+export const getProducts = () => {
+  let url = 'https://api.gdax.com/products'
+  return axios.get(url).then(res => {
+    return res.data
+  }).catch(handleError)
 }

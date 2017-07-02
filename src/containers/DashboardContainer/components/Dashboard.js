@@ -10,7 +10,13 @@ export default class Dashboard extends Component {
       <div className='dashboard'>
         <div className='container dashboard-top'>
           <div className='col-md-8'>
-            <Chart />
+            <Chart
+              chart={this.props.chart}
+              setProducts={this.props.setProducts}
+              onSelect={this.props.onSelect}
+              setProductData={this.props.setProductData}
+              onApply={this.props.onApply}
+            />
           </div>
           <div className='col-md-4'>
             {log}
@@ -18,7 +24,12 @@ export default class Dashboard extends Component {
         </div>
         <div className='container dashboard-bottom'>
           <div className='col-md-12'>
-            <Scratchpad />
+            <Scratchpad
+              scripts={this.props.scrips}
+              onAdd={this.props.onAdd}
+              onSave={this.props.onSave}
+              onDelete={this.props.onDelete}
+            />
           </div>
         </div>
       </div>

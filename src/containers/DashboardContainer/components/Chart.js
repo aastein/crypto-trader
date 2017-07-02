@@ -1,107 +1,83 @@
 import React, { Component } from 'react'
-import moment from 'moment'
 
-//import Highlight from 'react-highlight'
+import Datepicker from './Datepicker'
+import { Dropdown } from './Dropdown'
 import { Loader } from '../../../components/Loader'
-import { Datepicker } from './Datepicker'
-import { tryGetHistoricalData } from '../../../utils/api'
+import { tryGetHistoricalData, getProducts } from '../../../utils/api'
 import PriceChart from './PriceChart'
 
 
 export default class Chart extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      btc: {
-        product: 'BTC-USD',
-        startDate: '2017-05-29T20:08:43.347Z',
-        endDate: '2017-06-29T20:15:15.175Z'
-      },
-      datePicker: {
-        focusedInput: null,
-        isFetching: false,
-        startDate: '2017-05-29T20:08:43.347Z',
-        endDate: '2017-06-29T20:15:15.175Z'
-      }
-    }
-  }
 
-  fetchData = (product, startDate, endDate) => {
-    tryGetHistoricalData(product, startDate, endDate).then((data) => {
-      this.setState((prevState) => {
-        let currencyData = {
-          ...prevState.btc,
-          data: data[0] ? data[0].sort((a, b) => {
-            if(a.time < b.time) return -1;
-            if(a.time > b.time) return 1;
-            return 0;
-          }) : [],
-          startDate,
-          endDate
-        }
-        let datePicker = { ...prevState.datePicker, isFetching: false }
-        return { btc: currencyData, datePicker }
-      })
-    })
+  constructor(props){
+    super(props)
+    this.state = { isFetching : false }
   }
 
   componentDidMount(){
-    let product = this.state.btc.product
-    let startDate = this.state.datePicker.startDate
-    let endDate = this.state.datePicker.endDate
-    this.fetchData(product, startDate, endDate)
+    this.initData()
   }
 
-  onFocusChange = (focusedInput) => {
-    focusedInput = focusedInput.focusedInput
-    this.setState((prevState) => {
-      let datePicker = { ...prevState.datePicker, focusedInput }
-      return { datePicker }
+  initData = () => {
+    getProducts().then(products => {
+      this.props.setProducts(products)
+      let product = products[0].id
+      let startDate = this.props.chart.startDate
+      let endDate = this.props.chart.endDate
+      this.fetchProductData(product, startDate, endDate)
     })
   }
 
-  onDatesChange = ({ startDate, endDate }) => {
-    this.setState((prevState) => {
-      startDate = startDate ? startDate.toISOString() : null
-      endDate = endDate ? endDate.toISOString() : startDate
-      let datePicker = { ...prevState.datePicker, startDate, endDate }
-      return { datePicker }
+  fetchProductData = (product, startDate, endDate) => {
+    tryGetHistoricalData(product, startDate, endDate).then((data) => {
+      this.props.setProductData(product, data)
+      this.props.onApply(startDate, endDate)
+      if(!this.props.product) this.props.onSelect(product)
+      this.setState(() => (
+        { isFetching: false }
+      ))
     })
   }
 
-  onApply = (event) => {
-    event.preventDefault()
-    let product = this.state.btc.product
-    let startDate = this.state.datePicker.startDate
-    let endDate = this.state.datePicker.endDate
-    this.fetchData(product, startDate, endDate)
-    this.setState((prevState) => {
-      let datePicker = { ...prevState.datePicker, isFetching: true }
-      return { datePicker }
-    })
+  onApply = (startDate, endDate) => {
+    this.setState(() => (
+      { isFetching: true }
+    ))
+    this.fetchProductData(this.props.chart.product, startDate, endDate)
+  }
+
+  onChange = (event) => {
+    console.log(event)
+    this.props.onSelect(event.value)
+    this.fetchProductData(event.value, this.props.chart.startDate, this.props.chart.endDate)
   }
 
   render() {
 
-    let dateRange = { startDate: this.state.btc.startDate, endDate: this.state.btc.endDate }
+    let dateRange = { startDate: this.props.chart.startDate, endDate: this.props.chart.endDate }
+
+    let selectedProductHasData = this.props.chart.products.length > 0 ? this.props.chart.products.filter( product => {
+      return product.id === this.props.chart.product && product.data
+    }).length > 0 : false
+
+    let selectedProduct = this.props.chart.products.length > 0 && this.props.chart.product ?  this.props.chart.products.filter( product => (
+      product.id === this.props.chart.product
+    ))[0] : ''
+
+    let selectedProductData = selectedProduct.data ? selectedProduct.data.map(d => (
+      [ d.time, d.open, d.high, d.low, d.close ]
+    )) : []
+
     let config = {
      rangeSelector: {
        selected: 1
      },
      title: {
-       text: this.state.btc.product
+       text: selectedProduct.display_name
      },
      series: [{
-       name: this.state.btc.product,
-       data: !this.state.btc.data ? [] : this.state.btc.data.map(d => (
-         [
-           d.time,
-           d.open,
-           d.high,
-           d.low,
-           d.close
-         ]
-        )),
+       name: selectedProduct.display_name,
+       data: selectedProductData,
         type: 'candlestick',
         tooltip: {
          valueDecimals: 2
@@ -109,20 +85,28 @@ export default class Chart extends Component {
      }]
     }
 
+    let dropdownOptions = this.props.chart.products.map(product => {
+      return { value: product.id, label: product.display_name}
+    })
+
     return (
        <div style={{width: 897,height: 470}}>
+         <div className='dropdown'>
+           <Dropdown
+            options={dropdownOptions}
+            onChange={this.onChange}
+            value={this.props.chart.product}
+          />
+         </div>
          <div className='date-picker'>
            <Datepicker
-              startDate={moment(this.state.datePicker.startDate)}
-              endDate={moment(this.state.datePicker.endDate)}
-              focusedInput={this.state.datePicker.focusedInput}
-              onFocusChange={this.onFocusChange}
-              onDatesChange={this.onDatesChange}
+              startDate={this.props.chart.startDate}
+              endDate={this.props.chart.endDate}
               onApply={this.onApply}
-              isFetching={this.state.datePicker.isFetching}
+              isFetching={this.props.chart.isFetching}
             />
          </div>
-         { this.state.btc.data ?
+         { selectedProductHasData ?
           <PriceChart dateRange={dateRange} config={config} />
          :<div>
             <Loader />

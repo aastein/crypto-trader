@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 
-import { setProducts, setProduct, setDateRange, addScript, saveScript, deleteScript } from '../../actions'
+import { setProducts, setProduct, setProductData, setDateRange, addScript, saveScript, deleteScript } from '../../actions'
 import Dashboard from './components/Dashboard'
 
 const mapStateToProps = state => {
@@ -30,6 +30,9 @@ const mapDispatchToProps = dispatch => {
     },
     onDelete: id => {
       dispatch(deleteScript(id))
+    },
+    setProductData: (id, data) => {
+      dispatch(setProductData(id, data))
     }
   }
 }

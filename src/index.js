@@ -8,8 +8,9 @@ import App from './App';
 import reducer from './reducers'
 import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css'
-import './index.css'
+import 'react-select/dist/react-select.css';
 import '../node_modules/react-toggle-switch/dist/css/switch.min.css';
+import './index.css'
 
 
 let store = createStore(reducer)

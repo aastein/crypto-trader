@@ -1,5 +1,6 @@
 export const SET_PRODUCTS = 'SET_PRODUCTS'
 export const SET_PRODUCT = 'SET_PRODUCT'
+export const SET_PRODUCT_DATA = 'SET_PRODUCT_DATA'
 export const SET_DATE_RANGE = 'SET_DATE_RANGE'
 export const ADD_SCRIPT = 'ADD_SCRIPT'
 export const SAVE_SCRIPT = 'SAVE_SCRIPT'
