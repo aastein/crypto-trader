@@ -32,11 +32,11 @@ export default class Chart extends Component {
       this.setState((prevState) => {
         let currencyData = {
           ...prevState.btc,
-          data: data[0].sort((a, b) => {
+          data: data[0] ? data[0].sort((a, b) => {
             if(a.time < b.time) return -1;
             if(a.time > b.time) return 1;
             return 0;
-          }),
+          }) : [],
           startDate,
           endDate
         }
