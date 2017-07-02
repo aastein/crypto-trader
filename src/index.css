@@ -187,3 +187,11 @@ button.list-group-item {
 .highcharts-input-group {
   display:none
 }
+
+.profile {
+  margin-top: 100px;
+}
+
+.switch {
+  display: block;
+}

@@ -15,10 +15,10 @@ export default class Navigation extends Component {
           <div className='navbar'>
             <ul className='nav navbar-nav'>
               <li>
-                <NavLink exact activeClassName='active' to='/'>Login</NavLink>
+                <NavLink exact activeClassName='active' to='/'>Dashboard</NavLink>
               </li>
               <li>
-                <NavLink exact activeClassName='active' to='/dashboard'>Dashboard</NavLink>
+                <NavLink exact activeClassName='active' to='/profile'>Profile</NavLink>
               </li>
             </ul>
             <ExportImport />
