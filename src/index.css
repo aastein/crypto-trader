@@ -95,6 +95,11 @@ form button.btn {
   max-height: 200px;
 }
 
+.doc-list {
+  overflow-y: scroll;
+  max-height: 220px;
+}
+
 .navbar-right {
   position: relative;
   right: -15px;
@@ -232,4 +237,11 @@ button.list-group-item {
   width: 80px;
   height: 30px;
   line-height: 0px;
+}
+
+.doc-desc {
+  cursor: text;
+  padding: 10px;
+  padding-left: 15px;
+  background-color: #efefef;
 }

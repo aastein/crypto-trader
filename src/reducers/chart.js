@@ -29,7 +29,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
         products: state.products.map( product => {
           if(product.id === action.id){
             let data = product.data ? [...product.data, ...action.data] : action.data
-            data = data.length ? data : []
+            data = data && data.length ? data : []
             let dates = []
             data = data.filter( d => {
               let isDupe = dates.indexOf(d.time) > 0

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import moment from 'moment'
+import { run } from './scriptEnv'
 
 const ScriptList = ({ addNew, scripts, onScriptClick }) => (
   <div className='script-list list-group col-md-2'>
@@ -28,18 +28,22 @@ const ScriptList = ({ addNew, scripts, onScriptClick }) => (
 const ExpandableButtonList = ({ docs, onClick}) => (
   <div>
     { docs.map(doc => (
-      <button
-        key={doc.name}
-        className='list-group-item list-group-item-action'
-        onClick={() => onClick(doc.name)}
-      >
+      <div>
+        <button
+          key={doc.name}
+          className='list-group-item list-group-item-action'
+          onClick={() => onClick(doc.name)}
+        >
         {doc.name}
+        </button>
         { doc.active &&
-          <div>
-            <p>{doc.desc}</p>
+          <div className='doc-desc'>
+            {doc.desc.split('\n').map((item, key) => {
+              return <span key={key}>{item}<br/></span>
+            })}
           </div>
         }
-      </button>
+      </div>
     ))}
   </div>
 )
@@ -82,45 +86,8 @@ class CodeEditor extends Component {
     this.props.handleSubmit(script)
   }
 
- //mmnt.unix(products[0].data[0].time / 1000 ).format('YYYY-MM-DD')
- // LTC_EUR(1496160000000)
-
- /*
-   LTC-EUR
-   LTC-BTC
-   BTC-GBP
-   BTC-EUR
-   ETH-EUR
-   ETH-BTC
-   LTC-USD
-   BTC-USD
-   ETH-USD
- */
-
   runScript = () => {
-    try {
-      let products = this.props.products
-      let mmnt = moment
-
-      let LTC_EUR = (time) => (
-        products.filter(product => {
-          return product.id === 'LTC-EUR'
-        })[0].data.reduce((a, b) => {
-          let aDiff = Math.abs(a.time - time)
-          let bDiff = Math.abs(b.time - time)
-          if(aDiff > bDiff){
-             return b
-          }
-          return a
-        }, {time: -1})
-      )
-
-    } catch(err) {
-      console.log(err)
-    }
-
-
-    console.log(eval(this.state.script))
+    run(this.state.script, this.props.products)
   }
 
   render(){
