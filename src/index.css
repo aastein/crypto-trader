@@ -224,3 +224,12 @@ button.list-group-item {
 .highcharts-credits {
   display: none;
 }
+
+.btn-run {
+  position: absolute;
+  right: 10px;
+  top: 190px;
+  width: 80px;
+  height: 30px;
+  line-height: 0px;
+}

@@ -1,8 +1,9 @@
 import * as actionType from '../actions/actionTypes'
+import moment from 'moment'
 
 let INITAL_CHART_STATE = {
-  startDate: '2017-05-29T20:08:43.347Z',
-  endDate: '2017-06-29T20:15:15.175Z',
+  startDate: '2017-01-02T00:00:00.000Z',
+  endDate: moment().toISOString(),
   fetching: false,
   product: '',
   products: []
@@ -27,10 +28,26 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
         ...state,
         products: state.products.map( product => {
           if(product.id === action.id){
-            return { ...product, data: action.data }
+            let data = product.data ? [...product.data, ...action.data] : action.data
+            data = data.length ? data : []
+            let dates = []
+            data = data.filter( d => {
+              let isDupe = dates.indexOf(d.time) > 0
+              dates.push(d.time)
+              return !isDupe
+            }).sort((a, b) => {
+                if(a.time < b.time) return -1;
+                if(a.time > b.time) return 1;
+                return 0;
+            })
+            console.log(data)
+            return { ...product, data}
           }
+
           return product
+
         })
+
       }
     default:
       return state

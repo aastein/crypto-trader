@@ -33,6 +33,7 @@ export default class Dashboard extends Component {
               onDelete={this.props.onDelete}
               onScriptClick={this.props.onScriptClick}
               onDocClick={this.props.onDocClick}
+              products={this.props.chart.products}
             />
           </div>
         </div>

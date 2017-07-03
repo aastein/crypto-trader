@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 
 const ScriptList = ({ addNew, scripts, onScriptClick }) => (
   <div className='script-list list-group col-md-2'>
@@ -46,7 +47,6 @@ const ExpandableButtonList = ({ docs, onClick}) => (
 class CodeEditor extends Component {
   constructor(props){
     super(props)
-    console.log(props)
     this.state = {
       script: '',
       name: ''
@@ -54,7 +54,6 @@ class CodeEditor extends Component {
   }
 
   componentWillReceiveProps = nextProps => {
-    console.log(nextProps)
     this.setState(() => (
       {
         script: nextProps.script ? nextProps.script.script : '',
@@ -83,6 +82,47 @@ class CodeEditor extends Component {
     this.props.handleSubmit(script)
   }
 
+ //mmnt.unix(products[0].data[0].time / 1000 ).format('YYYY-MM-DD')
+ // LTC_EUR(1496160000000)
+
+ /*
+   LTC-EUR
+   LTC-BTC
+   BTC-GBP
+   BTC-EUR
+   ETH-EUR
+   ETH-BTC
+   LTC-USD
+   BTC-USD
+   ETH-USD
+ */
+
+  runScript = () => {
+    try {
+      let products = this.props.products
+      let mmnt = moment
+
+      let LTC_EUR = (time) => (
+        products.filter(product => {
+          return product.id === 'LTC-EUR'
+        })[0].data.reduce((a, b) => {
+          let aDiff = Math.abs(a.time - time)
+          let bDiff = Math.abs(b.time - time)
+          if(aDiff > bDiff){
+             return b
+          }
+          return a
+        }, {time: -1})
+      )
+
+    } catch(err) {
+      console.log(err)
+    }
+
+
+    console.log(eval(this.state.script))
+  }
+
   render(){
     return(
       <form onSubmit={this.handleSave}>
@@ -99,6 +139,9 @@ class CodeEditor extends Component {
           </div>
         </div>
         <textarea className='form-group col-md-12' rows={'3'} cols={'30'} value={this.state.script} onChange={this.handleTextAreaChange} />
+        <div className='run-button'>
+          <button className='btn btn-success btn-run' onClick={this.runScript} >Run</button>
+        </div>
       </form>
     )
   }
@@ -106,7 +149,6 @@ class CodeEditor extends Component {
 
 export default class Scratchpad extends Component {
   render() {
-
     let activeScript = this.props.scripts.filter( script => (
       script.active
     ))[0]
@@ -121,6 +163,7 @@ export default class Scratchpad extends Component {
             script={activeScript}
             handleDelete={this.props.onDelete}
             handleSubmit={this.props.onSave}
+            products={this.props.products}
           />
         </div>
         <div className='doc-list list-group col-md-4'>

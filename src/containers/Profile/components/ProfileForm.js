@@ -60,9 +60,7 @@ export default class ProfileForm extends Component {
 }
 
 ProfileForm.propTypes = {
-  apiKey: PropTypes.string.isRequired,
-  secret: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
+  session: PropTypes.string.isRequired,
   live: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired
 }

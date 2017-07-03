@@ -22,19 +22,20 @@ export default class Chart extends Component {
     if(!this.props.chart.product){
       getProducts().then(products => {
         this.props.setProducts(products)
-        let product = products[0].id
         let startDate = this.props.chart.startDate
         let endDate = this.props.chart.endDate
-        this.fetchProductData(product, startDate, endDate)
+        this.props.onSelect(products[7].id)
+        for (const product of products) {
+          this.fetchProductData(product.id, startDate, endDate)
+        }
       })
-    }  
+    }
   }
 
   fetchProductData = (product, startDate, endDate) => {
     tryGetHistoricalData(product, startDate, endDate).then((data) => {
       this.props.setProductData(product, data)
       this.props.onApply(startDate, endDate)
-      if(!this.props.product) this.props.onSelect(product)
       this.setState(() => (
         { isFetching: false }
       ))
@@ -49,9 +50,8 @@ export default class Chart extends Component {
   }
 
   onChange = (event) => {
-    if (event.value) {
+    if (event) {
       this.props.onSelect(event.value)
-      this.fetchProductData(event.value, this.props.chart.startDate, this.props.chart.endDate)
     }
   }
 
