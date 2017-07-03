@@ -8,7 +8,7 @@ export default class ProfileForm extends Component {
   constructor(props){
     super(props)
     this.state = {
-      session: '',
+      session: props.session,
       live: props.live,
     }
   }

@@ -8,4 +8,7 @@ export const setProductData = (id, data) => ({ type: actionType.SET_PRODUCT_DATA
 export const setDateRange = (startDate, endDate) => ({type: actionType.SET_DATE_RANGE, startDate, endDate})
 export const addScript = () => ({type: actionType.ADD_SCRIPT, id: nextScriptId++ })
 export const saveScript = script => ({type: actionType.SAVE_SCRIPT, script})
-export const deleteScript = id => ({type: actionType.DELETE_SCRIPT, id})
+export const deleteScript = () => ({type: actionType.DELETE_SCRIPT})
+export const initDocs = () => ({type: actionType.INIT_DOCS})
+export const selectScript = id => ({type: actionType.SELECT_SCRIPT, id})
+export const selectDoc = name => ({type: actionType.SELECT_DOC, name})

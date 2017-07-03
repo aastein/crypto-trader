@@ -4,9 +4,7 @@ import ProfileForm from './components/ProfileForm'
 
 const mapStateToProps = state => {
   return {
-    apiKey: state.profile.apiKey,
-    secret: state.profile.secret,
-    password: state.profile.password,
+    session: state.profile.session,
     live: state.profile.live
   }
 }

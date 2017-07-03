@@ -6,6 +6,7 @@ const log = 'Logging goes here'
 export default class Dashboard extends Component {
 
   render() {
+    if (!this.props.docs) this.props.initDocs()
     return (
       <div className='dashboard'>
         <div className='container dashboard-top'>
@@ -25,10 +26,13 @@ export default class Dashboard extends Component {
         <div className='container dashboard-bottom'>
           <div className='col-md-12'>
             <Scratchpad
-              scripts={this.props.scrips}
+              scripts={this.props.scripts}
+              docs={this.props.docs}
               onAdd={this.props.onAdd}
               onSave={this.props.onSave}
               onDelete={this.props.onDelete}
+              onScriptClick={this.props.onScriptClick}
+              onDocClick={this.props.onDocClick}
             />
           </div>
         </div>

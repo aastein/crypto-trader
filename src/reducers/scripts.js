@@ -7,19 +7,27 @@ export const scripts = (state = [], action) => {
         ...state,
         {
           id: action.id,
-          script: ''
+          name: 'New Script',
+          script: '',
+          active: false
         }
       ]
     case actionType.SAVE_SCRIPT:
       return state.map(script =>
-          (script.id === action.id)
-            ? { ...script, script: script.script, name: script.name }
-            : script
+        (script.id === action.script.id)
+          ? { ...script, script: action.script.script, name: action.script.name }
+          : script
       )
     case actionType.DELETE_SCRIPT:
       return state.filter(script =>
-          (!script.id === action.id)
+        !script.active
       )
+    case actionType.SELECT_SCRIPT:
+      return state.map(script =>
+        (script.id === action.id)
+          ? { ...script, active: true }
+          : { ...script, active: false }
+        )
     default:
       return state
   }
