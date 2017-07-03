@@ -8,9 +8,7 @@ export default class ProfileForm extends Component {
   constructor(props){
     super(props)
     this.state = {
-      apiKey: props.apiKey,
-      secret: props.secret,
-      password: props.password,
+      session: '',
       live: props.live,
     }
   }
@@ -31,7 +29,7 @@ export default class ProfileForm extends Component {
 
   handleSave = (event) => {
     event.preventDefault()
-    getAccounts(this.state.apiKey, this.state.secret, this.state.passoword)
+    getAccounts(this.state.session)
     this.props.onClick(this.state)
   }
 
@@ -40,16 +38,8 @@ export default class ProfileForm extends Component {
       <div className='profile col-md-6 col-md-offset-3'>
         <form onSubmit={this.props.onSaveClick}>
           <div className='form-group'>
-            <label>API Key</label>
-            <Input name='apiKey' placeholder='API Key' value={this.state.apiKey} onChange={this.handleInputChange}/>
-          </div>
-          <div className='form-group'>
-            <label>Secret</label>
-            <Input name='secret' placeholder='Secret' value={this.state.secret} onChange={this.handleInputChange}/>
-          </div>
-          <div className='form-group'>
-            <label>Password</label>
-            <Input name='password' placeholder='Password' value={this.state.password} onChange={this.handleInputChange} />
+            <label>Session</label>
+            <Input name='session' placeholder='Session' value={this.state.session} onChange={this.handleInputChange}/>
           </div>
           <div className='form-group'>
             <label>Live</label>

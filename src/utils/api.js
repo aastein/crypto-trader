@@ -3,28 +3,29 @@ import crypto from 'crypto'
 
 axios.defaults.baseURL = 'https://api.gdax.com'
 
-const authRequest = (uri, params, method, body, apiKey, secret, passphrase) => {
-  let timestamp = Date.now() / 1000;
-  let requestPath = uri;
-  body = JSON.stringify(body);
-  let what = timestamp + method + requestPath + body ? body : '';
-  let secretKey = Buffer(secret, 'base64');
-  let hmac = crypto.createHmac('sha256', secretKey);
-  let sign = hmac.update(what).digest('base64');
+const authRequest = (uri, params, method, body, session) => {
+
+  // let timestamp = Date.now() / 1000;
+  // let requestPath = uri;
+  // body = JSON.stringify(body);
+  // let what = timestamp + method + requestPath + body ? body : '';
+  // let secretKey = Buffer(secret, 'base64');
+  // let hmac = crypto.createHmac('sha256', secretKey);
+  // let sign = hmac.update(what).digest('base64');
   // let headers = {
   //   'CB-ACCESS-KEY': apiKey,
   //   'CB-ACCESS-SIGN': sign,
   //   'CB-ACCESS-TIMESTAMP': timestamp,
   //   'CB-ACCESS-PASSPHRASE': passphrase
   // }
-  let headers = { 'CB-SESSION': 'sessionid'}
+  let headers = { 'CB-SESSION': session}
   let options = { method, headers,  url: uri + params, data: body}
   return axios(options)
 }
 
-export const getAccounts = (apiKey, secret, passphrase) => {
+export const getAccounts = (session) => {
   let uri ='/accounts'
-  return authRequest(uri, '', 'get', '', apiKey, secret, passphrase)
+  return authRequest(uri, '', 'get', '', session)
 }
 
 let isFetching = false
