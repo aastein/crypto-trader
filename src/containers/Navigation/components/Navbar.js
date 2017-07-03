@@ -11,7 +11,6 @@ export default class Navigation extends Component {
               <img alt='logo' className='navbar-brand-img' height='50' src='https://avatars0.githubusercontent.com/u/18291415?v=3&s=460'/>
             </a>
           </div>
-          <div className='navbar'>
             <ul className='nav navbar-nav'>
               <li>
                 <NavLink exact activeClassName='active' to='/'>Dashboard</NavLink>
@@ -21,7 +20,6 @@ export default class Navigation extends Component {
               </li>
             </ul>
           </div>
-        </div>
       </nav>
     )
   }

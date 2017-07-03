@@ -81,6 +81,7 @@ form button.btn {
 .navbar-brand {
   margin: 0px;
   padding: 0px;
+  z-index: 10000;
 }
 
 .name-group {
@@ -218,4 +219,8 @@ button.list-group-item {
 
 .highcharts-tooltip {
   z-index: 20;
+}
+
+.highcharts-credits {
+  display: none;
 }
