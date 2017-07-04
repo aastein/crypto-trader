@@ -81,7 +81,7 @@ export default class Chart extends Component {
     )) : []
 
     let selectedProductWSData = selectedProduct.ws_data ? selectedProduct.ws_data.map(d => (
-      [ d.time, d.open, d.high, d.low, d.close ]
+      [ d.time, d.price ]
     )) : []
 
     let config = {

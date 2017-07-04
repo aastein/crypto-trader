@@ -2,7 +2,7 @@ import moment from 'moment'
 
 let connection
 
-export const initWSConnection = (productList, actionDispatcher) => {
+export const initWSConnection = (productList, addWSData) => {
 
   let url = 'wss://ws-feed.gdax.com'
   connection = new WebSocket(url)
@@ -31,18 +31,15 @@ export const initWSConnection = (productList, actionDispatcher) => {
       let size = parseFloat(data.size)
       let product = data.product_id
 
-      console.log(data)
-      console.log('product: ', product, 'price: ', price,'time: ', time)
+      //console.log(data)
+      //console.log('product: ', product, 'price: ', price,'time: ', time)
 
       if(price && time && size && product){
-        if (typeof actionDispatcher === "function") {
-          actionDispatcher(product, [{
+        if (typeof addWSData === "function") {
+          addWSData(product, [{
             time : time,
-            low: price,
-            high: price,
-            open: price,
-            close: price,
-            volume: size
+            price: price,
+            size: size
           }])
         }
       }
@@ -79,7 +76,8 @@ let waitForConnected = (productList) => {
   ]
 */
 let subscribe = productList => {
-  console.log('subscribing to: ', productList)
+  //console.log('subscribing to: ', productList)
+  productList = ['BTC-USD']
   connection.send(JSON.stringify(
     {
       "type": "subscribe",

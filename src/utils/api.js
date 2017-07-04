@@ -1,8 +1,8 @@
 import axios from 'axios'
 import crypto from 'crypto'
 
-//axios.defaults.baseURL = 'https://api-public.sandbox.gdax.com'
-axios.defaults.baseURL = 'https://api.gdax.com'
+axios.defaults.baseURL = 'https://api-public.sandbox.gdax.com'
+//axios.defaults.baseURL = 'https://api.gdax.com'
 
 const authRequest = (uri, params, method, body, session) => {
 
