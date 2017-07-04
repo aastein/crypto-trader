@@ -127,6 +127,9 @@ export default class Chart extends Component {
         background: {
           borderWidth: 0
         }
+      },
+      chart: {
+        height: '129%'
       }
     }
 

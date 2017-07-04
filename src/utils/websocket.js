@@ -35,14 +35,16 @@ export const initWSConnection = (productList, actionDispatcher) => {
       console.log('product: ', product, 'price: ', price,'time: ', time)
 
       if(price && time && size && product){
-        actionDispatcher(product, [{
-          time : time,
-          low: price,
-          high: price,
-          open: price,
-          close: price,
-          volume: size
-        }])
+        if (typeof actionDispatcher === "function") {
+          actionDispatcher(product, [{
+            time : time,
+            low: price,
+            high: price,
+            open: price,
+            close: price,
+            volume: size
+          }])
+        }
       }
     }
   }
@@ -61,6 +63,8 @@ let waitForConnected = (productList) => {
     n++
     if(n > 4) {
       clearInterval(t);
+      connection.close()
+      connection = null
       initWSConnection(productList)
     }
   }, 1000);
