@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 
-import Datepicker from './Datepicker'
-import { Dropdown } from './Dropdown'
+import Datepicker from '../../../components/Datepicker'
+import { Dropdown } from '../../../components/Dropdown'
 import { Loader } from '../../../components/Loader'
 import { Input } from '../../../components/Input'
+import PriceChart from '../../../components/PriceChart'
+import LineChart from '../../../components/LineChart'
 import { tryGetHistoricalData, getProducts } from '../../../utils/api'
 import { initWSConnection } from '../../../utils/websocket'
-import PriceChart from './PriceChart'
-import LineChart from './LineChart'
-
 
 export default class Chart extends Component {
 
@@ -34,7 +33,7 @@ export default class Chart extends Component {
         let productIds = products.map( p => (
           p.id
         ))
-        initWSConnection(productIds, this.props.setProductWSData)
+        //initWSConnection(productIds, this.props.setProductWSData)
         for (const product of products) {
           this.fetchProductData(product.id, startDate, endDate, 3600000)
         }

@@ -411,19 +411,6 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO:
 
-  Subscribe to trade feed
-    every 10 mins get o/h/l/c and add to main data array
-    discard all ws_data oder than 10 minutes
-
-  Get main data in intervals of user defined minutes over user defined range
-
-    range | freq | d-points | num-api calls
-    ------+------+----------+--------------
-    r        f       r / f      Math.ceil(( r / f) / max data per request)
-    700d    1d      700         3
-    700d    2d      350         2
-    700d    0.5d    1400        6
-
   Add indicator calculations
   Add indicator dropdown
   Add indicators to main chart, use secondary axis, or stacked primary.

@@ -57,8 +57,8 @@ export let getHistorialData = (product, startDate, endDate, granularity) => {
 // granularity == 300000 = 30s => I want a data point ever 30s
 export const tryGetHistoricalData = (productId, start, end, desiredGranularity) => {
 
-  console.log('')
-  console.log('desiredGranularity', desiredGranularity)
+  //console.log('')
+  //console.log('desiredGranularity', desiredGranularity)
   // convert desired granularity to s from ms
   // granularity = 3600 => 1hr
   desiredGranularity = desiredGranularity / 1000
@@ -87,8 +87,8 @@ export const tryGetHistoricalData = (productId, start, end, desiredGranularity) 
   let requests = []
 
   //console.log(numRequsts);
-  console.log('epochStart', epochStart)
-  console.log('epochStep', epochStep)
+  //console.log('epochStart', epochStart)
+  //console.log('epochStep', epochStep)
 
   for (let i = 0; i < numRequsts; i++) {
 

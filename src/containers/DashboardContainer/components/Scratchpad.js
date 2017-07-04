@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { run } from './scriptEnv'
+import { run } from '../../../utils/scriptEnv'
 
 const ScriptList = ({ addNew, scripts, onScriptClick }) => (
   <div className='script-list list-group col-md-2'>
