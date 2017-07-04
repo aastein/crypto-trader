@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 
-import Datepicker from '../../../components/Datepicker'
-import { Dropdown } from '../../../components/Dropdown'
 import { Loader } from '../../../components/Loader'
-import { Input } from '../../../components/Input'
 import PriceChart from '../../../components/PriceChart'
 import LineChart from '../../../components/LineChart'
 import { tryGetHistoricalData, getProducts } from '../../../utils/api'
@@ -59,23 +56,6 @@ export default class Chart extends Component {
    ))[0] : ''
   )
 
-  onApply = (startDate, endDate) => {
-    this.setState(() => (
-      { isFetching: true }
-    ))
-    this.fetchProductData(this.props.chart.productId, startDate, endDate, this.selectedProduct().granularity)
-  }
-
-  onChange = (event) => {
-    if (event) {
-      this.props.onSelect(event.value)
-    }
-  }
-
-  onSetGanularity = (name, event) => {
-    this.props.onSetGanularity(this.props.chart.productId, event.target.value)
-  }
-
   render() {
 
     let dateRange = { startDate: this.props.chart.startDate, endDate: this.props.chart.endDate }
@@ -95,10 +75,14 @@ export default class Chart extends Component {
 
     let config = {
       rangeSelector: {
-        selected: 1
-      },
-      title: {
-        text: this.selectedProduct().display_name
+        selected: 1,
+        inputEnabled: false,
+        buttonTheme: {
+          visibility: 'hidden'
+        },
+        labelStyle: {
+          visibility: 'hidden'
+        }
       },
       series: [{
         name: this.selectedProduct().display_name,
@@ -142,33 +126,8 @@ export default class Chart extends Component {
       }
     }
 
-    let dropdownOptions = this.props.chart.products.map(product => {
-      return { value: product.id, label: product.display_name}
-    })
-
     return (
-       <div style={{width: 950,height: 420}}>
-         <div className='dropdown'>
-           <Dropdown
-            options={dropdownOptions}
-            onChange={this.onChange}
-            value={this.props.chart.productId}
-          />
-         </div>
-         <div className='granularity'>
-          <Input name='granularity' onChange={this.onSetGanularity} placeholder='' value={this.selectedProduct().granularity ? this.selectedProduct().granularity + '' : ''} />
-         </div>
-         <div className='granularity-input'>
-           <label>ms</label>
-         </div>
-         <div className='date-picker'>
-           <Datepicker
-              startDate={this.props.chart.startDate}
-              endDate={this.props.chart.endDate}
-              onApply={this.onApply}
-              isFetching={this.state.isFetching}
-            />
-         </div>
+       <div style={{width: 950,height: 400}}>
          { selectedProductHasData ?
            <div>
              <PriceChart dateRange={dateRange} config={config} />
