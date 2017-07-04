@@ -13,7 +13,7 @@ export default class PriceChart extends Component {
 
   render() {
     return (
-      <div style={{width: 897,height: 470}}>
+      <div className='price-chart chart'>
         <ReactHighstock config={this.props.config} />
       </div>
     )

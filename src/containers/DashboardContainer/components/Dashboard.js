@@ -16,6 +16,7 @@ export default class Dashboard extends Component {
               setProducts={this.props.setProducts}
               onSelect={this.props.onSelect}
               setProductData={this.props.setProductData}
+              setProductWSData={this.props.setProductWSData}
               onApply={this.props.onApply}
             />
           </div>

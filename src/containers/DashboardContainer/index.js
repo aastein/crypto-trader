@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { setProducts,
   setProduct,
   setProductData,
+  setProductWSData,
   setDateRange,
   addScript,
   saveScript,
@@ -28,6 +29,12 @@ const mapDispatchToProps = dispatch => {
     setProducts: products => {
       dispatch(setProducts(products))
     },
+    setProductData: (id, data) => {
+      dispatch(setProductData(id, data))
+    },
+    setProductWSData: (id, ws_data) => {
+        dispatch(setProductWSData(id, ws_data))
+    },
     onSelect: product => {
       dispatch(setProduct(product))
     },
@@ -42,9 +49,6 @@ const mapDispatchToProps = dispatch => {
     },
     onDelete: id => {
       dispatch(deleteScript(id))
-    },
-    setProductData: (id, data) => {
-      dispatch(setProductData(id, data))
     },
     initDocs: () => {
       dispatch(initDocs())

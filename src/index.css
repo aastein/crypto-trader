@@ -245,3 +245,24 @@ button.list-group-item {
   padding-left: 15px;
   background-color: #efefef;
 }
+
+.price-chart {
+  width: 70%;
+  height: 420px;
+  display: flex;
+  margin: 0px;
+}
+
+.line-chart {
+  width: 30%;
+  height: 420px;
+  display: flex;
+}
+
+.line-chart .highcharts-range-selector-buttons {
+  display: none;
+}
+
+.chart {
+  display: inline-block;
+}

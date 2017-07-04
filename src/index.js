@@ -13,7 +13,7 @@ import '../node_modules/react-toggle-switch/dist/css/switch.min.css';
 import './index.css'
 
 
-let store = createStore(reducer)
+let store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 render(
   <Provider store={store}>

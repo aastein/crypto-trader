@@ -28,9 +28,8 @@ const ScriptList = ({ addNew, scripts, onScriptClick }) => (
 const ExpandableButtonList = ({ docs, onClick}) => (
   <div>
     { docs.map(doc => (
-      <div>
+      <div key={doc.name}>
         <button
-          key={doc.name}
           className='list-group-item list-group-item-action'
           onClick={() => onClick(doc.name)}
         >
