@@ -77,7 +77,7 @@ let waitForConnected = (productList) => {
 */
 let subscribe = productList => {
   //console.log('subscribing to: ', productList)
-  productList = ['BTC-USD']
+  //productList = ['BTC-USD']
   connection.send(JSON.stringify(
     {
       "type": "subscribe",

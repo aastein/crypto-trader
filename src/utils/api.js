@@ -1,8 +1,9 @@
 import axios from 'axios'
 import crypto from 'crypto'
+import moment from 'moment'
 
-axios.defaults.baseURL = 'https://api-public.sandbox.gdax.com'
-//axios.defaults.baseURL = 'https://api.gdax.com'
+//axios.defaults.baseURL = 'https://api-public.sandbox.gdax.com'
+axios.defaults.baseURL = 'https://api.gdax.com'
 
 const authRequest = (uri, params, method, body, session) => {
 
@@ -29,23 +30,14 @@ export const getAccounts = (session) => {
   return authRequest(uri, '', 'get', '', session)
 }
 
-let isFetching = false
-
 let handleError = (error) => {
   console.warn(error)
-  return null;
-}
-
-let handleGetHistoricalDataError = callBack => {
-  isFetching = false
-  setTimeout(() => callBack(), 350);
   return null;
 }
 
 export let getHistorialData = (product, startDate, endDate, granularity) => {
   granularity = Math.floor(granularity)
   if (true){
-    isFetching = true
     let url = `/products/${product}/candles?start=${startDate}&end=${endDate}&granularity=${granularity}`
     return axios.get(url).then(res => (
       res.data.map(d => (
@@ -62,27 +54,61 @@ export let getHistorialData = (product, startDate, endDate, granularity) => {
   }
 }
 
-export const tryGetHistoricalData = (product, start, end, granularity = 1) => {
+// granularity == 300000 = 30s => I want a data point ever 30s
+export const tryGetHistoricalData = (productId, start, end, desiredGranularity) => {
+
+  console.log('')
+  console.log('desiredGranularity', desiredGranularity)
+  // convert desired granularity to s from ms
+  // granularity = 3600 => 1hr
+  desiredGranularity = desiredGranularity / 1000
+
   let rateConstant
-  if(product.includes('LTC')){
+
+  if(productId.includes('LTC')){
     rateConstant = 400000
-  } else if (product.includes('BTC')){
+  } else if (productId.includes('BTC')){
     rateConstant = 350000
-  } else if (product.includes('ETH')){
+  } else if (productId.includes('ETH')){
     rateConstant = 350000
   }
-  let epochDiff = new Date(end).getTime() - new Date(start).getTime()
-  granularity = Math.max(( epochDiff / rateConstant ), granularity)
-  let nextGranularity = granularity === 1 ? 2 : granularity * 1.1
+
+  let epochStart = new Date(start).getTime()
+  let epochDiff = new Date(end).getTime() - epochStart
+
+  // ms * (ms / trade)^-1 => trade?
+  let maxGranularityIfSingleRequest = Math.ceil(epochDiff / rateConstant)
+  //console.log('maxGranularityIfSingleRequest', maxGranularityIfSingleRequest)
+  let numRequsts = Math.ceil(maxGranularityIfSingleRequest / desiredGranularity)
+  //console.log('numRequsts', numRequsts)
+  let epochStep = Math.ceil(epochDiff / numRequsts)
+
+
+  let requests = []
+
+  //console.log(numRequsts);
+  console.log('epochStart', epochStart)
+  console.log('epochStep', epochStep)
+
+  for (let i = 0; i < numRequsts; i++) {
+
+    let nStart = moment(epochStart + (epochStep * i)).toISOString()
+    let nEnd = moment(epochStart + epochStep + (epochStep * i)).toISOString()
+
+    let request = getHistorialData(productId, nStart, nEnd, desiredGranularity)
+    requests = [ ...requests, request]
+  }
+
+  //console.log(requests)
+
   return axios.all(
-    [getHistorialData(product, start, end, granularity)]
+    requests
   ).then( data => {
-    isFetching = false
+  //  console.log(data)
     data = data.length ? data[0] : []
     return data
-  }).catch(() => handleGetHistoricalDataError(() => tryGetHistoricalData(product, start, end, nextGranularity)))
+  }).catch(handleError)
 }
-
 
 export const getProducts = () => {
   let url = '/products'

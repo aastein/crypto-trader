@@ -177,6 +177,22 @@ button.list-group-item {
   z-index: 10;
 }
 
+.granularity {
+  position: absolute;
+  right: 325px;
+  width: 100px;
+  z-index: 10;
+}
+
+.granularity-input {
+  position: absolute;
+  right: 221px;
+  top: 5px;
+  width: 100px;
+  z-index: 10;
+  font-size: 15px;
+}
+
 .DateRangePickerInput {
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;

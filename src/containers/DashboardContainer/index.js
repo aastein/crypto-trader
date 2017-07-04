@@ -10,7 +10,8 @@ import { setProducts,
   deleteScript,
   initDocs,
   selectScript,
-  selectDoc
+  selectDoc,
+  setGranularity
 } from '../../actions'
 
 import Dashboard from './components/Dashboard'
@@ -35,8 +36,8 @@ const mapDispatchToProps = dispatch => {
     setProductWSData: (id, ws_data) => {
         dispatch(setProductWSData(id, ws_data))
     },
-    onSelect: product => {
-      dispatch(setProduct(product))
+    onSelect: productId => {
+      dispatch(setProduct(productId))
     },
     onApply: (startDate, endDate) => {
       dispatch(setDateRange(startDate, endDate))
@@ -58,6 +59,9 @@ const mapDispatchToProps = dispatch => {
     },
     onDocClick: name => {
       dispatch(selectDoc(name))
+    },
+    onSetGanularity: (id, granularity) => {
+      dispatch(setGranularity(id, granularity))
     }
   }
 }

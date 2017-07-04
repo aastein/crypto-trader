@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import Datepicker from './Datepicker'
 import { Dropdown } from './Dropdown'
 import { Loader } from '../../../components/Loader'
+import { Input } from '../../../components/Input'
 import { tryGetHistoricalData, getProducts } from '../../../utils/api'
 import { initWSConnection } from '../../../utils/websocket'
 import PriceChart from './PriceChart'
@@ -21,7 +22,7 @@ export default class Chart extends Component {
   }
 
   initData = () => {
-    if(!this.props.chart.product){
+    if(!this.props.chart.productId){
       getProducts().then(products => {
         this.props.setProducts(products)
         let startDate = this.props.chart.startDate
@@ -35,27 +36,35 @@ export default class Chart extends Component {
         ))
         initWSConnection(productIds, this.props.setProductWSData)
         for (const product of products) {
-          this.fetchProductData(product.id, startDate, endDate)
+          this.fetchProductData(product.id, startDate, endDate, 3600000)
         }
       })
     }
   }
 
-  fetchProductData = (product, startDate, endDate) => {
-    tryGetHistoricalData(product, startDate, endDate).then((data) => {
-      this.props.setProductData(product, data)
-      this.props.onApply(startDate, endDate)
-      this.setState(() => (
-        { isFetching: false }
-      ))
-    })
+  fetchProductData = (productId, startDate, endDate, granularity) => {
+    //if(productId === 'BTC-USD'){
+      tryGetHistoricalData(productId, startDate, endDate, granularity).then((data) => {
+        this.props.setProductData(productId, data)
+        this.props.onApply(startDate, endDate)
+        this.setState(() => (
+          { isFetching: false }
+        ))
+      })
+  //  }
   }
+
+  selectedProduct = () => (
+    this.props.chart.products.length > 0 && this.props.chart.productId ?  this.props.chart.products.filter( product => (
+     product.id === this.props.chart.productId
+   ))[0] : ''
+  )
 
   onApply = (startDate, endDate) => {
     this.setState(() => (
       { isFetching: true }
     ))
-    this.fetchProductData(this.props.chart.product, startDate, endDate)
+    this.fetchProductData(this.props.chart.productId, startDate, endDate, this.selectedProduct().granularity)
   }
 
   onChange = (event) => {
@@ -64,23 +73,24 @@ export default class Chart extends Component {
     }
   }
 
+  onSetGanularity = (name, event) => {
+    this.props.onSetGanularity(this.props.chart.productId, event.target.value)
+  }
+
   render() {
 
     let dateRange = { startDate: this.props.chart.startDate, endDate: this.props.chart.endDate }
 
     let selectedProductHasData = this.props.chart.products.length > 0 ? this.props.chart.products.filter( product => {
-      return product.id === this.props.chart.product && product.data
+      return product.id === this.props.chart.productId && product.data
     }).length > 0 : false
 
-    let selectedProduct = this.props.chart.products.length > 0 && this.props.chart.product ?  this.props.chart.products.filter( product => (
-      product.id === this.props.chart.product
-    ))[0] : ''
 
-    let selectedProductData = selectedProduct.data ? selectedProduct.data.map(d => (
+    let selectedProductData = this.selectedProduct().data ? this.selectedProduct().data.map(d => (
       [ d.time, d.open, d.high, d.low, d.close ]
     )) : []
 
-    let selectedProductWSData = selectedProduct.ws_data ? selectedProduct.ws_data.map(d => (
+    let selectedProductWSData = this.selectedProduct().ws_data ? this.selectedProduct().ws_data.map(d => (
       [ d.time, d.price ]
     )) : []
 
@@ -89,10 +99,10 @@ export default class Chart extends Component {
         selected: 1
       },
       title: {
-        text: selectedProduct.display_name
+        text: this.selectedProduct().display_name
       },
       series: [{
-        name: selectedProduct.display_name,
+        name: this.selectedProduct().display_name,
         data: selectedProductData,
         type: 'candlestick',
         tooltip: {
@@ -143,8 +153,14 @@ export default class Chart extends Component {
            <Dropdown
             options={dropdownOptions}
             onChange={this.onChange}
-            value={this.props.chart.product}
+            value={this.props.chart.productId}
           />
+         </div>
+         <div className='granularity'>
+          <Input name='granularity' onChange={this.onSetGanularity} placeholder='' value={this.selectedProduct().granularity ? this.selectedProduct().granularity + '' : ''} />
+         </div>
+         <div className='granularity-input'>
+           <label>ms</label>
          </div>
          <div className='date-picker'>
            <Datepicker

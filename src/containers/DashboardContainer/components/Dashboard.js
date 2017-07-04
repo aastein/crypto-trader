@@ -18,6 +18,7 @@ export default class Dashboard extends Component {
               setProductData={this.props.setProductData}
               setProductWSData={this.props.setProductWSData}
               onApply={this.props.onApply}
+              onSetGanularity={this.props.onSetGanularity}
             />
           </div>
           <div className='col-md-4'>
