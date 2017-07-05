@@ -70,8 +70,8 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
         for(let j=0; j < k; j++){
           sumStoch += srsi[i].stoch
         }
-        console.log('')
-        console.log(srsi[i].stoch)
+        //console.log('')
+        //console.log(srsi[i].stoch)
         srsi[i] = { ...srsi[i], k: sumStoch / k}
 
       }
@@ -81,7 +81,7 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
         for(let j=0; j < d; j++){
           sumK += srsi[i].k
         }
-        console.log(srsi[i].k)
+        //console.log(srsi[i].k)
         srsi[i] = { ...srsi[i], d: sumK / d}
         //console.log('srsi[i].d', srsi[i].d, sumK / d)
       }
