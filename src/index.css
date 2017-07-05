@@ -170,9 +170,16 @@ button.list-group-item {
   display: none;
 }
 
-.dropdown {
+.product-dropdown {
   position: absolute;
   left: 20px;
+  width: 150px;
+  z-index: 10;
+}
+
+.indicator-dropdown {
+  position: absolute;
+  left: 180px;
   width: 150px;
   z-index: 10;
 }

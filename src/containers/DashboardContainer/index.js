@@ -11,7 +11,9 @@ import { setProducts,
   initDocs,
   selectScript,
   selectDoc,
-  setGranularity
+  setGranularity,
+  selectIndicator,
+  editIndicator
 } from '../../actions'
 
 import Dashboard from './components/Dashboard'
@@ -21,7 +23,8 @@ const mapStateToProps = state => {
     chart: state.chart,
     products: state.products,
     scripts: state.scripts,
-    docs: state.docs
+    docs: state.docs,
+    indicators: state.indicators
   }
 }
 
@@ -62,6 +65,12 @@ const mapDispatchToProps = dispatch => {
     },
     onSetGanularity: (id, granularity) => {
       dispatch(setGranularity(id, granularity))
+    },
+    onSelectIndicator: (id) => {
+      dispatch(selectIndicator(id))
+    },
+    onEditIndicator: (id, params) => {
+      dispatch(editIndicator(id, params))
     }
   }
 }

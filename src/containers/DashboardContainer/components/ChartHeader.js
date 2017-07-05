@@ -25,9 +25,15 @@ export default class Chart extends Component {
     this.fetchProductData(this.props.chart.productId, startDate, endDate, this.selectedProduct().granularity)
   }
 
-  onChange = (event) => {
+  onProductChange = (event) => {
     if (event) {
       this.props.onSelect(event.value)
+    }
+  }
+
+  onIndicatorChange = (event) => {
+    if (event) {
+      this.props.onSelectIndicator(event.value)
     }
   }
 
@@ -49,17 +55,32 @@ export default class Chart extends Component {
 
   render() {
 
-    let dropdownOptions = this.props.chart.products.map(product => {
+    let dropdownProductOptions = this.props.chart.products.map(product => {
       return { value: product.id, label: product.display_name}
     })
 
+    let dropdownIndicatorOptions = this.props.indicators.map(indicator => {
+      return { value: indicator.id, label: indicator.id}
+    })
+
+    let activeIndicator = this.props.indicators.filter(indicator => (
+       indicator.active
+    ))[0]
+
     return (
        <div style={{width: 950, height: 35}}>
-         <div className='dropdown'>
+         <div className='product-dropdown'>
            <Dropdown
-            options={dropdownOptions}
-            onChange={this.onChange}
+            options={dropdownProductOptions}
+            onChange={this.onProductChange}
             value={this.props.chart.productId}
+          />
+         </div>
+         <div className='indicator-dropdown'>
+           <Dropdown
+            options={dropdownIndicatorOptions}
+            onChange={this.onIndicatorChange}
+            value={activeIndicator.id}
           />
          </div>
          <div className='granularity'>

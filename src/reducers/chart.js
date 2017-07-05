@@ -1,4 +1,5 @@
 import * as actionType from '../actions/actionTypes'
+import { indicators } from '../utils/indicators'
 import moment from 'moment'
 
 let INITAL_CHART_STATE = {
@@ -12,7 +13,6 @@ let INITAL_CHART_STATE = {
 export const chart = (state = INITAL_CHART_STATE, action) => {
   switch(action.type){
     case actionType.SET_GRANULARITY:
-      console.log(action)
       return {
         ...state,
         products: state.products.map( product => {
@@ -27,11 +27,10 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
         ...state,
         products: action.products.map( p => (
           // inital granularity is 1 hour
-          { ...p, granularity: 3600000 }
+          { ...p, granularity: 360000 }
         ))
       }
     case actionType.SET_PRODUCT:
-      console.log(action)
       return {
         ...state, productId: action.productId
       }
@@ -56,6 +55,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
             data = data && data.length ? data : []
             let dates = []
             let lastTime = 0
+
             data = data.sort((a, b) => {
                 if(a.time < b.time) return -1;
                 if(a.time > b.time) return 1;
@@ -71,7 +71,8 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
               }
               return false
             })
-            return { ...product, data}
+            let inds = indicators(14, 3, data)
+            return { ...product, data, srsi: inds.srsi, rsi: inds.rsi}
           }
           return product
         })

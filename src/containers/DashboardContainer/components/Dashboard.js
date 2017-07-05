@@ -14,10 +14,13 @@ export default class Dashboard extends Component {
           <div className='col-md-8'>
             <ChartHeader
               chart={this.props.chart}
+              indicators={this.props.indicators}
               onSelect={this.props.onSelect}
               onApply={this.props.onApply}
               onSetGanularity={this.props.onSetGanularity}
               setProductData={this.props.setProductData}
+              onSelectIndicator={this.props.onSelectIndicator}
+              onEditIndicator={this.props.onEditIndicator}
             />
             <Chart
               chart={this.props.chart}
