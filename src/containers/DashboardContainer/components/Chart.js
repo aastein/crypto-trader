@@ -3,89 +3,39 @@ import React, { Component } from 'react'
 import { Loader } from '../../../components/Loader'
 import PriceChart from '../../../components/PriceChart'
 import LineChart from '../../../components/LineChart'
-import { tryGetHistoricalData, getProducts } from '../../../utils/api'
-import { initWSConnection } from '../../../utils/websocket'
+
 
 export default class Chart extends Component {
 
-  constructor(props){
-    super(props)
-    this.state = { isFetching : false }
-  }
-
-  componentDidMount(){
-    this.initData()
-  }
-
-  initData = () => {
-    if(!this.props.chart.productId){
-      getProducts().then(products => {
-        this.props.setProducts(products)
-        let startDate = this.props.chart.startDate
-        let endDate = this.props.chart.endDate
-        let initalProduct = products.filter( p => (
-          p.id === 'BTC-USD'
-        ))[0]
-        this.props.onSelect(initalProduct.id)
-        let productIds = products.map( p => (
-          p.id
-        ))
-        initWSConnection(productIds, this.props.setProductWSData)
-        for (const product of products) {
-          this.fetchProductData(product.id, startDate, endDate, 360000)
-        }
-      })
-    }
-  }
-
-  fetchProductData = (productId, startDate, endDate, granularity) => {
-    //if(productId === 'BTC-USD'){
-      tryGetHistoricalData(productId, startDate, endDate, granularity).then((data) => {
-        this.props.setProductData(productId, data)
-        this.props.onApply(startDate, endDate)
-        this.setState(() => (
-          { isFetching: false }
-        ))
-      })
-  //  }
-  }
-
-  selectedProduct = () => (
-    this.props.chart.products.length > 0 && this.props.chart.productId ?  this.props.chart.products.filter( product => (
-     product.id === this.props.chart.productId
-   ))[0] : ''
-  )
-
   render() {
+
+    let selectedProduct = this.props.chart.products.length > 0 ?  this.props.chart.products.reduce((a, p) => {
+      return a = p.active ? p : a
+     }, {}) : {}
 
     let dateRange = { startDate: this.props.chart.startDate, endDate: this.props.chart.endDate }
 
-    let selectedProductHasData = this.props.chart.products.length > 0 ? this.props.chart.products.filter( product => {
-      return product.id === this.props.chart.productId && product.data
-    }).length > 0 : false
-
-
-    let selectedProductPriceData = this.selectedProduct().data ? this.selectedProduct().data.map(d => (
+    let selectedProductPriceData = selectedProduct.data ? selectedProduct.data.map(d => (
       [ d.time, d.open, d.high, d.low, d.close ]
     )) : []
 
-    let selectedProductVolumeData = this.selectedProduct().data ? this.selectedProduct().data.map(d => (
+    let selectedProductVolumeData = selectedProduct.data ? selectedProduct.data.map(d => (
       [ d.time, d.volume ]
     )) : []
 
-    let selectedProductIndicatorKData = this.selectedProduct().srsi ? this.selectedProduct().srsi.map(d => {
+    let selectedProductIndicatorKData = selectedProduct.srsi ? selectedProduct.srsi.map(d => {
       return [ d.time, d.k ]
     }) : []
 
-    let selectedProductIndicatorDData = this.selectedProduct().srsi ? this.selectedProduct().srsi.map(d => {
+    let selectedProductIndicatorDData = selectedProduct.srsi ? selectedProduct.srsi.map(d => {
       return [ d.time, d.d ]
     }) : []
 
-    let selectedProductWSPriceData = this.selectedProduct().ws_data ? this.selectedProduct().ws_data.map(d => (
+    let selectedProductWSPriceData = selectedProduct.ws_data ?selectedProduct.ws_data.map(d => (
       [ d.time, d.price ]
     )) : []
 
-    let selectedProductWSVolumeData = this.selectedProduct().ws_data ? this.selectedProduct().ws_data.map(d => (
+    let selectedProductWSVolumeData = selectedProduct.ws_data ? selectedProduct.ws_data.map(d => (
       [ d.time, d.size ]
     )) : []
 
@@ -128,7 +78,7 @@ export default class Chart extends Component {
         lineWidth: 2
        }],
       series: [{
-        name: this.selectedProduct().display_name,
+        name: selectedProduct.display_name,
         data: selectedProductPriceData,
         type: 'candlestick',
         tooltip: {
@@ -220,7 +170,7 @@ export default class Chart extends Component {
 
     return (
        <div style={{width: 950,height: 400}}>
-         { selectedProductHasData ?
+         { selectedProduct.data && selectedProduct.data.length > 0 ?
            <div>
              <PriceChart dateRange={dateRange} config={config} />
              <LineChart config={wsConfig} />

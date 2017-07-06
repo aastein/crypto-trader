@@ -15,20 +15,17 @@ export default class Dashboard extends Component {
             <ChartHeader
               chart={this.props.chart}
               indicators={this.props.indicators}
-              onSelect={this.props.onSelect}
-              onApply={this.props.onApply}
-              onSetGanularity={this.props.onSetGanularity}
+              selectProduct={this.props.selectProduct}
+              setGanularity={this.props.setGranularity}
               setProductData={this.props.setProductData}
-              onSelectIndicator={this.props.onSelectIndicator}
-              onEditIndicator={this.props.onEditIndicator}
+              selectIndicator={this.props.selectIndicator}
+              editIndicator={this.props.editIndicator}
+              selectDateRange={this.props.selectDateRange}
+              setProducts={this.props.setProducts}
+              setProductWSData={this.props.setProductWSData}
             />
             <Chart
               chart={this.props.chart}
-              onSelect={this.props.onSelect}
-              onApply={this.props.onApply}
-              setProducts={this.props.setProducts}
-              setProductData={this.props.setProductData}
-              setProductWSData={this.props.setProductWSData}
             />
           </div>
           <div className='col-md-4'>
@@ -38,14 +35,14 @@ export default class Dashboard extends Component {
         <div className='container dashboard-bottom'>
           <div className='col-md-12'>
             <Scratchpad
-              scripts={this.props.scripts}
               docs={this.props.docs}
-              onAdd={this.props.onAdd}
-              onSave={this.props.onSave}
-              onDelete={this.props.onDelete}
-              onScriptClick={this.props.onScriptClick}
-              onDocClick={this.props.onDocClick}
+              scripts={this.props.scripts}
               products={this.props.chart.products}
+              addScript={this.props.addScript}
+              saveScript={this.props.saveScript}
+              deleteScript={this.props.deleteScript}
+              selectScript={this.props.selectScript}
+              selectDoc={this.props.selectDoc}
             />
           </div>
         </div>

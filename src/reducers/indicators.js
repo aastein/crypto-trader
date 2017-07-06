@@ -13,8 +13,6 @@ const INITAL_INDICATORS = [
 
 export const indicators = (state = INITAL_INDICATORS, action) => {
   switch (action.type) {
-    case actionType.INIT_INDICATORS:
-      return [ ...state, INITAL_INDICATORS ]
     case actionType.SELECT_INDICATOR:
       return state.map( i => {
         if(i.id === action.id){

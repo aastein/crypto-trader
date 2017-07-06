@@ -411,9 +411,10 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO:
 
-  Add indicator calculations
-  Add indicator dropdown
-  Add indicators to main chart, use secondary axis, or stacked primary.
+
+  When bumping WS data to main data, calculate new indicator values
+
+  Move API and WS calls and responses into action creators
 
   Export config - Supply encryption method and set key
   Import config - Ask for encryption method and key

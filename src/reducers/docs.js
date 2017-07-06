@@ -50,8 +50,6 @@ const INITIAL_DOCS = [
 
 export const docs = (state = INITIAL_DOCS, action) => {
   switch (action.type) {
-    case actionType.INIT_DOCS:
-      return { ...state, docs: INITIAL_DOCS }
     case actionType.SELECT_DOC:
       return state.map( doc => {
         if(doc.name === action.name)

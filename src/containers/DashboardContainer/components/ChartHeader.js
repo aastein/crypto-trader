@@ -1,59 +1,82 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 
 import Datepicker from '../../../components/Datepicker'
 import { Dropdown } from '../../../components/Dropdown'
 import { Input } from '../../../components/Input'
-import { tryGetHistoricalData } from '../../../utils/api'
+import { serverTime, tryGetHistoricalData, getProducts } from '../../../utils/api'
+import { initWSConnection } from '../../../utils/websocket'
 
 export default class Chart extends Component {
 
-  constructor(props){
-    super(props)
-    this.state = { isFetching : false }
+  componentDidMount(){
+    this.initData()
   }
 
-  selectedProduct = () => (
-    this.props.chart.products.length > 0 && this.props.chart.productId ?  this.props.chart.products.filter( product => (
-     product.id === this.props.chart.productId
-   ))[0] : ''
-  )
+  initData = () => {
+    if(this.props.chart.products.length === 0){
+      getProducts().then(products => {
+        let productIds = products.map( p => (p.id))
+        this.props.setProducts(products)
+        this.props.selectProduct('BTC-USD')
+        initWSConnection(productIds, this.props.setProductWSData)
+        for (const product of products) {
+          this.fetchProductData(product.id, 60, 60)
+        }
+      })
+    }
+  }
 
-  onApply = (startDate, endDate) => {
-    this.setState(() => (
-      { isFetching: true }
-    ))
-    this.fetchProductData(this.props.chart.productId, startDate, endDate, this.selectedProduct().granularity)
+  fetchProductData = (id, range, granularity) => {
+//    if(id === 'BTC-USD'){
+      serverTime().then( time => {
+        tryGetHistoricalData(id, time, range, granularity).then( data => {
+          this.props.setProductData(id, data)
+        })
+      })
+//    }
   }
 
   onProductChange = (event) => {
     if (event) {
-      this.props.onSelect(event.value)
+      this.props.selectProduct(event.value)
     }
   }
 
-  onIndicatorChange = (event) => {
+  onSelectIndicator = (event) => {
     if (event) {
-      this.props.onSelectIndicator(event.value)
+      this.props.selectIndicator(event.value)
+    }
+  }
+
+  onSelectDateRange = (event) => {
+    let id = this.props.chart.products.reduce((a, p) => (
+      a = p.active ? p.id : a
+    ), '')
+    if (event) {
+      this.props.selectDateRange(id, event.value)
     }
   }
 
   onSetGanularity = (name, event) => {
-    this.props.onSetGanularity(this.props.chart.productId, event.target.value)
+    let id = this.props.chart.products.reduce((a, p) => (
+      a = p.active ? p.id : a
+    ), '')
+    this.props.setGanularity(id, event.target.value)
   }
 
-  fetchProductData = (productId, startDate, endDate, granularity) => {
-    //if(productId === 'BTC-USD'){
-      tryGetHistoricalData(productId, startDate, endDate, granularity).then((data) => {
-        this.props.setProductData(productId, data)
-        this.props.onApply(startDate, endDate)
-        this.setState(() => (
-          { isFetching: false }
-        ))
-      })
-  //  }
-  }
+  onApply = (startDate, endDate) => {
+    let product = this.props.chart.products.reduce((a, p) => (
+      a = p.active ? p : a
+    ), {})
+     this.fetchProductData(product.id, product.range, product.granularity)
+   }
 
   render() {
+
+    let selectedProduct = this.props.chart.products.length > 0 ?  this.props.chart.products.reduce((a, p) => (
+      a = p.active ? p : a
+    ), {}) : {}
 
     let dropdownProductOptions = this.props.chart.products.map(product => {
       return { value: product.id, label: product.display_name}
@@ -63,40 +86,40 @@ export default class Chart extends Component {
       return { value: indicator.id, label: indicator.id}
     })
 
-    let activeIndicator = this.props.indicators.filter(indicator => (
-       indicator.active
-    ))[0]
+    let activeIndicator = this.props.indicators.reduce((a, b) => (
+       a = b.active ? b : a
+    ), {})
 
     return (
-       <div style={{width: 950, height: 35}}>
-         <div className='product-dropdown'>
+       <div className='chart-header' style={{width: 950, height: 35}}>
+         <div className='product-dropdown chart-header-item'>
            <Dropdown
             options={dropdownProductOptions}
             onChange={this.onProductChange}
-            value={this.props.chart.productId}
+            value={selectedProduct.id}
           />
          </div>
-         <div className='indicator-dropdown'>
+         <div className='indicator-dropdown chart-header-item'>
            <Dropdown
             options={dropdownIndicatorOptions}
-            onChange={this.onIndicatorChange}
+            onChange={this.onSelectIndicator}
             value={activeIndicator.id}
           />
          </div>
-         <div className='granularity'>
-          <Input name='granularity' onChange={this.onSetGanularity} placeholder='' value={this.selectedProduct().granularity ? this.selectedProduct().granularity + '' : ''} />
-         </div>
-         <div className='granularity-input'>
-           <label>ms</label>
-         </div>
-         <div className='date-picker'>
-           <Datepicker
-              startDate={this.props.chart.startDate}
-              endDate={this.props.chart.endDate}
-              onApply={this.onApply}
-              isFetching={this.state.isFetching}
+         <div className='date-picker chart-header-item'>
+            <Dropdown
+              options={this.props.chart.dateRanges}
+              onChange={this.onSelectDateRange}
+              value={selectedProduct.range}
             />
          </div>
+         <div className='granularity chart-header-item'>
+           <Input name='granularity' onChange={this.onSetGanularity} placeholder='' value={selectedProduct.granularity ? selectedProduct.granularity + '' : ''} />
+         </div>
+         <div className='granularity-label'>
+           <label>s</label>
+         </div>
+         <button className="chart-header-item btn btn-primary" onClick={this.onApply}>Apply</button>
        </div>
       )
     }

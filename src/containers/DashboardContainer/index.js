@@ -1,14 +1,13 @@
 import { connect } from 'react-redux'
 
 import { setProducts,
-  setProduct,
+  selectProduct,
   setProductData,
   setProductWSData,
-  setDateRange,
+  selectDateRange,
   addScript,
   saveScript,
   deleteScript,
-  initDocs,
   selectScript,
   selectDoc,
   setGranularity,
@@ -39,38 +38,35 @@ const mapDispatchToProps = dispatch => {
     setProductWSData: (id, ws_data) => {
         dispatch(setProductWSData(id, ws_data))
     },
-    onSelect: productId => {
-      dispatch(setProduct(productId))
+    selectProduct: id => {
+      dispatch(selectProduct(id))
     },
-    onApply: (startDate, endDate) => {
-      dispatch(setDateRange(startDate, endDate))
-    },
-    onAdd: () => {
+    addScript: () => {
       dispatch(addScript())
     },
-    onSave: script => {
+    saveScript: script => {
       dispatch(saveScript(script))
     },
-    onDelete: id => {
+    deleteScript: id => {
       dispatch(deleteScript(id))
     },
-    initDocs: () => {
-      dispatch(initDocs())
-    },
-    onScriptClick: id => {
+    selectScript: id => {
       dispatch(selectScript(id))
     },
-    onDocClick: name => {
+    selectDoc: name => {
       dispatch(selectDoc(name))
     },
-    onSetGanularity: (id, granularity) => {
+    setGranularity: (id, granularity) => {
       dispatch(setGranularity(id, granularity))
     },
-    onSelectIndicator: (id) => {
+    selectIndicator: (id) => {
       dispatch(selectIndicator(id))
     },
-    onEditIndicator: (id, params) => {
+    editIndicator: (id, params) => {
       dispatch(editIndicator(id, params))
+    },
+    selectDateRange: (id, range) => {
+      dispatch(selectDateRange(id, range))
     }
   }
 }

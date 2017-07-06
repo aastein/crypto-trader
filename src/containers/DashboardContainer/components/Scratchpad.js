@@ -82,7 +82,7 @@ class CodeEditor extends Component {
   handleSave = (event) => {
     event.preventDefault()
     let script = { ...this.props.script, script: this.state.script, name: this.state.name}
-    this.props.handleSubmit(script)
+    this.props.saveScript(script)
   }
 
   runScript = () => {
@@ -101,7 +101,7 @@ class CodeEditor extends Component {
           </div>
           <div className='save-input'>
             <input className='btn btn-primary btn-save' type="submit" value="Save" />
-            <input className='btn btn-danger' type="button" value="Delete" onClick={this.props.handleDelete} />
+            <input className='btn btn-danger' type="button" value="Delete" onClick={this.props.deleteScript} />
           </div>
         </div>
         <textarea className='form-group col-md-12' rows={'3'} cols={'30'} value={this.state.script} onChange={this.handleTextAreaChange} />
@@ -121,19 +121,19 @@ export default class Scratchpad extends Component {
     return (
       <div>
         <ScriptList
-          addNew={this.props.onAdd}
+          addNew={this.props.addScript}
           scripts={this.props.scripts}
-          onScriptClick={this.props.onScriptClick} />
+          onScriptClick={this.props.selectScript} />
         <div className='code-editor col-md-6'>
           <CodeEditor
             script={activeScript}
-            handleDelete={this.props.onDelete}
-            handleSubmit={this.props.onSave}
+            deleteScript={this.props.deleteScript}
+            saveScript={this.props.saveScript}
             products={this.props.products}
           />
         </div>
         <div className='doc-list list-group col-md-4'>
-          <ExpandableButtonList docs={this.props.docs} onClick={this.props.onDocClick}/>
+          <ExpandableButtonList docs={this.props.docs} onClick={this.props.selectDoc}/>
         </div>
       </div>
     )

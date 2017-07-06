@@ -151,7 +151,6 @@ button.list-group-item {
   border-radius: 0px;
 }
 
-
 .list-group {
   min-height: 234px;
   border-width: 1px;
@@ -160,62 +159,46 @@ button.list-group-item {
   padding-right: 0px;
 }
 
-.date-picker {
-  position: absolute;
-  right: 0px;
-  z-index: 10;
-}
-
 .Select-clear{
   display: none;
 }
 
+.chart-header {
+  margin-bottom: 10px;
+}
+
+.chart-header-item {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 .product-dropdown {
-  position: absolute;
-  left: 20px;
+  display: inline-block;
   width: 150px;
-  z-index: 10;
 }
 
 .indicator-dropdown {
-  position: absolute;
-  left: 180px;
+  display: inline-block;
   width: 150px;
-  z-index: 10;
 }
 
 .granularity {
-  position: absolute;
-  right: 325px;
+  display: inline-block;
   width: 100px;
-  z-index: 10;
+  position: relative;
+  bottom: 13px;
 }
 
-.granularity-input {
-  position: absolute;
-  right: 221px;
-  top: 5px;
-  width: 100px;
-  z-index: 10;
+.granularity-label {
+  display: inline-block;
   font-size: 15px;
+  position: relative;
+  bottom: 5px;
 }
 
-.DateRangePickerInput {
-  border-top-left-radius: 2px;
-  border-bottom-left-radius: 2px;
-}
-
-.DateInput {
-  font-size: 14px;
-  line-height: 8px;
+.date-picker {
+  display: inline-block;
   width: 100px;
-}
-
-.date-range-button {
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
 }
 
 .spinner {
@@ -288,4 +271,9 @@ button.list-group-item {
 
 .chart {
   display: inline-block;
+}
+
+.chart-header-item.btn {
+  position: relative;
+  bottom: 15px;
 }

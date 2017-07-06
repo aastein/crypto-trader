@@ -35,8 +35,18 @@ let handleError = (error) => {
   return null;
 }
 
+
+export let serverTime = () => {
+  let url = `/time`
+  return axios.get(url).then(res => (
+    res.data
+  ))
+}
+
+
 export let getHistorialData = (product, startDate, endDate, granularity) => {
-  granularity = Math.floor(granularity)
+  //console.log('startDate', startDate, 'endDate', endDate)
+  granularity = Math.ceil(granularity)
   if (true){
     let url = `/products/${product}/candles?start=${startDate}&end=${endDate}&granularity=${granularity}`
     return axios.get(url).then(res => (
@@ -54,60 +64,48 @@ export let getHistorialData = (product, startDate, endDate, granularity) => {
   }
 }
 
+// GDAX doesnt like handling large requests to if the requested range is too big to be
+// served in a single response, split up into multiple requests
+// GDAX also has a burst request limit so it is important to not initialize the app a rage so wide
+// that it needs to split the requests
 // granularity == 300000 = 30s => I want a data point ever 30s
-export const tryGetHistoricalData = (productId, start, end, desiredGranularity) => {
+export const tryGetHistoricalData = (productId, time, range, desiredGranularity) => {
 
-  //console.log('')
-  //console.log('desiredGranularity', desiredGranularity)
-  // convert desired granularity to s from ms
-  // granularity = 3600 => 1hr
-  desiredGranularity = desiredGranularity / 1000
+    //console.log('time', time)
+    let rateConstant
+    let requests = []
+    let epochEnd = time.epoch
+    let epochDiff = range * 60 // ( minutes * (seconds / minute ) )
 
-  let rateConstant
+    if(productId.includes('LTC')){
+      rateConstant = 400
+    } else if (productId.includes('BTC')){
+      rateConstant = 350
+    } else if (productId.includes('ETH')){
+      rateConstant = 350
+    }
 
-  if(productId.includes('LTC')){
-    rateConstant = 400000
-  } else if (productId.includes('BTC')){
-    rateConstant = 350000
-  } else if (productId.includes('ETH')){
-    rateConstant = 350000
-  }
+    // ms * (ms / trade)^-1 => trade?
+  //  console.log(epochDiff) // minutes
+    let minGranularityIfSingleRequest = Math.ceil(epochDiff / rateConstant)
+    let numRequsts = Math.ceil(minGranularityIfSingleRequest / desiredGranularity)
+    let epochStep = Math.ceil(epochDiff / numRequsts)
 
-  let epochStart = new Date(start).getTime()
-  let epochDiff = new Date(end).getTime() - epochStart
+//    console.log('minGranularityIfSingleRequest', minGranularityIfSingleRequest, 'numRequsts', numRequsts, 'epochStep', epochStep)
 
-  // ms * (ms / trade)^-1 => trade?
-  let maxGranularityIfSingleRequest = Math.ceil(epochDiff / rateConstant)
-  //console.log('maxGranularityIfSingleRequest', maxGranularityIfSingleRequest)
-  let numRequsts = Math.ceil(maxGranularityIfSingleRequest / desiredGranularity)
-  //console.log('numRequsts', numRequsts)
-  let epochStep = Math.ceil(epochDiff / numRequsts)
+    for (let i = 0; i < numRequsts; i++) {
+      let nStart = moment.unix(epochEnd - epochStep - (epochStep * i)).toISOString()
+      let nEnd = moment.unix(epochEnd - (epochStep * i)).toISOString()
+      let request = getHistorialData(productId, nStart, nEnd, desiredGranularity)
+      requests = [ ...requests, request]
+    }
 
-
-  let requests = []
-
-  //console.log(numRequsts);
-  //console.log('epochStart', epochStart)
-  //console.log('epochStep', epochStep)
-
-  for (let i = 0; i < numRequsts; i++) {
-
-    let nStart = moment(epochStart + (epochStep * i)).toISOString()
-    let nEnd = moment(epochStart + epochStep + (epochStep * i)).toISOString()
-
-    let request = getHistorialData(productId, nStart, nEnd, desiredGranularity)
-    requests = [ ...requests, request]
-  }
-
-  //console.log(requests)
-
-  return axios.all(
-    requests
-  ).then( data => {
-  //  console.log(data)
-    data = data.length ? data[0] : []
-    return data
-  }).catch(handleError)
+    return axios.all(
+      requests
+    ).then( data => {
+      data = data.length ? data[0] : []
+      return { epochEnd, data }
+    }).catch(handleError)
 }
 
 export const getProducts = () => {

@@ -53,7 +53,6 @@ export default class Datepicker extends Component {
           onFocusChange={(focusedInput) => this.onFocusChange({ focusedInput })} // PropTypes.func.isRequired,
           isOutsideRange={() => false}
         />
-        <button className="date-range-button btn btn-primary" onClick={this.onApply} disabled={this.props.isFetching}>Apply</button>
       </div>
     )
   }
