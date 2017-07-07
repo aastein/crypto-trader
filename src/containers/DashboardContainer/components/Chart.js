@@ -101,7 +101,16 @@ export default class Chart extends Component {
         height: '20%',
         lineWidth: 2,
         softMax: 100,
-        softMin: 0
+        softMin: 0,
+        plotLines: [{
+          value: 70,
+          color: 'red',
+          width: 1
+        }, {
+          value: 30,
+          color: 'red',
+          width: 1
+        }]
       }],
       series: [{
         name: selectedProduct.display_name,

@@ -411,107 +411,61 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO:
 
-  Move API and WS calls and responses into action creators
+  Profile:
+    Add product subscription checkboxes in profile
+    Export config - indicator settings, product ranges, scripts
+    Import config - indicator settings, product ranges, scripts
+    On save, get account info and display in header
+      balances per account
 
-  Export config - indicator settings, product ranges, scripts
-  Import config - indicator settings, product ranges, scripts
+  General API:
+    Queue promises and burst at 6 per second.
+    Move API and WS calls and responses into action creators, do this last
 
-  Add methods for trades
-    Add tab on textarea for static trade buttons, mirror functionality on GDAX UI
-    Main goal is scripts plot custom indicators?
-      User should be able to parameterize build in indicators
+  Chart Header:
+    Add spinner over apply button on isFetching
+    Show user error when api responds with error
+    Parameterize indicator params via modal
 
-    End to End Example:
+  Script Area:
+    Add tab for static trade buttons, mirror functionality on GDAX UI
 
-      SRSI:
+  Script environment:
+    Expose each product props with a method
+      BTC_USD().srsi.k
 
-        Part 1: Old Data (Built in logic)*
+  Documentation:
+    Generate doc based on available props.
 
-          for each point in time, calculate companion data.
-          plot the data
+  Order APIs:
+    Limit orders:
+      amount as fraction of available balance
+      strike price as +/- units of last close price
+      for now, all orders as good till time and pass user value ('minute, hour, day')
+        ideally you should be pricing your oder so it gets snatched up instantly
 
-        Part 2: New Data (Build in logic)*
+        Order:
+        {
+          side: buy or sell,
+          product_id: BTC-USD,
+          type: limit: buy at specified price or better,
 
-          Subscribe to data feed for product to get current price
-          Append the price data to data array
-          Calculate new indicator value and append to indicator array
-          Get current price, append to data list
+          LIMIT:
+          price: $per unit
+          size: num units
+          time_in_force: GTC: good till cancel,
+                         GTT: good till time,
+                         IOC: immidiate or cancel,
+                         FOK: fill or kill
+          if time_in_force: GTT
+          cancel_after: min, hour, day
+          if not time_in_force: IOC or FOK
+          post_only:
+        }
 
-        Part 3: Decision (User defined logic)
+  Flow:
 
-          At the end of the new indicator calculation check for a user defined condition
-          at ANY point in time if the current indicator value is above or below
-          a certain value, call a trade API to execute a trade
+    At the end of a websocket reducer run all user defined scripts per product.
 
-        Part 3*: Trade params
-
-          Price per unit
-          Number of units
-
-          All in all out:
-            get account data
-
-              Sell:
-                sell amount of base_currency for account.quote_currency
-
-              Buy:
-                but amount of base_currency with max account.quote_currency
-
-    STOP makes a market order
-    Market orders incurs fees and do not guarantee price
-
-    Make all automated trades as limit with GTC and cancel after minute or hour
-
-    Order:
-    {
-      side: buy or sell,
-      product_id: BTC-USD,
-      type: market: buy at best possible price,
-            limit: buy at specified price or better,
-            stop: wait for price to be at specified level, then execute market or limit
-
-      LIMIT:
-      price: $per unit
-      size: num units
-      time_in_force: GTC: good till cancel,
-                     GTT: good till time,
-                     IOC: immidiate or cancel,
-                     FOK: fill or kill
-      if time_in_force: GTT
-      cancel_after: min, hour, day
-      if not time_in_force: IOC or FOK
-      post_only:
-
-      MARKET:
-      size: num units (BTC)
-      OR
-      funds: amt quote_currency (USD)
-
-      STOP:
-      price: price at which order is triggered
-      size: num units (BTC)
-      OR
-      funds: amt quote_currency (USD
-
-
-    }
-
-    OR use FIX api?
-
-
-  Websocket feed:
-    subscribe with standard request fields
-    {
-        "type": "subscribe",
-        "product_ids": [
-            "BTC-USD"
-        ],
-        signature: "...",
-        key: "...",
-        passphrase: "...",
-        timestamp: "..."
-    }
-
-https://github.com/coinbase/gdax-node/blob/master/lib/clients/websocket.js
-https://gist.github.com/martinsik/2031681
-{'type': 'subscribe','product_ids': 'BTC-USD'}
+          if(BTC_USD.srsi.k > 20)
+            limit(limit order params...)
