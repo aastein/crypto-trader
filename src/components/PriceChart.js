@@ -11,10 +11,21 @@ export default class PriceChart extends Component {
     return startDateChanged ||  endDateChanged || dataLengthChanged
   }
 
+  componentWillReceiveProps() {
+    let chart = this.refs.chart.getChart();
+    //console.log(chart)
+    //setData (Array data, [Boolean redraw], [Mixed animation], [Boolean updatePoints])
+    for(let i = 0 ; i < chart.series.length; i++){
+      if (this.props.config.series[i]) {
+    //    chart.series[i].setData(this.props.config.series[i].data)
+      }
+    }
+  }
+
   render() {
     return (
       <div className='price-chart chart'>
-        <ReactHighstock config={this.props.config} />
+        <ReactHighstock config={this.props.config} ref="chart"/>
       </div>
     )
   }

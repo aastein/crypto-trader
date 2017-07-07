@@ -1,6 +1,5 @@
 import * as actionType from '../actions/actionTypes'
 import { indicators } from '../utils/indicators'
-import moment from 'moment'
 
 let INITAL_CHART_STATE = {
   dateRanges: [
@@ -21,7 +20,7 @@ let INITAL_CHART_STATE = {
 export const chart = (state = INITAL_CHART_STATE, action) => {
   switch(action.type){
     case actionType.SELECT_DATE_RANGE:
-      console.log(action)
+      //console.log(action)
       return {
         ...state,
         products: state.products.map( p => {
@@ -54,15 +53,11 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
         })
       }
     case actionType.SET_PRODUCT_DATA:
-        /*
-        [{
-          close: 2589.91 high: 2596 low: 2579.41 open: 2582.37 time: 1499205600000 volume: 188.85271597
-        }]
-        */
       return {
         ...state,
         products: state.products.map( product => {
           if(product.id === action.id && action.data ){
+
             let data = [ ...product.data, ...action.data.data ]
             let endDate = action.data.epochEnd * 1000
             let startDate = endDate - product.range * 60000 // ( minutes * ( ms / minute) * 1000)
@@ -94,6 +89,11 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
       // after ws_data is sorted, remove all that are 5min(300000ms) after newest ws_data
       // if newst ws_data is 1min + last data.time, calculate ohlc and add to data with time = latest ws_time
       //console.log('')
+      /*
+      time: 1499396513781
+      price: 2590.02
+      size: 0.35052233
+      */
       return {
         ...state,
 
@@ -101,69 +101,53 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
 
           if(product.id === action.id){
 
-            // get procut data
+            // get procut historical data
             let data = product.data ? [ ...product.data ] : []
 
-            // get time of newest product data
+            // get time of newest product historical data
             let newestdatatime =  data[data.length - 1] && data[data.length - 1].time ? data[data.length - 1].time : null
 
-            // get all ws_data for product
+            // get all web socket data for product
             let ws_data = product.ws_data ? [...product.ws_data, ...action.ws_data] : action.ws_data
 
-            console.log(ws_data)
-
-            // if ws_data is not array, set it to empty array
+            // if web socket data is not array, set it to empty array
             ws_data = ws_data && ws_data.length ? ws_data : []
 
-            // get time of oldest ws_data
+            // get time of oldest and newest web socket data
             let newestwsdatatime = ws_data[ws_data.length - 1].time ? ws_data[ws_data.length - 1].time : null
             let oldestwsdatatime = ws_data[0].time ? ws_data[0].time : null
 
-
-            // init date list for filtering
-            let times = []
-
-            // filter out duplicate times
-            ws_data = ws_data.filter( d => {
-
-              let isDupe = times.indexOf(d.time) > 0
-
-              times.push(d.time)
-
-              return !isDupe
-
             // sort by time, newest data on top
-            }).sort((a, b) => {
+            ws_data = ws_data.sort((a, b) => {
                 if(a.time < b.time) return -1;
                 if(a.time > b.time) return 1;
                 return 0;
-            })
-            .filter(d => {
+            }).filter(d => {
               if(oldestwsdatatime){
-
-                // filter out data older than 5 minutes
-                if(action.id === 'BTC-USD'){
-                  //console.log(action.id,'filtering', newestwsdatatime, '-', d.time, '<', DATA_GRANULARITY, (newestwsdatatime - d.time < DATA_GRANULARITY))
-                }
+                // filter out data older than granularity time
                 return (newestwsdatatime - d.time < product.granularity * 1000)
               }
               return true
             })
 
-            // if newist data time is 300000ms or greater behind oldest ws_data
-            // get ohlc for ws_data and add to data array
-
-            if(action.id === 'BTC-USD'){
-              //console.log(action.id, 'oldestwsdatatime', oldestwsdatatime)
-              //console.log(action.id, 'newestwsdatatime', newestwsdatatime)
-              //console.log(action.id, 'newestdatatime', newestdatatime )
-              //console.log(action.id, 'diff', (newestwsdatatime - newestdatatime) / 1000, 's' )
-              //console.log('gran', DATA_GRANULARITY/1000, 's')
+            // if multiple transactions per ms, avaerage the transactions
+            let clean_ws_data = []
+            if(ws_data.length > 1){
+              for(let i = 0; i < ws_data.length; i++ ){
+                let d = ws_data[i]
+                if(ws_data[i + 1] && ws_data[i].time === ws_data[i + 1].time){
+                  d.price = (d.price  + ws_data[i + 1].price) / 2
+                  d.size = (d.size + ws_data[i + 1].size) / 2
+                  i++
+                }
+                clean_ws_data.push(d)
+              }
+            } else {
+              clean_ws_data = [ ...ws_data ]
             }
 
             if(oldestwsdatatime && newestdatatime && (newestwsdatatime - newestdatatime >= product.granularity * 1000)){
-
-              let newdata = [ ...ws_data ]
+              let newdata = [ ...clean_ws_data ]
               newdata = newdata.reduce((ohlc, d) => {
                 return {
                   ...ohlc,
@@ -172,19 +156,20 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
                   volume: d.size + ohlc.volume
                 }
               }, {
-                open: ws_data[ws_data.length - 1].price,
+                open: clean_ws_data[clean_ws_data.length - 1].price,
                 high: Number.MIN_SAFE_INTEGER,
                 low: Number.MAX_SAFE_INTEGER,
-                close: ws_data[0].price,
+                close: clean_ws_data[0].price,
                 time: newestwsdatatime,
                 volume: 0
               })
 
               data = [ ...data, newdata ]
+              let inds = indicators(14, 3, data)
+              return { ...product, data, ws_data: clean_ws_data, srsi: inds.srsi, rsi: inds.rsi }
             }
-
             // return product with new ws_data and new data
-            return { ...product, ws_data, data}
+            return { ...product, data , ws_data: clean_ws_data }
           }
           // return product because we are not updating the prduct with this ID
           return product

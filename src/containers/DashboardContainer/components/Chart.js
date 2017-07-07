@@ -31,6 +31,10 @@ export default class Chart extends Component {
       return [ d.time, d.d ]
     }) : []
 
+    let selectedProductRSIData = selectedProduct.rsi ? selectedProduct.rsi.map(d => {
+      return [ d.time, d.value ]
+    }) : []
+
     let selectedProductWSPriceData = selectedProduct.ws_data ?selectedProduct.ws_data.map(d => (
       [ d.time, d.price ]
     )) : []
@@ -51,20 +55,11 @@ export default class Chart extends Component {
         }
       },
       yAxis: [{
-      labels: {
-        align: 'right',
-        x: -3
-      },
-      height: '60%',
-      lineWidth: 2
-      },
-      {
         labels: {
           align: 'right',
           x: -3
         },
-        top: '60%',
-        height: '20%',
+        height: '60%',
         lineWidth: 2
       },
       {
@@ -72,18 +67,58 @@ export default class Chart extends Component {
           align: 'right',
           x: -3
         },
-        top: '83%',
-        height: '18%',
+        top: '40%',
+        height: '20%',
         offset: 0,
         lineWidth: 2
-       }],
+      },
+      {
+        labels: {
+          align: 'right',
+          x: -3
+        },
+        top: '62%',
+        height: '17%',
+        lineWidth: 2,
+        max: 1,
+        min: 0,
+        plotLines: [{
+          value: .8,
+          color: 'red',
+          width: 1
+        }, {
+          value: .2,
+          color: 'red',
+          width: 1
+        }]
+      },
+      {
+        labels: {
+          align: 'right',
+          x: -3
+        },
+        top: '80%',
+        height: '20%',
+        lineWidth: 2,
+        softMax: 100,
+        softMin: 0
+      }],
       series: [{
         name: selectedProduct.display_name,
         data: selectedProductPriceData,
         type: 'candlestick',
         tooltip: {
           valueDecimals: 2
+        },
+        dataGrouping: {
+            enabled: false
         }
+      },
+      {
+        type: 'column',
+        name: 'Volume',
+        data: selectedProductVolumeData,
+        yAxis: 1
       },
       {
         data: selectedProductIndicatorKData,
@@ -92,7 +127,16 @@ export default class Chart extends Component {
         tooltip: {
           valueDecimals: 2
         },
-        yAxis: 1
+        yAxis: 2,
+        dataGrouping: {
+          enabled: false
+        },
+        lineWidth: 1,
+        states: {
+          hover: {
+            lineWidth: 1
+          }
+        }
       },
       {
         data: selectedProductIndicatorDData,
@@ -101,13 +145,34 @@ export default class Chart extends Component {
         tooltip: {
           valueDecimals: 2
         },
-        yAxis: 1
+        yAxis: 2,
+        lineWidth: 1,
+        dataGrouping: {
+          enabled: false
+        },
+        states: {
+          hover: {
+            lineWidth: 1
+          }
+        }
       },
       {
-        type: 'column',
-        name: 'Volume',
-        data: selectedProductVolumeData,
-        yAxis: 2
+        data: selectedProductRSIData,
+        type: 'line',
+        name: 'rsi',
+        tooltip: {
+          valueDecimals: 2
+        },
+        yAxis: 3,
+        dataGrouping: {
+            enabled: false
+        },
+        lineWidth: 1,
+        states: {
+          hover: {
+            lineWidth: 1
+          }
+        }
       }],
       scrollbar: {
         enabled: false

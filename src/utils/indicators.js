@@ -29,7 +29,9 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
     } else if (close < data[i-1].close){
       loss = data[i-1].close - close
     }
-    rsi[i] = { gain, loss }
+
+    rsi[i] = { ...rsi[i], gain, loss }
+
     if ( i >= rsiLength ){
       //set initial average values
       if( i === rsiLength){
@@ -88,7 +90,21 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
     }
 
   }
-  return { srsi, rsi }
+
+  // console.log('data', data.length, 'rsi', rsi.reduce((a, b) => (
+  //   b.value ? a + 1 : a
+  // ), 0), 'k', srsi.reduce((a, b) => (
+  //   b.k ? a + 1 : a
+  // ), 0), 'd', srsi.reduce((a, b) => (
+  //   b.d ? a + 1 : a
+  // ), 0))
+  //
+  // console.log('rsi.time', rsi.map(a => {
+  //   console.log(a.time)
+  //   return true
+  // }))
+
+  return { rsi, srsi }
 }
 
 

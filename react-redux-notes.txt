@@ -411,13 +411,10 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO:
 
-
-  When bumping WS data to main data, calculate new indicator values
-
   Move API and WS calls and responses into action creators
 
-  Export config - Supply encryption method and set key
-  Import config - Ask for encryption method and key
+  Export config - indicator settings, product ranges, scripts
+  Import config - indicator settings, product ranges, scripts
 
   Add methods for trades
     Add tab on textarea for static trade buttons, mirror functionality on GDAX UI

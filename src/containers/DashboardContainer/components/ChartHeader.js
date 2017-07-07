@@ -28,13 +28,13 @@ export default class Chart extends Component {
   }
 
   fetchProductData = (id, range, granularity) => {
-//    if(id === 'BTC-USD'){
+    //if(id === 'BTC-USD'){
       serverTime().then( time => {
         tryGetHistoricalData(id, time, range, granularity).then( data => {
           this.props.setProductData(id, data)
         })
       })
-//    }
+    //}
   }
 
   onProductChange = (event) => {
