@@ -95,9 +95,17 @@ form button.btn {
   max-height: 200px;
 }
 
-.doc-list {
+.doc-list .docs{
   overflow-y: scroll;
-  max-height: 220px;
+  max-height: 200px;
+}
+
+.doc-list h3 {
+  margin: 0px;
+  padding: 9px;
+  font-size: 15px;
+  background-color: #eee;
+  border-color: #ccc;
 }
 
 .navbar-right {
@@ -184,7 +192,7 @@ button.list-group-item {
 
 .granularity {
   display: inline-block;
-  width: 100px;
+  width: 70px;
   position: relative;
   bottom: 13px;
 }

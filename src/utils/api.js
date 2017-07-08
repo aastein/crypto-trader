@@ -35,14 +35,12 @@ let handleError = (error) => {
   return null;
 }
 
-
 export let serverTime = () => {
   let url = `/time`
   return axios.get(url).then(res => (
     res.data
   ))
 }
-
 
 export let getHistorialData = (product, startDate, endDate, granularity) => {
   //console.log('startDate', startDate, 'endDate', endDate)
@@ -76,6 +74,7 @@ export const tryGetHistoricalData = (productId, time, range, desiredGranularity)
     let requests = []
     let epochEnd = time.epoch
     let epochDiff = range * 60 // ( minutes * (seconds / minute ) )
+    let maxConcurrentRequests = 10
 
     if(productId.includes('LTC')){
       rateConstant = 400
@@ -86,27 +85,33 @@ export const tryGetHistoricalData = (productId, time, range, desiredGranularity)
     }
 
     // ms * (ms / trade)^-1 => trade?
-  //  console.log(epochDiff) // minutes
+    //  console.log(epochDiff) // minutes
     let minGranularityIfSingleRequest = Math.ceil(epochDiff / rateConstant)
     let numRequsts = Math.ceil(minGranularityIfSingleRequest / desiredGranularity)
     let epochStep = Math.ceil(epochDiff / numRequsts)
 
-//    console.log('minGranularityIfSingleRequest', minGranularityIfSingleRequest, 'numRequsts', numRequsts, 'epochStep', epochStep)
+    if(numRequsts <= maxConcurrentRequests){
+      for(let i = 0; i < numRequsts; i++){
+        let nStart = moment.unix(epochEnd - epochStep - (epochStep * i)).toISOString()
+        let nEnd = moment.unix(epochEnd - (epochStep * i)).toISOString()
+        let request = getHistorialData(productId, nStart, nEnd, desiredGranularity)
+        requests = [ ...requests, request]
+      }
 
-    for (let i = 0; i < numRequsts; i++) {
-      let nStart = moment.unix(epochEnd - epochStep - (epochStep * i)).toISOString()
-      let nEnd = moment.unix(epochEnd - (epochStep * i)).toISOString()
-      let request = getHistorialData(productId, nStart, nEnd, desiredGranularity)
-      requests = [ ...requests, request]
+      return axios.all(
+        requests
+      ).then( axios.spread( ( ...data ) => {
+        data = data.reduce( (a, b) => (
+          a = [ ...a, ...b ]
+        ), [])
+        return { epochEnd, data }
+      })).catch(handleError)
     }
-
-    return axios.all(
-      requests
-    ).then( data => {
-      data = data.length ? data[0] : []
-      return { epochEnd, data }
-    }).catch(handleError)
+    return new Promise((resolve, reject) => {
+      return reject('Ganularity too small!')
+    })
 }
+
 
 export const getProducts = () => {
   let url = '/products'

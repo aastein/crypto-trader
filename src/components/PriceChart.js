@@ -4,20 +4,23 @@ import ReactHighstock from 'react-highcharts/ReactHighstock.src'
 
 export default class PriceChart extends Component {
 
-  shouldComponentUpdate = (nextProps, nextState) => {
-    let startDateChanged = nextProps.dateRange.startDate !== this.props.dateRange.startDate
-    let endDateChanged = nextProps.dateRange.endDate !== this.props.dateRange.endDate
-    let dataLengthChanged = this.props.config.series[0].data.length !== nextProps.config.series[0].data.length
-    return startDateChanged ||  endDateChanged || dataLengthChanged
+  dataChanged = (nextProps) => {
+    let dataChanged = this.props.config.series[0].name !== nextProps.config.series[0].name
+      || this.props.config.series[0].data.length !== nextProps.config.series[0].data.length
+    return dataChanged
   }
 
-  componentWillReceiveProps() {
+  shouldComponentUpdate = (nextProps, nextState) => (
+    this.dataChanged(nextProps)
+  )
+
+  componentWillReceiveProps = (nextProps) => {
     let chart = this.refs.chart.getChart();
-    //console.log(chart)
-    //setData (Array data, [Boolean redraw], [Mixed animation], [Boolean updatePoints])
-    for(let i = 0 ; i < chart.series.length; i++){
-      if (this.props.config.series[i]) {
-    //    chart.series[i].setData(this.props.config.series[i].data)
+    if (this.dataChanged(nextProps)) {
+      for(let i = 0 ; i < chart.series.length; i++){
+        if(nextProps.config.series[i]){
+            chart.series[i].setData(nextProps.config.series[i].data)
+        }
       }
     }
   }

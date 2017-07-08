@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
+import { ObjectInspector } from 'react-inspector'
 import { run } from '../../../utils/scriptEnv'
 
 const ScriptList = ({ addNew, scripts, onScriptClick }) => (
-  <div className='script-list list-group col-md-2'>
+  <div className='script-list list-group col-md-3'>
     <div>
       <button
         className='list-group-item list-group-item-action btn-primary'
@@ -25,116 +26,95 @@ const ScriptList = ({ addNew, scripts, onScriptClick }) => (
   </div>
 )
 
-const ExpandableButtonList = ({ docs, onClick}) => (
-  <div>
-    { docs.map(doc => (
-      <div key={doc.name}>
-        <button
-          className='list-group-item list-group-item-action'
-          onClick={() => onClick(doc.name)}
-        >
-        {doc.name}
-        </button>
-        { doc.active &&
-          <div className='doc-desc'>
-            {doc.desc.split('\n').map((item, key) => {
-              return <span key={key}>{item}<br/></span>
-            })}
-          </div>
-        }
-      </div>
-    ))}
+const ProductDataList = ({ products, onClick }) => (
+  <div className='doc-list list-group col-md-3'>
+    <div>
+      <h3>
+        Product Data
+      </h3>
+    </div>
+    <div className='docs'>
+      { products.map(p => (
+        <div key={p.id}>
+          <button
+            className='list-group-item list-group-item-action'
+            onClick={() => onClick(p.id)}
+          >
+          {p.display_name}
+          </button>
+          { p.docSelected &&
+            <div className='doc-desc'>
+              <ObjectInspector data={p} name={p.display_name}/>
+            </div>
+          }
+        </div>
+      ))}
+    </div>
   </div>
 )
 
 class CodeEditor extends Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      script: '',
-      name: ''
-    }
-  }
-
-  componentWillReceiveProps = nextProps => {
-    this.setState(() => (
-      {
-        script: nextProps.script ? nextProps.script.script : '',
-        name: nextProps.script ? nextProps.script.name : ''
-      }
-    ))
-  }
 
   handleTextAreaChange = (event) => {
-    let script = event.target.value
-    this.setState(() => {
-      return { script }
-    })
+    let script = { ...this.props.script, script: event.target.value}
+    this.props.saveScript(script)
   }
 
   handleInputChange = (event) => {
     let name = event.target.value
-    this.setState(() => {
-      return { name }
-    })
+    this.props.saveScript({ ...this.props.script, name})
   }
 
-  handleSave = (event) => {
+  runScript = (event) => {
     event.preventDefault()
-    let script = { ...this.props.script, script: this.state.script, name: this.state.name}
-    this.props.saveScript(script)
-  }
-
-  runScript = () => {
-    run(this.state.script, this.props.products)
+    run(this.props.script.script, this.props.products, this.props.appendLog)
   }
 
   render(){
     return(
-      <form onSubmit={this.handleSave}>
-        <div className='editor-form row'>
-          <div className='name-group'>
-            <div className='input-group'>
-              <div className='input-group-addon'>Script Name:</div>
-              <input className='form-control' type='input' value={this.state.name} onChange={this.handleInputChange}/>
+      <div className='code-editor col-md-6'>
+        <form onSubmit={this.handleSave}>
+          <div className='editor-form row'>
+            <div className='name-group'>
+              <div className='input-group'>
+                <div className='input-group-addon'>Script Name:</div>
+                <input className='form-control' type='input' value={this.props.script.name} onChange={this.handleInputChange}/>
+              </div>
+            </div>
+            <div className='save-input'>
+              <input className='btn btn-danger' type="button" value="Delete" onClick={this.props.deleteScript} />
             </div>
           </div>
-          <div className='save-input'>
-            <input className='btn btn-primary btn-save' type="submit" value="Save" />
-            <input className='btn btn-danger' type="button" value="Delete" onClick={this.props.deleteScript} />
+          <textarea className='form-group col-md-12' rows={'3'} cols={'30'} value={this.props.script.script} onChange={this.handleTextAreaChange} />
+          <div className='run-button'>
+            <button className='btn btn-success btn-run' onClick={this.runScript} >Run</button>
           </div>
-        </div>
-        <textarea className='form-group col-md-12' rows={'3'} cols={'30'} value={this.state.script} onChange={this.handleTextAreaChange} />
-        <div className='run-button'>
-          <button className='btn btn-success btn-run' onClick={this.runScript} >Run</button>
-        </div>
-      </form>
+        </form>
+      </div>
     )
   }
 }
 
 export default class Scratchpad extends Component {
+
   render() {
-    let activeScript = this.props.scripts.filter( script => (
-      script.active
-    ))[0]
+    let activeScript = this.props.scripts.reduce((a, b) => (
+      b.active ? b : a
+    ), {})
     return (
       <div>
         <ScriptList
           addNew={this.props.addScript}
           scripts={this.props.scripts}
           onScriptClick={this.props.selectScript} />
-        <div className='code-editor col-md-6'>
-          <CodeEditor
-            script={activeScript}
-            deleteScript={this.props.deleteScript}
-            saveScript={this.props.saveScript}
-            products={this.props.products}
-          />
-        </div>
-        <div className='doc-list list-group col-md-4'>
-          <ExpandableButtonList docs={this.props.docs} onClick={this.props.selectDoc}/>
-        </div>
+        <CodeEditor
+          script={activeScript}
+          appendLog={this.props.appendLog}
+          deleteScript={this.props.deleteScript}
+          saveScript={this.props.saveScript}
+          products={this.props.products}
+        />
+        <ProductDataList products={this.props.products} onClick={this.props.selectProductDoc}/>
       </div>
     )
   }

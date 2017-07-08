@@ -9,10 +9,12 @@ import { setProducts,
   saveScript,
   deleteScript,
   selectScript,
-  selectDoc,
+  selectProductDoc,
   setGranularity,
   selectIndicator,
-  editIndicator
+  editIndicator,
+  appendLog,
+  clearLog
 } from '../../actions'
 
 import Dashboard from './components/Dashboard'
@@ -23,7 +25,8 @@ const mapStateToProps = state => {
     products: state.products,
     scripts: state.scripts,
     docs: state.docs,
-    indicators: state.indicators
+    indicators: state.indicators,
+    log: state.log
   }
 }
 
@@ -53,8 +56,8 @@ const mapDispatchToProps = dispatch => {
     selectScript: id => {
       dispatch(selectScript(id))
     },
-    selectDoc: name => {
-      dispatch(selectDoc(name))
+    selectProductDoc: name => {
+      dispatch(selectProductDoc(name))
     },
     setGranularity: (id, granularity) => {
       dispatch(setGranularity(id, granularity))
@@ -67,6 +70,12 @@ const mapDispatchToProps = dispatch => {
     },
     selectDateRange: (id, range) => {
       dispatch(selectDateRange(id, range))
+    },
+    appendLog: (log) => {
+      dispatch(appendLog(log))
+    },
+    clearLog: () => {
+      dispatch(clearLog())
     }
   }
 }

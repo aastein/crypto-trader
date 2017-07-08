@@ -122,6 +122,7 @@ module.exports = {
           },
         ],
         include: paths.appSrc,
+        exclude: /scriptEnv.js/
       },
       // ** ADDING/UPDATING LOADERS **
       // The "file" loader handles all assets unless explicitly excluded.

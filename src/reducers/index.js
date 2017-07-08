@@ -2,15 +2,15 @@ import { combineReducers } from 'redux'
 import { chart } from './chart'
 import { profile } from './profile'
 import { scripts } from './scripts'
-import { docs } from './docs'
 import { indicators } from './indicators'
+import { log } from './log'
 
 const reducer = combineReducers({
   chart,
   profile,
   scripts,
-  docs,
-  indicators
+  indicators,
+  log
 })
 
 export default reducer

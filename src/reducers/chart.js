@@ -19,8 +19,15 @@ let INITAL_CHART_STATE = {
 
 export const chart = (state = INITAL_CHART_STATE, action) => {
   switch(action.type){
+    case actionType.SELECT_PRODUCT_DOC:
+      return {
+        ...state,
+        products: state.products.map( p => {
+          p.docSelected = p.id === action.id ? !p.docSelected : p.docSelected
+          return p
+        })
+      }
     case actionType.SELECT_DATE_RANGE:
-      //console.log(action)
       return {
         ...state,
         products: state.products.map( p => {
@@ -42,7 +49,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
       return {
         ...state,
         products: action.products.map( p => (
-          { ...p, granularity: 60, range: 60, data: [] }
+          { ...p, granularity: 60, range: 60, data: [], docSelected: false }
         ))
       }
     case actionType.SELECT_PRODUCT:
@@ -53,12 +60,13 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
         })
       }
     case actionType.SET_PRODUCT_DATA:
+    //  console.log('set product data size', action.data.data.length)
       return {
         ...state,
         products: state.products.map( product => {
           if(product.id === action.id && action.data ){
 
-            let data = [ ...product.data, ...action.data.data ]
+            let data = [ ...action.data.data ]
             let endDate = action.data.epochEnd * 1000
             let startDate = endDate - product.range * 60000 // ( minutes * ( ms / minute) * 1000)
             let dates = []
@@ -69,9 +77,14 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
                 if(a.time > b.time) return 1;
                 return 0;
             }).filter( d => {
+
               let isDupe = dates.indexOf(d.time) > 0
+              //if(isDupe) console.log('duplicate data')
               let isInTimeRange = d.time >= startDate && d.time <= endDate
+              //if(!isInTimeRange) console.log('data outside of range')
+
               dates.push(d.time)
+
               if(d.time - lastTime >= product.granularity * 1000){
                 lastTime = d.time
                 return true && !isDupe && isInTimeRange
@@ -79,7 +92,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
               return false
             })
             let inds = indicators(14, 3, data)
-            return { ...product, data, srsi: inds.srsi, rsi: inds.rsi}
+            return { ...product, data, srsi: inds.srsi, rsi: inds.rsi, cci: inds.cci}
           }
           return product
         })
@@ -147,6 +160,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
             }
 
             if(oldestwsdatatime && newestdatatime && (newestwsdatatime - newestdatatime >= product.granularity * 1000)){
+              //console.log('compiling ws data to data')
               let newdata = [ ...clean_ws_data ]
               newdata = newdata.reduce((ohlc, d) => {
                 return {
@@ -166,7 +180,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
 
               data = [ ...data, newdata ]
               let inds = indicators(14, 3, data)
-              return { ...product, data, ws_data: clean_ws_data, srsi: inds.srsi, rsi: inds.rsi }
+              return { ...product, data, ws_data: clean_ws_data, srsi: inds.srsi, rsi: inds.rsi, cci: inds.cci }
             }
             // return product with new ws_data and new data
             return { ...product, data , ws_data: clean_ws_data }

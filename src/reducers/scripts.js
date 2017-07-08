@@ -1,6 +1,15 @@
 import * as actionType from '../actions/actionTypes'
 
-export const scripts = (state = [], action) => {
+let INITAL_SCRIPTS_STATE = [
+  {
+    id: 0,
+    name: 'New Script',
+    script: '',
+    active: true
+  }
+]
+
+export const scripts = (state = INITAL_SCRIPTS_STATE, action) => {
   switch (action.type) {
     case actionType.ADD_SCRIPT:
       return [

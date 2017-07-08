@@ -1,64 +1,31 @@
-import moment from 'moment'
-
 let products
 
-let value = (productId, time) => {
-  return products.filter(product => {
-    return product.id === productId
-  })[0].data.reduce((a, b) => {
-    let aDiff = Math.abs(a.time - time)
-    let bDiff = Math.abs(b.time - time)
-    if(aDiff > bDiff){
-       return b
-    }
-    return a
-  }, {time: -1})
+let product = (id) => {
+  return products.reduce((a, b) => (
+    a = b.id === id ? b : a
+  ), {})
 }
-
-let LTC_EUR = (time) => (
-  value('LTC-EUR', time)
-)
-
-let LTC_BTC = (time) => (
-  value('LTC-BTC', time)
-)
-
-let BTC_GBP = (time) => (
-  value('BTC-GBP', time)
-)
-
-let BTC_EUR = (time) => (
-  value('BTC-EUR', time)
-)
-
-let ETH_EUR = (time) => (
-  value('ETH-EUR', time)
-)
-
-let ETH_BTC = (time) => (
-  value('ETH-BTC', time)
-)
-
-let LTC_USD = (time) => (
-  value('LTC-USD', time)
-)
-
-let BTC_USD = (time) => (
-  value('BTC-USD', time)
-)
-
-let ETH_USD = (time) => (
-  value('ETH-USD', time)
-)
 
 //mmnt.unix(products[0].data[0].time / 1000 ).format('YYYY-MM-DD')
 // LTC_EUR(1496160000000)
-export const run = (script, p) => {
+export const run = (script, p, appendLog) => {
+  // set global variable
   products = p
   try {
-    let mmnt = moment
-    console.log(eval(script))
+    // define variables avalable in the script
+    let LTC_EUR = product('LTC-EUR')
+    let LTC_BTC = product('LTC-BTC')
+    let BTC_GBP = product('BTC-GBP')
+    let BTC_EUR = product('BTC-EUR')
+    let ETH_EUR = product('ETH-EUR')
+    let ETH_BTC = product('ETH-BTC')
+    let LTC_USD = product('LTC-USD')
+    let BTC_USD = product('BTC-USD')
+    let ETH_USD = product('ETH-USD')
+
+    let output = eval(script)
+    appendLog('Script output: ' + output)
   } catch(err) {
-    console.log(err)
+    appendLog('Script encountered error: ' + err)
   }
 }

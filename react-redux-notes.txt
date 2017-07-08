@@ -409,14 +409,21 @@ Advanced:
 Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 
-TODO:
+TODO
+
+  Bugs:
+    prevent scratchpad from reloading on products prop change
+
+  Script environment:
+    Expose each product props with a method
+      BTC_USD().srsi.k
 
   Profile:
-    Add product subscription checkboxes in profile
-    Export config - indicator settings, product ranges, scripts
-    Import config - indicator settings, product ranges, scripts
     On save, get account info and display in header
       balances per account
+    Export config - indicator settings, product ranges, scripts
+    Import config - indicator settings, product ranges, scripts
+    Add product subscription checkboxes in profile
 
   General API:
     Queue promises and burst at 6 per second.
@@ -430,10 +437,6 @@ TODO:
   Script Area:
     Add tab for static trade buttons, mirror functionality on GDAX UI
 
-  Script environment:
-    Expose each product props with a method
-      BTC_USD().srsi.k
-
   Documentation:
     Generate doc based on available props.
 
@@ -443,6 +446,7 @@ TODO:
       strike price as +/- units of last close price
       for now, all orders as good till time and pass user value ('minute, hour, day')
         ideally you should be pricing your oder so it gets snatched up instantly
+        should retain highest buy price and lowest sell price on order books and match or beat
 
         Order:
         {

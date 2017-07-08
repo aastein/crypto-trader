@@ -1,6 +1,6 @@
 import * as actionType from './actionTypes'
 
-let nextScriptId = 0
+let nextScriptId = 1
 
 // profile page
 export const saveProfile = profile => ({type: actionType.SAVE_PROFILE, profile})
@@ -20,4 +20,8 @@ export const addScript = () => ({type: actionType.ADD_SCRIPT, id: nextScriptId++
 export const saveScript = script => ({type: actionType.SAVE_SCRIPT, script})
 export const deleteScript = () => ({type: actionType.DELETE_SCRIPT})
 export const selectScript = id => ({type: actionType.SELECT_SCRIPT, id})
-export const selectDoc = name => ({type: actionType.SELECT_DOC, name})
+export const selectProductDoc = id => ({type: actionType.SELECT_PRODUCT_DOC, id})
+
+// logging
+export const appendLog = (log) => ({type: actionType.APPEND_LOG, log})
+export const clearLog = () => ({type: actionType.CLEAR_LOG})

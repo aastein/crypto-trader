@@ -13,8 +13,6 @@ export default class Chart extends Component {
       return a = p.active ? p : a
      }, {}) : {}
 
-    let dateRange = { startDate: this.props.chart.startDate, endDate: this.props.chart.endDate }
-
     let selectedProductPriceData = selectedProduct.data ? selectedProduct.data.map(d => (
       [ d.time, d.open, d.high, d.low, d.close ]
     )) : []
@@ -32,6 +30,10 @@ export default class Chart extends Component {
     }) : []
 
     let selectedProductRSIData = selectedProduct.rsi ? selectedProduct.rsi.map(d => {
+      return [ d.time, d.value ]
+    }) : []
+
+    let selectedProductCCIData = selectedProduct.cci ? selectedProduct.cci.map(d => {
       return [ d.time, d.value ]
     }) : []
 
@@ -98,7 +100,7 @@ export default class Chart extends Component {
           x: -3
         },
         top: '80%',
-        height: '20%',
+        height: '10%',
         lineWidth: 2,
         softMax: 100,
         softMin: 0,
@@ -111,6 +113,26 @@ export default class Chart extends Component {
           color: 'red',
           width: 1
         }]
+      },
+      {
+        labels: {
+          align: 'right',
+          x: -3
+        },
+        top: '90%',
+        height: '10%',
+        lineWidth: 2,
+        softMax: 100,
+        softMin: 0,
+        plotLines: [{
+          value: 100,
+          color: 'red',
+          width: 1
+        }, {
+          value: -100,
+          color: 'red',
+          width: 1
+        }]
       }],
       series: [{
         name: selectedProduct.display_name,
@@ -120,7 +142,7 @@ export default class Chart extends Component {
           valueDecimals: 2
         },
         dataGrouping: {
-            enabled: false
+            enabled: true
         }
       },
       {
@@ -173,6 +195,24 @@ export default class Chart extends Component {
           valueDecimals: 2
         },
         yAxis: 3,
+        dataGrouping: {
+            enabled: false
+        },
+        lineWidth: 1,
+        states: {
+          hover: {
+            lineWidth: 1
+          }
+        }
+      },
+      {
+        data: selectedProductCCIData,
+        type: 'line',
+        name: 'cci',
+        tooltip: {
+          valueDecimals: 2
+        },
+        yAxis: 4,
         dataGrouping: {
             enabled: false
         },
@@ -243,10 +283,10 @@ export default class Chart extends Component {
     }
 
     return (
-       <div style={{width: 950,height: 400}}>
+       <div style={{width: 1030,height: 400}}>
          { selectedProduct.data && selectedProduct.data.length > 0 ?
            <div>
-             <PriceChart dateRange={dateRange} config={config} />
+             <PriceChart config={config} />
              <LineChart config={wsConfig} />
            </div>
          :<div>

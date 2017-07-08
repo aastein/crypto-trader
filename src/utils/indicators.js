@@ -6,11 +6,16 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
   let d = signalPeriod
   let rsiLength = period
   let stochLength = period
+  let cciLength = period
+
   let rsi = []
   let srsi = []
+  let cci = []
+
   if(data[0]){
     rsi = [ ...rsi, { time: data[0].time }]
     srsi = [ ...srsi, { time: data[0].time }]
+    cci = [ ...cci, { time: data[0].time }]
   }
 
   for( let i=1; i < data.length; i++){
@@ -89,6 +94,32 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
       }
     }
 
+    //for CCI calc: get CCI
+    // adding object to array, initialize with pt = close. pt means point, like as in data p
+    cci = [ ...cci, { price: close, time: time } ]
+    if (i >= cciLength) {
+      //reset values for moving average and standard deviation
+      let priceMovingAverage = 0
+      let priceAverageDeviation = 0
+      // set moving average
+      if (i > cciLength - 1) {
+          // sum of last cciLength days closing price
+          // i > 13  -> i >=14 when this block executes
+          for(let j=0; j < cciLength; j++) {
+              // 14 - 0 -> 14 - 14 === 14 -> 0
+              priceMovingAverage += cci[i-j].price
+          }
+          // divide by length to get averaage
+          priceMovingAverage = priceMovingAverage/cciLength
+          // set average deviation
+          for(let j=0; j < cciLength; j++){
+            priceAverageDeviation += Math.abs(cci[i-j].price - priceMovingAverage)
+          }
+          priceAverageDeviation = priceAverageDeviation / cciLength
+          cci[i].value = (cci[i].price - priceMovingAverage)/(0.015 * priceAverageDeviation)
+      }
+    }
+    //console.log(cci[i])
   }
 
   // console.log('data', data.length, 'rsi', rsi.reduce((a, b) => (
@@ -104,34 +135,5 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
   //   return true
   // }))
 
-  return { rsi, srsi }
+  return { rsi, srsi, cci }
 }
-
-
-
-// adding object to array, initialize with pt = close. pt means point, like as in data p
-//cci = [ ...cci, { price: close } ]
-
-// for CCI calc: get CCI
-// if (i >= cciLength) {
-//   //reset values for moving average and standard deviation
-//   priceMovingAverage = 0
-//   priceAverageDeviation = 0
-//   // set moving average
-//   if (i > cciLength - 1) {
-//       // sum of last cciLength days closing price
-//       // i > 13  -> i >=14 when this block executes
-//       for(let j=0; j < cciLength; j++) {
-//           // 14 - 0 -> 14 - 14 === 14 -> 0
-//           priceMovingAverage += cci[i-j].price
-//       }
-//       // divide by length to get averaage
-//       priceMovingAverage = priceMovingAverage/cciLength
-//       // set average deviation
-//       for(let j=0; j < cciLength; j++){
-//         priceAverageDeviation += Math.abs(cci[i-j].price - priceMovingAverage)
-//       }
-//       priceAverageDeviation = priceAverageDeviation / cciLength
-//       cci[i].value = (cci[i].price - priceMovingAverage)/(0.015 * priceAverageDeviation)
-//   }
-// }
