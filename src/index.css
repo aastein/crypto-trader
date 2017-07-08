@@ -95,6 +95,11 @@ form button.btn {
   max-height: 200px;
 }
 
+.log-messages {
+  overflow-y: scroll;
+  max-height: 380px;
+}
+
 .doc-list .docs{
   overflow-y: scroll;
   max-height: 200px;
@@ -299,4 +304,22 @@ button.list-group-item {
   padding-left: 35px;
   padding-right: 35px;
   margin-bottom: 10px;
+}
+
+.profile .btn-success {
+  padding: 1px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  position: relative;
+  top: 3px;
+}
+
+.product-multi-select {
+  margin-bottom: 10px;
+}
+
+.log-message {
+  display: block;
 }

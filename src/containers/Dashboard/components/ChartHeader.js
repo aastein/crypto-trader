@@ -18,7 +18,7 @@ export default class Chart extends Component {
       getProducts().then(products => {
         let productIds = products.map( p => (p.id))
         this.props.setProducts(products)
-        this.props.selectProduct('BTC-USD')
+        this.props.selectProduct('LTC-USD')
         initWSConnection(productIds, this.props.setProductWSData)
         for (const product of products) {
           this.fetchProductData(product.id, 60, 60)
@@ -84,11 +84,11 @@ export default class Chart extends Component {
       this.props.selectedProductIds.indexOf(p.value) > -1
     ))
 
-    let dropdownIndicatorOptions = this.props.indicators.map(indicator => {
+    let dropdownIndicatorOptions = this.props.chart.settings.indicators.map(indicator => {
       return { value: indicator.id, label: indicator.id}
     })
 
-    let activeIndicator = this.props.indicators.reduce((a, b) => (
+    let activeIndicator = this.props.chart.settings.indicators.reduce((a, b) => (
        a = b.active ? b : a
     ), {})
 
@@ -110,7 +110,7 @@ export default class Chart extends Component {
          </div>
          <div className='date-picker chart-header-item'>
             <Dropdown
-              options={this.props.chart.dateRanges}
+              options={this.props.chart.settings.dateRanges}
               onChange={this.onSelectDateRange}
               value={selectedProduct.range}
             />

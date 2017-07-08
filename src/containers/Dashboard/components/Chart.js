@@ -47,14 +47,7 @@ export default class Chart extends Component {
 
     let config = {
       rangeSelector: {
-        selected: 1,
-        inputEnabled: false,
-        buttonTheme: {
-          visibility: 'hidden'
-        },
-        labelStyle: {
-          visibility: 'hidden'
-        }
+        enabled: false
       },
       yAxis: [{
         labels: {
@@ -122,8 +115,8 @@ export default class Chart extends Component {
         top: '90%',
         height: '10%',
         lineWidth: 2,
-        softMax: 100,
-        softMin: 0,
+        max: 400,
+        min: -400,
         plotLines: [{
           value: 100,
           color: 'red',
@@ -235,23 +228,24 @@ export default class Chart extends Component {
 
     let wsConfig = {
       yAxis: [{
-           labels: {
-               align: 'right',
-               x: -3
-           },
-           top: '-12%',
-           height: '100%',
-           lineWidth: 2
-       }, {
-           labels: {
-               align: 'right',
-               x: -3
-           },
-           top: '83%',
-           height: '18%',
-           offset: 0,
-           lineWidth: 2
-       }],
+        labels: {
+          align: 'right',
+          x: -3
+        },
+        height: '114%',
+        top: '-14%',
+        lineWidth: 2
+      },
+      {
+        labels: {
+          align: 'right',
+          x: -3
+        },
+        //top: '85%',
+        //height: '15%',
+        offset: 0,
+        lineWidth: 2
+      }],
       series: [{
         data: selectedProductWSPriceData,
         type: 'line',
@@ -276,14 +270,11 @@ export default class Chart extends Component {
         background: {
           borderWidth: 0
         }
-      },
-      chart: {
-        height: '129%'
       }
     }
 
     return (
-       <div style={{width: 1030,height: 400}}>
+       <div style={{width: 1030, height: 390}}>
          { selectedProduct.data && selectedProduct.data.length > 0 ?
            <div>
              <PriceChart config={config} />

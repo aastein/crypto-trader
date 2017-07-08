@@ -22,10 +22,8 @@ import Dashboard from './components/Dashboard'
 const mapStateToProps = state => {
   return {
     chart: state.chart,
-    products: state.products,
     scripts: state.scripts,
     profile: state.profile,
-    indicators: state.indicators,
     log: state.log
   }
 }

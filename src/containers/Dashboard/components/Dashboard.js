@@ -15,8 +15,8 @@ export default class Dashboard extends Component {
           <div className='col-md-9'>
             <ChartHeader
               chart={this.props.chart}
-              indicators={this.props.indicators}
               selectedProductIds={this.props.profile.selectedProducts.map( p => ( p.value ))}
+
               selectProduct={this.props.selectProduct}
               setGanularity={this.props.setGranularity}
               setProductData={this.props.setProductData}
@@ -30,14 +30,14 @@ export default class Dashboard extends Component {
               chart={this.props.chart}
             />
           </div>
-          <div className='log col-md-3' style={{height: 435}}>
+          <div className='log col-md-3' style={{height: 400}}>
             <h2>
               History
             </h2>
-            <div>
+            <div className='log-messages'>
               { this.props.log.map( l => {
                 return (
-                  <span key={l.time}>{`${moment(l.time).format('h:mm:ss a')}: ${l.message}`}</span>
+                  <span className='log-message' key={l.time}>{`${moment(l.time).format('h:mm:ss a')}: ${l.message}`}</span>
                 )
               })}
             </div>
@@ -48,6 +48,7 @@ export default class Dashboard extends Component {
             <Scratchpad
               scripts={this.props.scripts}
               products={this.props.chart.products}
+
               addScript={this.props.addScript}
               appendLog={this.props.appendLog}
               saveScript={this.props.saveScript}

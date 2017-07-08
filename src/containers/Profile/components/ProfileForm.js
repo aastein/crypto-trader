@@ -84,7 +84,10 @@ export default class ProfileForm extends Component {
             />
           </div>
           <div>
-            <label>User State</label>
+            <label>Settings</label>
+            <button type='submit' className='btn btn-success' onClick={this.handleImport}>
+              Import
+            </button>
             <textarea className='form-group col-md-12' rows={'3'} cols={'30'} value={this.state.textState} onChange={this.handleTextAreaChange} />
           </div>
         </form>

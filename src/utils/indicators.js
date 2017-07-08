@@ -1,5 +1,3 @@
-
-
 export const indicators = (period = 14, signalPeriod = 3, data) => {
 
   let k =  signalPeriod
@@ -27,16 +25,13 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
     let time = data[i].time
     rsi = [ ...rsi, { time } ]
     srsi = [ ...srsi, { time } ]
-
     // RSI, Averageing is EMA
     if (close > data[i-1].close){
       gain = close - data[i-1].close
     } else if (close < data[i-1].close){
       loss = data[i-1].close - close
     }
-
     rsi[i] = { ...rsi[i], gain, loss }
-
     if ( i >= rsiLength ){
       //set initial average values
       if( i === rsiLength){
@@ -58,7 +53,6 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
         let rs = avgGain / avgLoss
         rsi[i] = { ...rsi[i], avgGain, avgLoss, value:  100 - (100/(rs + 1))}
       }
-
       // StochRSI
       if (i >= rsiLength + stochLength){
         let minRSI = rsi[i].value
@@ -71,29 +65,21 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
         }
         srsi[i] = { ...srsi[i], stoch: (rsi[i].value - minRSI) / (maxRSI - minRSI)}
       }
-
       if(i >= rsiLength + stochLength + k){
         let sumStoch = 0
         for(let j=0; j < k; j++){
-          sumStoch += srsi[i].stoch
+          sumStoch += srsi[i-j].stoch
         }
-        //console.log('')
-        //console.log(srsi[i].stoch)
         srsi[i] = { ...srsi[i], k: sumStoch / k}
-
       }
-
       if(i >= rsiLength + stochLength + k + d){
         let sumK = 0
         for(let j=0; j < d; j++){
-          sumK += srsi[i].k
+          sumK += srsi[i-j].k
         }
-        //console.log(srsi[i].k)
         srsi[i] = { ...srsi[i], d: sumK / d}
-        //console.log('srsi[i].d', srsi[i].d, sumK / d)
       }
     }
-
     //for CCI calc: get CCI
     // adding object to array, initialize with pt = close. pt means point, like as in data p
     cci = [ ...cci, { price: close, time: time } ]
@@ -119,21 +105,6 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
           cci[i].value = (cci[i].price - priceMovingAverage)/(0.015 * priceAverageDeviation)
       }
     }
-    //console.log(cci[i])
   }
-
-  // console.log('data', data.length, 'rsi', rsi.reduce((a, b) => (
-  //   b.value ? a + 1 : a
-  // ), 0), 'k', srsi.reduce((a, b) => (
-  //   b.k ? a + 1 : a
-  // ), 0), 'd', srsi.reduce((a, b) => (
-  //   b.d ? a + 1 : a
-  // ), 0))
-  //
-  // console.log('rsi.time', rsi.map(a => {
-  //   console.log(a.time)
-  //   return true
-  // }))
-
   return { rsi, srsi, cci }
 }
