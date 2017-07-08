@@ -3,7 +3,8 @@ import * as actionType from './actionTypes'
 let nextScriptId = 1
 
 // profile page
-export const saveProfile = profile => ({type: actionType.SAVE_PROFILE, profile})
+export const importProfile = userData => ({type: actionType.IMPORT_PROFILE, userData})
+export const saveProfile = settings => ({type: actionType.SAVE_PROFILE, settings})
 
 // dashboard page: charts
 export const setProducts = products => ({ type: actionType.SET_PRODUCTS, products})

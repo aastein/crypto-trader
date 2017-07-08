@@ -1,18 +1,23 @@
 import { connect } from 'react-redux'
-import { saveProfile } from '../../actions'
+import { importProfile, saveProfile } from '../../actions'
 import ProfileForm from './components/ProfileForm'
 
 const mapStateToProps = state => {
   return {
-    session: state.profile.session,
-    live: state.profile.live
+    profile: state.profile,
+    scripts: state.scripts,
+    indicators: state.indicators,
+    products: state.chart.products,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onClick: profile => {
-      dispatch(saveProfile(profile))
+    importProfile: userData => {
+      dispatch(importProfile(userData))
+    },
+    saveProfile: settigns => {
+      dispatch(saveProfile(settigns))
     }
   }
 }

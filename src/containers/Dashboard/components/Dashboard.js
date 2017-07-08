@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import moment from 'moment'
+
 import ChartHeader  from './ChartHeader'
 import Chart from './Chart'
 import Scratchpad from './Scratchpad'
@@ -14,6 +16,7 @@ export default class Dashboard extends Component {
             <ChartHeader
               chart={this.props.chart}
               indicators={this.props.indicators}
+              selectedProductIds={this.props.profile.selectedProducts.map( p => ( p.value ))}
               selectProduct={this.props.selectProduct}
               setGanularity={this.props.setGranularity}
               setProductData={this.props.setProductData}
@@ -27,14 +30,17 @@ export default class Dashboard extends Component {
               chart={this.props.chart}
             />
           </div>
-          <div className='col-md-3' style={{height: 435}}>
-            { this.props.log.map( l => {
-              return (
-                l.message.split('\n').map((item, key) => {
-                    return <span key={key}>{item}<br/></span>
-                })
-              )
-            })}
+          <div className='log col-md-3' style={{height: 435}}>
+            <h2>
+              History
+            </h2>
+            <div>
+              { this.props.log.map( l => {
+                return (
+                  <span key={l.time}>{`${moment(l.time).format('h:mm:ss a')}: ${l.message}`}</span>
+                )
+              })}
+            </div>
           </div>
         </div>
         <div className='container dashboard-bottom'>

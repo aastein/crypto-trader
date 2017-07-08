@@ -37,6 +37,8 @@ export const scripts = (state = INITAL_SCRIPTS_STATE, action) => {
           ? { ...script, active: true }
           : { ...script, active: false }
         )
+    case actionType.IMPORT_PROFILE:
+      return  action.userData.scripts
     default:
       return state
   }

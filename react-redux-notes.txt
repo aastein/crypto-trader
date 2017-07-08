@@ -411,19 +411,11 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO
 
-  Bugs:
-    prevent scratchpad from reloading on products prop change
-
   Script environment:
-    Expose each product props with a method
-      BTC_USD().srsi.k
 
   Profile:
     On save, get account info and display in header
       balances per account
-    Export config - indicator settings, product ranges, scripts
-    Import config - indicator settings, product ranges, scripts
-    Add product subscription checkboxes in profile
 
   General API:
     Queue promises and burst at 6 per second.

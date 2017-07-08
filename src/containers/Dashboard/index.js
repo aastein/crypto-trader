@@ -24,7 +24,7 @@ const mapStateToProps = state => {
     chart: state.chart,
     products: state.products,
     scripts: state.scripts,
-    docs: state.docs,
+    profile: state.profile,
     indicators: state.indicators,
     log: state.log
   }

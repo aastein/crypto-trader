@@ -29,6 +29,8 @@ export const indicators = (state = INITAL_INDICATORS, action) => {
         }
         return i
       })
+    case actionType.IMPORT_PROFILE:
+      return  action.userData.indicators
     default:
       return state
   }

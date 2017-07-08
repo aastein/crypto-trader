@@ -80,7 +80,9 @@ export default class Chart extends Component {
 
     let dropdownProductOptions = this.props.chart.products.map(product => {
       return { value: product.id, label: product.display_name}
-    })
+    }).filter( p => (
+      this.props.selectedProductIds.indexOf(p.value) > -1
+    ))
 
     let dropdownIndicatorOptions = this.props.indicators.map(indicator => {
       return { value: indicator.id, label: indicator.id}

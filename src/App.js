@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 
 import Navigation from './containers/Navigation'
-import DashboardContainer from './containers/DashboardContainer'
+import DashboardContainer from './containers/Dashboard'
 import Profile from './containers/Profile'
 
 class App extends Component {
