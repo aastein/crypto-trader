@@ -46,6 +46,9 @@ export default class Chart extends Component {
     )) : []
 
     let config = {
+      chart: {
+        marginBottom: 15
+      },
       rangeSelector: {
         enabled: false
       },
