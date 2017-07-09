@@ -23,6 +23,24 @@ if(BTC_USD.rsi[lastIndex].value > 70){
 }
 ```
 
+Print to the log with log()
+
+```
+log('RSI is' + BTC_USD.rsi[0].value)
+```
+
+Reserved variables
+
+```
+product
+profile
+log
+script
+prods
+prof
+appendLog
+```
+
 ## Getting Started
 
 Login to GDAX
