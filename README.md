@@ -11,24 +11,24 @@ Login to GDAX
 Open the browser console and navigate to the settings page
 </br>
 </br>
-![Step 1](/public/step1.png?raw=true)
+<img src="/public/step1.png" height="300">
 </br>
 </br>
 Find the GET request for /profiles
 </br>
 </br>
-![Step 2](/public/step2.png?raw=true)
+<img src="/public/step2.png" width="450">
 </br>
 </br>
 Copy the cb-session in the request headers
 </br>
 </br>
-![Step 3](/public/step3.png?raw=true)
+<img src="/public/step3.png" width="500">
 </br>
 </br>
 Go to the profile page on crypto-trader and paste in the cb-session to the session input and click save
 </br>
 </br>
-![Step 4](/public/step4.png?raw=true)
+<img src="/public/step4.png" width="450">
 
 ## Usage
