@@ -32,3 +32,13 @@ Go to the profile page on crypto-trader and paste in the cb-session to the sessi
 <img src="/public/step4.png" width="450">
 
 ## Usage
+
+Write scripts to trigger trades on GDAX
+Click on the Product Data list item to see avalable data for the product 
+```BTC_USD.data[0].close```
+Write conditions based on the data to execute limit orders 
+```
+if(BTC_USD.rsi[lastIndex].value > 70){
+  limitOrder('sell', 'BTC-USD')
+}
+```
