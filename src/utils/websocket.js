@@ -26,8 +26,8 @@ export const initWSConnection = (productList, addWSData, updateHeartbeat) => {
   connection.onmessage = event => {
     let data = JSON.parse(event.data)
 
-    if(data.type === 'match'){
-      console.log(data.type)
+    if(data.type){
+      //console.log(data.type)
       updateHeartbeat(data.time, true)
     }
 

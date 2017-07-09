@@ -1,19 +1,28 @@
-export const indicators = (period = 14, signalPeriod = 3, data) => {
+export const indicators = (indicators, data) => {
+  let indicatorData = {}
+  for(const i of indicators){
+    switch (i.id) {
+      case 'srsi':
+        indicatorData = { ...indicatorData, ...srsi(data, i.params.rsiPeriod, i.params.stochPeriod, i.params.kPeriod, i.params.dPeriod)}
+        break;
+      case 'cci':
+        indicatorData = { ...indicatorData, ...cci(data, i.params.period)}
+        break;
+      default:
+        break;
+    }
+  }
+  return indicatorData
+}
 
-  let k =  signalPeriod
-  let d = signalPeriod
-  let rsiLength = period
-  let stochLength = period
-  let cciLength = period
+const srsi = (data, rsiPeriod, stochPeriod, kPeriod, dPeriod) => {
 
   let rsi = []
   let srsi = []
-  let cci = []
 
   if(data[0]){
     rsi = [ ...rsi, { time: data[0].time }]
     srsi = [ ...srsi, { time: data[0].time }]
-    cci = [ ...cci, { time: data[0].time }]
   }
 
   for( let i=1; i < data.length; i++){
@@ -32,79 +41,97 @@ export const indicators = (period = 14, signalPeriod = 3, data) => {
       loss = data[i-1].close - close
     }
     rsi[i] = { ...rsi[i], gain, loss }
-    if ( i >= rsiLength ){
+    if ( i >= rsiPeriod ){
       //set initial average values
-      if( i === rsiLength){
+      if( i === rsiPeriod){
         //get sum of gains values in rsiLength
-        for(let j=0; j <rsiLength; j++){
+        for(let j=0; j < rsiPeriod; j++){
           sumGains += rsi[i-j].gain
           sumLosses += rsi[i-j].loss
         }
-        let avgGain = sumGains / rsiLength
-        let avgLoss = sumLosses / rsiLength
+        let avgGain = sumGains / rsiPeriod
+        let avgLoss = sumLosses / rsiPeriod
         rsi[i] = { ...rsi[i], avgGain, avgLoss, value: 100 - (100/(( avgGain / avgLoss + 1))) }
       } else {
         let lastAvgGain = rsi[i-1].avgGain
         let lastAvgLoss = rsi[i-1].avgLoss
         let currentGain = rsi[i].gain
         let currentLoss = rsi[i].loss
-        let avgGain = ( lastAvgGain * (rsiLength - 1) + currentGain ) / rsiLength
-        let avgLoss = ( lastAvgLoss * (rsiLength - 1) + currentLoss ) / rsiLength
+        let avgGain = ( lastAvgGain * (rsiPeriod - 1) + currentGain ) / rsiPeriod
+        let avgLoss = ( lastAvgLoss * (rsiPeriod - 1) + currentLoss ) / rsiPeriod
         let rs = avgGain / avgLoss
         rsi[i] = { ...rsi[i], avgGain, avgLoss, value:  100 - (100/(rs + 1))}
       }
       // StochRSI
-      if (i >= rsiLength + stochLength){
+      if (i >= rsiPeriod + stochPeriod){
         let minRSI = rsi[i].value
         let maxRSI = minRSI
         // iterate through last 14 data to get min and max rsi
-        for(let j=0;j<stochLength;j++){
+        for(let j=0;j < stochPeriod;j++){
           let newRSI = rsi[i-j].value
           minRSI = Math.min(newRSI, minRSI)
           maxRSI = Math.max(newRSI, maxRSI)
         }
         srsi[i] = { ...srsi[i], stoch: (rsi[i].value - minRSI) / (maxRSI - minRSI)}
       }
-      if(i >= rsiLength + stochLength + k){
+      if(i >= rsiPeriod + stochPeriod + kPeriod){
         let sumStoch = 0
-        for(let j=0; j < k; j++){
+        for(let j=0; j < kPeriod; j++){
           sumStoch += srsi[i-j].stoch
         }
-        srsi[i] = { ...srsi[i], k: sumStoch / k}
+        srsi[i] = { ...srsi[i], k: sumStoch / kPeriod}
       }
-      if(i >= rsiLength + stochLength + k + d){
+      if(i >= rsiPeriod + stochPeriod + kPeriod + dPeriod){
         let sumK = 0
-        for(let j=0; j < d; j++){
+        for(let j=0; j < dPeriod; j++){
           sumK += srsi[i-j].k
         }
-        srsi[i] = { ...srsi[i], d: sumK / d}
+        srsi[i] = { ...srsi[i], d: sumK / dPeriod}
       }
     }
-    //for CCI calc: get CCI
-    // adding object to array, initialize with pt = close. pt means point, like as in data p
-    cci = [ ...cci, { price: close, time: time } ]
-    if (i >= cciLength) {
+  }
+  return { rsi, srsi }
+}
+
+const metaSrsi = data => {
+
+  let periods = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
+  let signalPeriod = 3
+
+}
+
+const cci = (data, period) => {
+
+  let cci = []
+
+  if(data[0]){
+    cci = [ ...cci, { time: data[0].time }]
+  }
+
+  for( let i=1; i < data.length; i++){
+    cci = [ ...cci, { price: data[i].close, time: data[i].time } ]
+    if (i >= period) {
       //reset values for moving average and standard deviation
       let priceMovingAverage = 0
       let priceAverageDeviation = 0
       // set moving average
-      if (i > cciLength - 1) {
+      if (i > period - 1) {
           // sum of last cciLength days closing price
           // i > 13  -> i >=14 when this block executes
-          for(let j=0; j < cciLength; j++) {
+          for(let j=0; j < period; j++) {
               // 14 - 0 -> 14 - 14 === 14 -> 0
               priceMovingAverage += cci[i-j].price
           }
           // divide by length to get averaage
-          priceMovingAverage = priceMovingAverage/cciLength
+          priceMovingAverage = priceMovingAverage/period
           // set average deviation
-          for(let j=0; j < cciLength; j++){
+          for(let j=0; j < period; j++){
             priceAverageDeviation += Math.abs(cci[i-j].price - priceMovingAverage)
           }
-          priceAverageDeviation = priceAverageDeviation / cciLength
+          priceAverageDeviation = priceAverageDeviation / period
           cci[i].value = (cci[i].price - priceMovingAverage)/(0.015 * priceAverageDeviation)
       }
     }
   }
-  return { rsi, srsi, cci }
+  return { cci }
 }

@@ -16,7 +16,7 @@ const mapStateToProps = state => {
     accounts: state.profile.accounts,
     session: state.profile.session,
     products: state.chart.products,
-    websocket: state.chart.settings.websocket,
+    websocket: state.chart.websocket,
     selectedProductIds: state.profile.selectedProducts.map( p => ( p.value ))
   }
 }

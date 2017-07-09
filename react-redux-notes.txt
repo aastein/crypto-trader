@@ -411,7 +411,6 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO:
 
-  Healthcheck websocket
   Order retries
 
   Logic:
@@ -423,7 +422,6 @@ TODO:
 
     Sell Rules:
       crossover above buy line
-
 
 
 

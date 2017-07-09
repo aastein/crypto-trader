@@ -53,11 +53,11 @@ export default class Chart extends Component {
       this.props.selectedProductIds.indexOf(p.value) > -1
     ))
 
-    let dropdownIndicatorOptions = this.props.chart.settings.indicators.map(indicator => {
+    let dropdownIndicatorOptions = this.props.chart.indicators.map(indicator => {
       return { value: indicator.id, label: indicator.id}
     })
 
-    let activeIndicator = this.props.chart.settings.indicators.reduce((a, b) => (
+    let activeIndicator = this.props.chart.indicators.reduce((a, b) => (
        a = b.active ? b : a
     ), {})
 
@@ -79,7 +79,7 @@ export default class Chart extends Component {
          </div>
          <div className='date-picker chart-header-item'>
             <Dropdown
-              options={this.props.chart.settings.dateRanges}
+              options={this.props.chart.dateRanges}
               onChange={this.onSelectDateRange}
               value={selectedProduct.range}
             />
@@ -93,7 +93,7 @@ export default class Chart extends Component {
          <button className="btn btn-primary chart-header-item" onClick={this.onApply}>Apply</button>
          <div className='websocket-status chart-header-item'>
            <label>Websocket</label>
-           <span className={`glyphicon glyphicon-dot chart-header-item ${this.props.chart.settings.websocket.connected ? 'connected' : ''}`}></span>
+           <span className={`glyphicon glyphicon-dot chart-header-item ${this.props.chart.websocket.connected ? 'connected' : ''}`}></span>
          </div>
        </div>
       )

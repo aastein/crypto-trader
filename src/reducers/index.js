@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import chart from './chart'
+import { chart } from './chart'
 import { profile } from './profile'
 import { scripts } from './scripts'
 import { log } from './log'
