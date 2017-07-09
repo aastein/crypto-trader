@@ -11,7 +11,7 @@ export default class PriceChart extends Component {
   }
 
   shouldComponentUpdate = (nextProps, nextState) => (
-    this.dataChanged(nextProps)
+    this.props.config.series[0].name !== nextProps.config.series[0].name
   )
 
   componentWillReceiveProps = (nextProps) => {

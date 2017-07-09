@@ -87,10 +87,14 @@ export default class Chart extends Component {
          <div className='granularity chart-header-item'>
            <Input name='granularity' onChange={this.onSetGanularity} placeholder='' value={selectedProduct.granularity ? selectedProduct.granularity + '' : ''} />
          </div>
-         <div className='granularity-label'>
+         <div className='granularity-label chart-header-item'>
            <label>s</label>
          </div>
-         <button className="chart-header-item btn btn-primary" onClick={this.onApply}>Apply</button>
+         <button className="btn btn-primary chart-header-item" onClick={this.onApply}>Apply</button>
+         <div className='websocket-status chart-header-item'>
+           <label>Websocket</label>
+           <span className={`glyphicon glyphicon-dot chart-header-item ${this.props.chart.settings.websocket.connected ? 'connected' : ''}`}></span>
+         </div>
        </div>
       )
     }

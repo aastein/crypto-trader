@@ -1,6 +1,10 @@
 import * as actionType from '../../actions/actionTypes'
 
 const INITAL_STATE = {
+  websocket: {
+    heartbeatTime: 0,
+    connected: false
+  } ,
   dateRanges: [
     { label: '1 minute', value: 1},
     { label: '5 minutes', value: 5},
@@ -41,6 +45,13 @@ const INITAL_STATE = {
 
 export const settings = (state = INITAL_STATE, action) => {
   switch (action.type) {
+    case actionType.UPDATE_HEARTBEAT:
+      return { ...state,
+        websocket: {
+          heartbeatTime: action.time,
+          connected: action.connected
+        }
+      }
     case actionType.SELECT_INDICATOR:
       return { ...state,
         indicators: state.indicators.map( i => {

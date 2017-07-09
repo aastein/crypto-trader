@@ -9,6 +9,14 @@ const product = (id) => {
     a = b.id === id ? b : a
   ), {})
 }
+
+const round = (value, decimals) => {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+const floor = (value, decimals) => {
+  return Number(Math.floor(value+'e'+decimals)+'e-'+decimals);
+}
                   //(buy, BTC-USD,   1000)
 const limitOrder = (side, productId) => {
 
@@ -19,30 +27,29 @@ const limitOrder = (side, productId) => {
     ), {})
 
     let baseCurrency = product.base_currency // BTC
+    let baseIncrement = product.base_min_size // 0.01
     let quoteCurrency = product.quote_currency // USD
     let quoteIncrement = product.quote_increment // 0.01
 
-    let account
-    let price
+    let quoteAccount = profile.accounts.reduce((a, b) => (
+      b.currency === quoteCurrency ? b : a
+    ), {})
 
+    let baseAccount = profile.accounts.reduce((a, b) => (
+      b.currency === baseCurrency ? b : a
+    ), {})
+
+    let price
+    let size
     // set account to account which will be handling the trade
     // set price to best price +/- quote increment
     if(side === 'buy'){
-      account = profile.accounts.reduce((a, b) => (
-        b.currency === quoteCurrency ? b : a
-      ), {})
-      price = parseFloat(ob.bid) + parseFloat(quoteIncrement)
+      price = round(Number(ob.bid) + Number(quoteIncrement), 2)
+      size = floor(quoteAccount.available / price, 2)
     } else if(side === 'sell'){
-      account = profile.accounts.reduce((a, b) => (
-        b.currency === baseCurrency ? b : a
-      ), {})
-      price = parseFloat(ob.ask) - parseFloat(quoteIncrement)
+      price = round(Number(ob.ask) - Number(quoteIncrement), 2)
+      size = baseAccount.available
     }
-
-    let availableBalance = account.available
-
-    // all in all out trade
-    let size = availableBalance
 
     if(profile.live){
       placeOrder('limit', side, productId, price, size, profile.session, log).then(res => {
@@ -73,12 +80,7 @@ export const run = (script, prods, prof, appendLog, updateAccounts) => {
     let BTC_USD = product('BTC-USD')
     let ETH_USD = product('ETH-USD')
 
-    let output = eval(script)
-    if(output){
-      appendLog('Ran script: ' + output)
-    } else {
-      appendLog('Ran script')
-    }
+    eval(script)
     updateAccounts()
   } catch(err) {
     appendLog('Script encountered error: ' + err)

@@ -1,5 +1,4 @@
 import axios from 'axios'
-import crypto from 'crypto'
 import moment from 'moment'
 
 //axios.defaults.baseURL = 'https://api-public.sandbox.gdax.com'

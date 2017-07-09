@@ -30,7 +30,7 @@ export const products = (state = INITAL_CHART_STATE, action) => {
       })
     case actionType.SET_PRODUCTS:
       return action.products.map( p => (
-        { ...p, granularity: 60, range: 60, data: [], docSelected: false, bid:'' , ask: '' }
+        { ...p, granularity: 240, range: (60*24), data: [], docSelected: false, bid:'' , ask: '' }
       ))
     case actionType.SELECT_PRODUCT:
       return state.map( p => {
@@ -142,10 +142,10 @@ export const products = (state = INITAL_CHART_STATE, action) => {
                 volume: d.size + ohlc.volume
               }
             }, {
-              open: clean_ws_data[clean_ws_data.length - 1].price,
+              open: clean_ws_data[0].price,
               high: Number.MIN_SAFE_INTEGER,
               low: Number.MAX_SAFE_INTEGER,
-              close: clean_ws_data[0].price,
+              close: clean_ws_data[clean_ws_data.length - 1].price,
               time: newestwsdatatime,
               volume: 0
             })

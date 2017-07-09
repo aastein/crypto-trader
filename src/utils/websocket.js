@@ -2,7 +2,7 @@ import moment from 'moment'
 
 let connection
 
-export const initWSConnection = (productList, addWSData) => {
+export const initWSConnection = (productList, addWSData, updateHeartbeat) => {
 
   let url = 'wss://ws-feed.gdax.com'
   connection = new WebSocket(url)
@@ -25,6 +25,12 @@ export const initWSConnection = (productList, addWSData) => {
   */
   connection.onmessage = event => {
     let data = JSON.parse(event.data)
+
+    if(data.type === 'match'){
+      console.log(data.type)
+      updateHeartbeat(data.time, true)
+    }
+
     if(data.type === 'match' || (data.type === 'done' &&  data.reason === 'filled')){
       let price = parseFloat(data.price)
       let time = moment(data.time).valueOf()
@@ -56,6 +62,7 @@ let waitForConnected = (productList) => {
     if(connection.readyState === 1){
       clearInterval(t);
       subscribe(productList)
+      //hearbeat()
     }
     n++
     if(n > 4) {

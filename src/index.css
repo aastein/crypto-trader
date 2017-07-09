@@ -12,6 +12,9 @@ textarea {
   resize: none;
   height: 200px;
   padding: 0px;
+  font-family: 'Roboto Mono', 'Menlo', 'Ubuntu Mono', 'Monaco', 'Consolas', 'source-code-pro', 'monospace';
+  line-height: 1.21;
+  font-size: 14px;
 }
 
 .navbar {
@@ -401,4 +404,23 @@ button.list-group-item {
   line-height: 1;
   color: #9d9d9d;
   font-size: 10px;
+}
+
+.websocket-status {
+  display: inline-block;
+  position: absolute;
+  right: 10px;
+  z-index: 20;
+}
+
+.glyphicon-dot:before{
+    content: "\25cf";
+    font-size: 1.5em;
+    color: red;
+}
+
+.glyphicon-dot.connected:before{
+    content: "\25cf";
+    font-size: 1.5em;
+    color: green;
 }

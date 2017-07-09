@@ -14,7 +14,7 @@ export const log = (state = INITAL_LOG_STATE, action) => {
       if(typeof action.log === 'object'){
         message = JSON.stringify(action.log)
       }
-      return [ ...state, { message, time: new Date().getTime()} ]
+      return [ { message, time: new Date().getTime()} , ...state ]
     case actionType.CLEAR_LOG:
       return []
     default:

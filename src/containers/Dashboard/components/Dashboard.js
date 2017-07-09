@@ -4,7 +4,6 @@ import moment from 'moment'
 import ChartHeader  from './ChartHeader'
 import Chart from './Chart'
 import Scratchpad from './Scratchpad'
-const log = 'Logging goes here'
 
 export default class Dashboard extends Component {
 

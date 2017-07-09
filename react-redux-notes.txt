@@ -409,16 +409,34 @@ Advanced:
 Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 
-TODO
+TODO:
+
+  Healthcheck websocket
+  Order retries
+
+  Logic:
+    Multiple rsi of fib sequence periods.
+
+    Buy Rules:
+      cross-under / rebound above buy line k > d
+      k crossover buy line and d < k
+
+    Sell Rules:
+      crossover above buy line
+
+
+
+
+  Script environment:
+    toggle script live / not live
+    back testing on run
+    on all ws_data evaluate live scripts
 
   Chart:
-    reduce margin/padding
 
   Order APIs:
 
   Bugs:
-
-  Script environment:
 
   Profile:
 

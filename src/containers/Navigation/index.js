@@ -5,7 +5,8 @@ import {
   setProducts,
   setProductData,
   selectProduct,
-  setProductWSData
+  setProductWSData,
+  updateHeartbeat
 } from '../../actions'
 import Navbar from './components/Navbar'
 
@@ -15,6 +16,7 @@ const mapStateToProps = state => {
     accounts: state.profile.accounts,
     session: state.profile.session,
     products: state.chart.products,
+    websocket: state.chart.settings.websocket,
     selectedProductIds: state.profile.selectedProducts.map( p => ( p.value ))
   }
 }
@@ -38,6 +40,9 @@ const mapDispatchToProps = dispatch => {
     },
     setProductWSData: (id, ws_data) => {
         dispatch(setProductWSData(id, ws_data))
+    },
+    updateHeartbeat: (time, connected) => {
+        dispatch(updateHeartbeat(time, connected))
     },
   }
 }

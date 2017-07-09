@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
+import moment from 'moment'
+
 import { getAccounts, getProducts, fetchProductData, setOrderBook  } from '../../../utils/api'
 import { initWSConnection } from '../../../utils/websocket'
 
@@ -13,10 +15,10 @@ export default class Navigation extends Component {
       this.props.setProducts(products)
       this.props.selectProduct('LTC-USD')
 
-      initWSConnection(productIds, this.props.setProductWSData)
+      initWSConnection(productIds, this.props.setProductWSData, this.props.updateHeartbeat)
 
       for (const product of products) {
-        fetchProductData(product.id, 60, 60, this.props.setProductData)
+        fetchProductData(product.id, (60*24), 240, this.props.setProductData)
         setOrderBook(product.id, this.props.updateOrderBook)
       }
     })
@@ -27,7 +29,7 @@ export default class Navigation extends Component {
           this.props.updateAccounts(res)
         })
       }
-    }, 30000)
+    }, 5000)
 
     setInterval(() => {
       let ids = this.props.selectedProductIds
@@ -35,6 +37,13 @@ export default class Navigation extends Component {
         setOrderBook(ids[i], this.props.updateOrderBook)
       }
     }, 30000)
+
+    setInterval(() => {
+      let heartbeatTime = this.props.websocket.heartbeatTime
+      if(moment().unix() - moment(this.props.websocket.heartbeatTime).unix() > 20){
+        this.props.updateHeartbeat(heartbeatTime, false)
+      }
+    }, 5000)
 
   }
 
@@ -65,7 +74,7 @@ export default class Navigation extends Component {
               {this.props.products.filter( p => (
                 this.props.selectedProductIds.indexOf(p.id) > -1
                )).map( a => (
-                <li>
+                <li key={a.display_name}>
                   <div>
                     <label>{a.display_name}</label>
                     <span>{`Bid: ${a.bid}`}</span>
@@ -78,7 +87,7 @@ export default class Navigation extends Component {
           <div className='accounts'>
             <ul>
               {this.props.accounts.map( a => (
-                <li>
+                <li key={a.currency}>
                   <div>
                     <label>{a.currency}</label>
                     <span>{`Available: ${round(a.available, 6)}`}</span>
