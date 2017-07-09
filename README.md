@@ -9,6 +9,7 @@ WIP @ https://crypto-trader-2b0ce.firebaseapp.com
 ## Usage
 
 Write scripts to trigger trades on GDAX
+
 Click on the Product Data list item to see avalable data for the product 
 ```
 BTC_USD.data[0].close
