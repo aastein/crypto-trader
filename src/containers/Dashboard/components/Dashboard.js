@@ -48,6 +48,7 @@ export default class Dashboard extends Component {
             <Scratchpad
               scripts={this.props.scripts}
               products={this.props.chart.products}
+              profile={this.props.profile}
 
               addScript={this.props.addScript}
               appendLog={this.props.appendLog}
@@ -55,6 +56,7 @@ export default class Dashboard extends Component {
               deleteScript={this.props.deleteScript}
               selectScript={this.props.selectScript}
               selectProductDoc={this.props.selectProductDoc}
+              updateAccounts={this.props.updateAccounts}
             />
           </div>
         </div>

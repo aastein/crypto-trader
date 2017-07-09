@@ -5,41 +5,53 @@ import moment from 'moment'
 //axios.defaults.baseURL = 'https://api-public.sandbox.gdax.com'
 axios.defaults.baseURL = 'https://api.gdax.com'
 
-const authRequest = (uri, params, method, body, session) => {
+const handleError = (error) => {
+  console.warn(error)
+  return null;
+}
 
-  // let timestamp = Date.now() / 1000;
-  // let requestPath = uri;
-  // body = JSON.stringify(body);
-  // let what = timestamp + method + requestPath + body ? body : '';
-  // let secretKey = Buffer(secret, 'base64');
-  // let hmac = crypto.createHmac('sha256', secretKey);
-  // let sign = hmac.update(what).digest('base64');
-  // let headers = {
-  //   'CB-ACCESS-KEY': apiKey,
-  //   'CB-ACCESS-SIGN': sign,
-  //   'CB-ACCESS-TIMESTAMP': timestamp,
-  //   'CB-ACCESS-PASSPHRASE': passphrase
-  // }
+const authRequest = (uri, params, method, body, session) => {
   let headers = { 'CB-SESSION': session}
   let options = { method, headers,  url: uri + params, data: body}
   return axios(options)
 }
 
-export const getAccounts = (session) => {
-  let uri ='/accounts'
-  return authRequest(uri, '', 'get', '', session)
-}
-
-let handleError = (error) => {
-  console.warn(error)
-  return null;
-}
-
 export let serverTime = () => {
-  let url = `/time`
+  let url = '/time'
   return axios.get(url).then(res => (
     res.data
   ))
+}
+
+/*
+{
+  "sequence":3528829167,
+  "bids":[ [ "2556.3","0.02",2 ] ], price, size, num-orders
+  "asks":[ [ "2556.31","2.55276193",3 ] ] price, size, num-orders
+}
+*/
+export const orderBook = (productId) => {
+  let url = `/products/${productId}/book`
+  return axios.get(url).then(res => (
+    {
+      maxBid: res.data.bids[0][0],
+      minAsk: res.data.asks[0][0]
+    }
+  ))
+}
+
+export const getAccounts = (session) => {
+  let uri ='/accounts'
+  return authRequest(uri, '', 'get', '', session).then(res => {
+    return res.data
+  }).catch( err => {alert('Session ID invalid.')})
+}
+
+export const getProducts = () => {
+  let url = '/products'
+  return axios.get(url).then(res => {
+    return res.data
+  }).catch(handleError)
 }
 
 export let getHistorialData = (product, startDate, endDate, granularity) => {
@@ -112,10 +124,27 @@ export const tryGetHistoricalData = (productId, time, range, desiredGranularity)
     })
 }
 
+export const placeOrder = (type, side, productId, price, size, session, log) => {
+  console.log('size', size)
+  let uri ='/orders'
+  let body = {
+    type: type,
+    side: side,
+    product_id: productId,
+    price: price,
+    size: size,
+    time_in_force: 'GTT',
+    cancel_after: 'min'
+  }
 
-export const getProducts = () => {
-  let url = '/products'
-  return axios.get(url).then(res => {
+  //uri, params, method, body, session
+  return authRequest(uri, '', 'post', body, session).then(res => {
     return res.data
-  }).catch(handleError)
+  }).catch( error => {
+    if (error.response) {
+      log(`Order Error: ${error.response.data.message}`);
+    } else {
+      log('Error', error);
+    }
+  })
 }

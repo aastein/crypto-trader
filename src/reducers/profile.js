@@ -13,7 +13,8 @@ const INITAL_PROFILE_STATE = {
     {label: 'LTC/USD', value:'LTC-USD'},
     {label: 'BTC/USD', value:'BTC-USD'},
     {label: 'ETH/USD', value:'ETH-USD'}
-  ]
+  ],
+  accounts: [{available: 0, balance: 0, currency: 'USD'}]
 }
 
 export const profile = (state=INITAL_PROFILE_STATE, action) => {
@@ -21,8 +22,9 @@ export const profile = (state=INITAL_PROFILE_STATE, action) => {
     case actionType.IMPORT_PROFILE:
       return { ...state, ...action.userData.profile }
     case actionType.SAVE_PROFILE:
-      console.log(action.settings)
       return { ...state, ...action.settings.profile }
+    case actionType.UPDATE_ACCOUNTS:
+      return { ...state, accounts: action.accounts }
     default:
       return state
   }

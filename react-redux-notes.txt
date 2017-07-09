@@ -411,13 +411,39 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO
 
+Order APIs:
+
+  Limit orders:
+    amount as fraction of available balance
+    strike price as +/- units of last close price
+    for now, all orders as good till time and pass user value ('minute, hour, day')
+      ideally you should be pricing your oder so it gets snatched up instantly
+      should retain highest buy price and lowest sell price on order books and match or beat
+
+      Order:
+      {
+        side: buy or sell,
+        product_id: BTC-USD,
+        type: limit: buy at specified price or better,
+
+        LIMIT:
+        price: $per unit
+        size: num units
+        time_in_force: GTC: good till cancel,
+                       GTT: good till time,
+                       IOC: immidiate or cancel,
+                       FOK: fill or kill
+        if time_in_force: GTT
+        cancel_after: min, hour, day
+        if not time_in_force: IOC or FOK
+        post_only:
+      }
+
   Bugs:
 
   Script environment:
 
   Profile:
-    On save, get account info and display in header
-      balances per account
 
   General API:
     Queue promises and burst at 6 per second.
@@ -425,45 +451,10 @@ TODO
 
   Chart Header:
     Add spinner over apply button on isFetching
-    Show user error when api responds with error
     Parameterize indicator params via modal
 
   Script Area:
     Add tab for static trade buttons, mirror functionality on GDAX UI
 
   Documentation:
-    Generate doc based on available props.
-
-  Order APIs:
-    Limit orders:
-      amount as fraction of available balance
-      strike price as +/- units of last close price
-      for now, all orders as good till time and pass user value ('minute, hour, day')
-        ideally you should be pricing your oder so it gets snatched up instantly
-        should retain highest buy price and lowest sell price on order books and match or beat
-
-        Order:
-        {
-          side: buy or sell,
-          product_id: BTC-USD,
-          type: limit: buy at specified price or better,
-
-          LIMIT:
-          price: $per unit
-          size: num units
-          time_in_force: GTC: good till cancel,
-                         GTT: good till time,
-                         IOC: immidiate or cancel,
-                         FOK: fill or kill
-          if time_in_force: GTT
-          cancel_after: min, hour, day
-          if not time_in_force: IOC or FOK
-          post_only:
-        }
-
-  Flow:
-
-    At the end of a websocket reducer run all user defined scripts per product.
-
-          if(BTC_USD.srsi.k > 20)
-            limit(limit order params...)
+    Pretty doc based on props

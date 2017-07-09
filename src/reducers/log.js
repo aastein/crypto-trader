@@ -10,8 +10,11 @@ const INITAL_LOG_STATE = [
 export const log = (state = INITAL_LOG_STATE, action) => {
   switch(action.type) {
     case actionType.APPEND_LOG:
-    console.log(action)
-      return [ ...state, { message: action.log, time: new Date().getTime()} ]
+      let message = action.log
+      if(typeof action.log === 'object'){
+        message = JSON.stringify(action.log)
+      }
+      return [ ...state, { message, time: new Date().getTime()} ]
     case actionType.CLEAR_LOG:
       return []
     default:

@@ -37,7 +37,11 @@ export default class ProfileForm extends Component {
 
   handleSave = (event) => {
     event.preventDefault()
-    getAccounts(this.state.profile.session)
+
+    getAccounts(this.state.profile.session).then((res) => {
+      this.props.updateAccounts(res)
+    })
+
     this.props.saveProfile({ profile: this.state.profile })
   }
 

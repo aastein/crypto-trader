@@ -2,11 +2,12 @@ import * as actionType from './actionTypes'
 
 let nextScriptId = 1
 
-// profile page
+// profile
 export const importProfile = userData => ({type: actionType.IMPORT_PROFILE, userData})
 export const saveProfile = settings => ({type: actionType.SAVE_PROFILE, settings})
+export const updateAccounts = accounts => ({type: actionType.UPDATE_ACCOUNTS, accounts})
 
-// dashboard page: charts
+// dashboard: charts
 export const setProducts = products => ({ type: actionType.SET_PRODUCTS, products})
 export const selectProduct = id => ({ type: actionType.SELECT_PRODUCT, id})
 export const setProductData = (id, data) => ({ type: actionType.SET_PRODUCT_DATA, id, data })
@@ -16,7 +17,7 @@ export const setGranularity = (id, granularity) => ({type: actionType.SET_GRANUL
 export const selectIndicator = (id) => ({type: actionType.SELECT_INDICATOR, id})
 export const editIndicator = (id, params) => ({type: actionType.EDIT_INDICATOR, id, params})
 
-// dashpbard page: scratchpad
+// dashpbard: scratchpad
 export const addScript = () => ({type: actionType.ADD_SCRIPT, id: nextScriptId++ })
 export const saveScript = script => ({type: actionType.SAVE_SCRIPT, script})
 export const deleteScript = () => ({type: actionType.DELETE_SCRIPT})

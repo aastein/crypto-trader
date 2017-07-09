@@ -135,12 +135,15 @@ export default class Chart extends Component {
           valueDecimals: 2
         },
         dataGrouping: {
-            enabled: true
+            enabled: false
         }
       },
       {
         type: 'column',
         name: 'Volume',
+        dataGrouping: {
+            enabled: false
+        },
         data: selectedProductVolumeData,
         yAxis: 1
       },
@@ -241,8 +244,8 @@ export default class Chart extends Component {
           align: 'right',
           x: -3
         },
-        //top: '85%',
-        //height: '15%',
+        top: '85%',
+        height: '15%',
         offset: 0,
         lineWidth: 2
       }],

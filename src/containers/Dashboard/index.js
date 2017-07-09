@@ -14,7 +14,8 @@ import { setProducts,
   selectIndicator,
   editIndicator,
   appendLog,
-  clearLog
+  clearLog,
+  updateAccounts
 } from '../../actions'
 
 import Dashboard from './components/Dashboard'
@@ -74,6 +75,9 @@ const mapDispatchToProps = dispatch => {
     },
     clearLog: () => {
       dispatch(clearLog())
+    },
+    updateAccounts: accounts => {
+      dispatch(updateAccounts(accounts))
     }
   }
 }

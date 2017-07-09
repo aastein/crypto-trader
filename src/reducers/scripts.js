@@ -4,7 +4,7 @@ let INITAL_SCRIPTS_STATE = [
   {
     id: 0,
     name: 'New Script',
-    script: '',
+    script: 'limitOrder("buy", "BTC-USD")',
     active: true
   }
 ]

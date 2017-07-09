@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { ObjectInspector } from 'react-inspector'
 import { run } from '../../../utils/scriptEnv'
+import { getAccounts } from '../../../utils/api'
 
 const ScriptList = ({ addNew, scripts, onScriptClick }) => (
   <div className='script-list list-group col-md-3'>
@@ -65,9 +66,19 @@ class CodeEditor extends Component {
     this.props.saveScript({ ...this.props.script, name})
   }
 
+  updateAccounts = () => {
+    if(this.props.profile.session.length > 5){
+      setTimeout(() => {
+        getAccounts(this.props.profile.session).then((res) => {
+          this.props.updateAccounts(res)
+        })
+      }, 5000)
+    }
+  }
+
   runScript = (event) => {
     event.preventDefault()
-    run(this.props.script.script, this.props.products, this.props.appendLog)
+    run(this.props.script.script, this.props.products, this.props.profile, this.props.appendLog, this.updateAccounts)
   }
 
   render(){
@@ -113,6 +124,8 @@ export default class Scratchpad extends Component {
           deleteScript={this.props.deleteScript}
           saveScript={this.props.saveScript}
           products={this.props.products}
+          profile={this.props.profile}
+          updateAccounts={this.props.updateAccounts}
         />
         <ProductDataList products={this.props.products} onClick={this.props.selectProductDoc}/>
       </div>

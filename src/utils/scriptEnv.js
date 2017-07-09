@@ -1,16 +1,62 @@
-let products
+import { orderBook, placeOrder } from './api'
 
-let product = (id) => {
+let products
+let profile
+let log
+
+const product = (id) => {
   return products.reduce((a, b) => (
     a = b.id === id ? b : a
   ), {})
 }
+                  //(buy, BTC-USD,   1000)
+const limitOrder = (side, productId) => {
 
-//mmnt.unix(products[0].data[0].time / 1000 ).format('YYYY-MM-DD')
-// LTC_EUR(1496160000000)
-export const run = (script, p, appendLog) => {
-  // set global variable
-  products = p
+  orderBook(productId).then((ob) => {
+
+    let product = products.reduce((a, b) => (
+      a = b.id === productId ? b : a
+    ), {})
+
+    let baseCurrency = product.base_currency // BTC
+    let quoteCurrency = product.quote_currency // USD
+    let quoteIncrement = product.quote_increment // 0.01
+
+    let account
+    let price
+
+    // set account to account which will be handling the trade
+    // set price to best price +/- quote increment
+    if(side === 'buy'){
+      account = profile.accounts.reduce((a, b) => (
+        b.currency === quoteCurrency ? b : a
+      ), {})
+      price = parseFloat(ob.maxBid) + parseFloat(quoteIncrement)
+    } else if(side === 'sell'){
+      account = profile.accounts.reduce((a, b) => (
+        b.currency === baseCurrency ? b : a
+      ), {})
+      price = parseFloat(ob.minAsk) - parseFloat(quoteIncrement)
+    }
+
+    let availableBalance = account.available
+
+    // all in all out trade
+    let size = availableBalance
+    console.log('size', size)
+    placeOrder('limit', side, productId, price, size, profile.session, log).then(res => {
+      return res.data
+    }).catch( err => (err))
+  })
+}
+
+export const run = (script, prods, prof, appendLog, updateAccounts) => {
+
+  // set global variables
+  products = prods
+  profile = prof
+  log = appendLog
+
   try {
     // define variables avalable in the script
     let LTC_EUR = product('LTC-EUR')
@@ -24,7 +70,12 @@ export const run = (script, p, appendLog) => {
     let ETH_USD = product('ETH-USD')
 
     let output = eval(script)
-    appendLog('Script output: ' + output)
+    if(output){
+      appendLog('Ran script: ' + output)
+    } else {
+      appendLog('Ran script')
+    }
+    updateAccounts()
   } catch(err) {
     appendLog('Script encountered error: ' + err)
   }

@@ -98,6 +98,7 @@ form button.btn {
 .log-messages {
   overflow-y: scroll;
   max-height: 380px;
+  padding: 5px;
 }
 
 .doc-list .docs{
@@ -322,4 +323,31 @@ button.list-group-item {
 
 .log-message {
   display: block;
+}
+
+.accounts ul {
+  margin: 0px;
+  position: absolute;
+  right: 0
+}
+
+.accounts li {
+  display: inline-block;
+  color: #9d9d9d;
+  margin-right: 20px;
+}
+
+.accounts span {
+  display: block;
+  line-height: 1;
+  margin-top: 2px;
+  color: #9d9d9d;
+}
+
+.accounts label {
+  display: block;
+  margin: 0px;
+  margin-top: 2px;
+  line-height: 1;
+  color: #9d9d9d;
 }
