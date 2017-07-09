@@ -15,6 +15,11 @@ Click on the Product Data list item to see avalable data for the product
 BTC_USD.data[0].close
 ```
 
+Get the most recent data at the index given by 
+```
+lastIndex
+```
+
 Write conditions based on the data to execute limit orders 
 
 ```
