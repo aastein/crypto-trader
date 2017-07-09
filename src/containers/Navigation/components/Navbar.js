@@ -30,13 +30,11 @@ export default class Navigation extends Component {
     }, 30000)
 
     setInterval(() => {
-      let ids = this.props.products.reduce((a, b) => (
-        [ ...b, a.id ]
-      ), [])
+      let ids = this.props.selectedProductIds
       for(let i = 0; i < ids.length; i++){
         setOrderBook(ids[i], this.props.updateOrderBook)
       }
-    }, 10000)
+    }, 30000)
 
   }
 

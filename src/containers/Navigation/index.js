@@ -1,5 +1,12 @@
 import { connect } from 'react-redux'
-import { updateAccounts, updateOrderBook, setProducts, setProductData, selectProduct} from '../../actions'
+import {
+  updateAccounts,
+  updateOrderBook,
+  setProducts,
+  setProductData,
+  selectProduct,
+  setProductWSData
+} from '../../actions'
 import Navbar from './components/Navbar'
 
 const mapStateToProps = state => {
@@ -28,7 +35,10 @@ const mapDispatchToProps = dispatch => {
     },
     selectProduct: id => {
       dispatch(selectProduct(id))
-    }
+    },
+    setProductWSData: (id, ws_data) => {
+        dispatch(setProductWSData(id, ws_data))
+    },
   }
 }
 

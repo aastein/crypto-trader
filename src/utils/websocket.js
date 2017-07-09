@@ -2,7 +2,7 @@ import moment from 'moment'
 
 let connection
 
-export const initWSConnection = (productList, addWSData, updateAccounts) => {
+export const initWSConnection = (productList, addWSData) => {
 
   let url = 'wss://ws-feed.gdax.com'
   connection = new WebSocket(url)
@@ -41,9 +41,6 @@ export const initWSConnection = (productList, addWSData, updateAccounts) => {
             price: price,
             size: size
           }])
-        }
-        if (typeof updateAccounts === "function") {
-          updateAccounts()
         }
       }
     }
