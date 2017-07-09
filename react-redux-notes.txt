@@ -411,33 +411,7 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO
 
-Order APIs:
-
-  Limit orders:
-    amount as fraction of available balance
-    strike price as +/- units of last close price
-    for now, all orders as good till time and pass user value ('minute, hour, day')
-      ideally you should be pricing your oder so it gets snatched up instantly
-      should retain highest buy price and lowest sell price on order books and match or beat
-
-      Order:
-      {
-        side: buy or sell,
-        product_id: BTC-USD,
-        type: limit: buy at specified price or better,
-
-        LIMIT:
-        price: $per unit
-        size: num units
-        time_in_force: GTC: good till cancel,
-                       GTT: good till time,
-                       IOC: immidiate or cancel,
-                       FOK: fill or kill
-        if time_in_force: GTT
-        cancel_after: min, hour, day
-        if not time_in_force: IOC or FOK
-        post_only:
-      }
+  Order APIs:
 
   Bugs:
 

@@ -3,9 +3,15 @@ import * as actionType from '../actions/actionTypes'
 let INITAL_SCRIPTS_STATE = [
   {
     id: 0,
-    name: 'New Script',
-    script: 'limitOrder("buy", "BTC-USD")',
+    name: 'Buy LTC',
+    script: 'limitOrder("buy", "LTC-USD")',
     active: true
+  },
+  {
+    id: 1,
+    name: 'Sell LTC',
+    script: 'limitOrder("sell", "LTC-USD")',
+    active: false
   }
 ]
 

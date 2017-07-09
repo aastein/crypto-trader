@@ -34,10 +34,16 @@ export const orderBook = (productId) => {
   let url = `/products/${productId}/book`
   return axios.get(url).then(res => (
     {
-      maxBid: res.data.bids[0][0],
-      minAsk: res.data.asks[0][0]
+      bid: res.data.bids[0][0],
+      ask: res.data.asks[0][0]
     }
   ))
+}
+
+export const setOrderBook = (productId, updateOrderBook) => {
+  orderBook(productId).then(ob => {
+    updateOrderBook(productId, ob)
+  })
 }
 
 export const getAccounts = (session) => {
@@ -45,6 +51,14 @@ export const getAccounts = (session) => {
   return authRequest(uri, '', 'get', '', session).then(res => {
     return res.data
   }).catch( err => {alert('Session ID invalid.')})
+}
+
+export const fetchProductData = (id, range, granularity, setProductData) => {
+  serverTime().then( time => {
+    tryGetHistoricalData(id, time, range, granularity).then( data => {
+      setProductData(id, data)
+    }).catch((err) => {alert(err)})
+  })
 }
 
 export const getProducts = () => {
@@ -139,7 +153,27 @@ export const placeOrder = (type, side, productId, price, size, session, log) => 
 
   //uri, params, method, body, session
   return authRequest(uri, '', 'post', body, session).then(res => {
-    return res.data
+    res = res.data
+    /*
+    {
+      "id": "d0c5340b-6d6c-49d9-b567-48c4bfca13d2",
+      "price": "0.10000000",
+      "size": "0.01000000",
+      "product_id": "BTC-USD",
+      "side": "buy",
+      "stp": "dc",
+      "type": "limit",
+      "time_in_force": "GTC",
+      "post_only": false,
+      "created_at": "2016-12-08T20:02:28.53864Z",
+      "fill_fees": "0.0000000000000000",
+      "filled_size": "0.00000000",
+      "executed_value": "0.0000000000000000",
+      "status": "pending",
+      "settled": false
+    }
+    */
+    log(`Sent ${res.side} ${type} order of ${res.product_id}. Price ${res.price}, Size ${res.size}`)
   }).catch( error => {
     if (error.response) {
       log(`Order Error: ${error.response.data.message}`);

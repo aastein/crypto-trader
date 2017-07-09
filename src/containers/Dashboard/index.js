@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 
-import { setProducts,
+import {
   selectProduct,
   setProductData,
   setProductWSData,
@@ -31,9 +31,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setProducts: products => {
-      dispatch(setProducts(products))
-    },
     setProductData: (id, data) => {
       dispatch(setProductData(id, data))
     },

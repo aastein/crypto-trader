@@ -325,10 +325,26 @@ button.list-group-item {
   display: block;
 }
 
+.navbar-inverse.live span {
+  color: #fff;
+}
+
+.navbar-inverse.live label {
+  color: #fff;
+}
+
+
+
+.accounts  {
+  margin: 0px;
+  padding: 0px;
+  position: absolute;
+  right: 0;
+  display: inline-block;
+}
+
 .accounts ul {
   margin: 0px;
-  position: absolute;
-  right: 0
 }
 
 .accounts li {
@@ -342,12 +358,47 @@ button.list-group-item {
   line-height: 1;
   margin-top: 2px;
   color: #9d9d9d;
+  font-size: 10px;
 }
 
 .accounts label {
   display: block;
   margin: 0px;
-  margin-top: 2px;
+  margin-top: 6px;
   line-height: 1;
   color: #9d9d9d;
+  font-size: 10px;
+}
+
+.order-book {
+  padding-left: 15px;
+  display: inline-block;
+}
+
+.order-book ul {
+  margin: 0px;
+  padding: 0px;
+}
+
+.order-book li {
+  display: inline-block;
+  color: #9d9d9d;
+  margin-right: 10px;
+}
+
+.order-book span {
+  display: block;
+  line-height: 1;
+  margin-top: 2px;
+  color: #9d9d9d;
+  font-size: 10px;
+}
+
+.order-book label {
+  display: block;
+  margin: 0px;
+  margin-top: 6px;
+  line-height: 1;
+  color: #9d9d9d;
+  font-size: 10px;
 }

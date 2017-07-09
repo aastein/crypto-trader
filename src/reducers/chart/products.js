@@ -5,6 +5,12 @@ let INITAL_CHART_STATE = []
 
 export const products = (state = INITAL_CHART_STATE, action) => {
   switch(action.type){
+    case actionType.UPDATE_ORDER_BOOK:
+      return state.map( p => {
+        p.bid = p.id === action.id ? action.orderBook.bid : p.bid
+        p.ask = p.id === action.id ? action.orderBook.ask : p.ask
+        return p
+      })
     case actionType.SELECT_PRODUCT_DOC:
       return state.map( p => {
         p.docSelected = p.id === action.id ? !p.docSelected : p.docSelected
@@ -24,7 +30,7 @@ export const products = (state = INITAL_CHART_STATE, action) => {
       })
     case actionType.SET_PRODUCTS:
       return action.products.map( p => (
-        { ...p, granularity: 60, range: 60, data: [], docSelected: false }
+        { ...p, granularity: 60, range: 60, data: [], docSelected: false, bid:'' , ask: '' }
       ))
     case actionType.SELECT_PRODUCT:
       return state.map( p => {

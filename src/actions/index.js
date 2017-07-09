@@ -1,6 +1,6 @@
 import * as actionType from './actionTypes'
 
-let nextScriptId = 1
+let nextScriptId = 2
 
 // profile
 export const importProfile = userData => ({type: actionType.IMPORT_PROFILE, userData})
@@ -16,6 +16,7 @@ export const selectDateRange = (id, range) => ({type: actionType.SELECT_DATE_RAN
 export const setGranularity = (id, granularity) => ({type: actionType.SET_GRANULARITY, id, granularity})
 export const selectIndicator = (id) => ({type: actionType.SELECT_INDICATOR, id})
 export const editIndicator = (id, params) => ({type: actionType.EDIT_INDICATOR, id, params})
+export const updateOrderBook = (id, orderBook) => ({type: actionType.UPDATE_ORDER_BOOK, id, orderBook})
 
 // dashpbard: scratchpad
 export const addScript = () => ({type: actionType.ADD_SCRIPT, id: nextScriptId++ })

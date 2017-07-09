@@ -31,22 +31,26 @@ const limitOrder = (side, productId) => {
       account = profile.accounts.reduce((a, b) => (
         b.currency === quoteCurrency ? b : a
       ), {})
-      price = parseFloat(ob.maxBid) + parseFloat(quoteIncrement)
+      price = parseFloat(ob.bid) + parseFloat(quoteIncrement)
     } else if(side === 'sell'){
       account = profile.accounts.reduce((a, b) => (
         b.currency === baseCurrency ? b : a
       ), {})
-      price = parseFloat(ob.minAsk) - parseFloat(quoteIncrement)
+      price = parseFloat(ob.ask) - parseFloat(quoteIncrement)
     }
 
     let availableBalance = account.available
 
     // all in all out trade
     let size = availableBalance
-    console.log('size', size)
-    placeOrder('limit', side, productId, price, size, profile.session, log).then(res => {
-      return res.data
-    }).catch( err => (err))
+
+    if(profile.live){
+      placeOrder('limit', side, productId, price, size, profile.session, log).then(res => {
+        return res.data
+      }).catch( err => (err))
+    } else {
+      log('Turn on live mode to execute orders.')
+    }
   })
 }
 

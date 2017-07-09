@@ -1,41 +1,10 @@
 import React, { Component } from 'react'
-import moment from 'moment'
 
-import Datepicker from '../../../components/Datepicker'
 import { Dropdown } from '../../../components/Dropdown'
 import { Input } from '../../../components/Input'
-import { serverTime, tryGetHistoricalData, getProducts } from '../../../utils/api'
-import { initWSConnection } from '../../../utils/websocket'
+import { fetchProductData } from '../../../utils/api'
 
 export default class Chart extends Component {
-
-  componentDidMount(){
-    this.initData()
-  }
-
-  initData = () => {
-    if(this.props.chart.products.length === 0){
-      getProducts().then(products => {
-        let productIds = products.map( p => (p.id))
-        this.props.setProducts(products)
-        this.props.selectProduct('LTC-USD')
-        initWSConnection(productIds, this.props.setProductWSData)
-        for (const product of products) {
-          this.fetchProductData(product.id, 60, 60)
-        }
-      })
-    }
-  }
-
-  fetchProductData = (id, range, granularity) => {
-  //  if(id === 'BTC-USD'){
-      serverTime().then( time => {
-        tryGetHistoricalData(id, time, range, granularity).then( data => {
-          this.props.setProductData(id, data)
-        }).catch((err) => {alert(err)})
-      })
-  //  }
-  }
 
   onProductChange = (event) => {
     if (event) {
@@ -69,7 +38,7 @@ export default class Chart extends Component {
     let product = this.props.chart.products.reduce((a, p) => (
       a = p.active ? p : a
     ), {})
-     this.fetchProductData(product.id, product.range, product.granularity)
+     fetchProductData(product.id, product.range, product.granularity, this.props.setProductData)
    }
 
   render() {
