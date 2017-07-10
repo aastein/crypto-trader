@@ -29,6 +29,14 @@ export default class Chart extends Component {
       return [ d.time, d.d ]
     }) : []
 
+    let selectedProductIndicatorMetaKData = selectedProduct.metasrsi ? selectedProduct.metasrsi.map(d => {
+      return [ d.time, d.k ]
+    }) : []
+
+    let selectedProductIndicatorMetaDData = selectedProduct.metasrsi ? selectedProduct.metasrsi.map(d => {
+      return [ d.time, d.d ]
+    }) : []
+
     let selectedProductRSIData = selectedProduct.rsi ? selectedProduct.rsi.map(d => {
       return [ d.time, d.value ]
     }) : []
@@ -48,6 +56,9 @@ export default class Chart extends Component {
     let config = {
       chart: {
         marginBottom: 15
+      },
+      navigator: {
+        height: 10
       },
       rangeSelector: {
         enabled: false
@@ -172,6 +183,42 @@ export default class Chart extends Component {
         data: selectedProductIndicatorDData,
         type: 'line',
         name: 'd',
+        tooltip: {
+          valueDecimals: 2
+        },
+        yAxis: 2,
+        lineWidth: 1,
+        dataGrouping: {
+          enabled: false
+        },
+        states: {
+          hover: {
+            lineWidth: 1
+          }
+        }
+      },
+      {
+        data: selectedProductIndicatorMetaKData,
+        type: 'line',
+        name: 'metaK',
+        tooltip: {
+          valueDecimals: 2
+        },
+        yAxis: 2,
+        lineWidth: 1,
+        dataGrouping: {
+          enabled: false
+        },
+        states: {
+          hover: {
+            lineWidth: 1
+          }
+        }
+      },
+      {
+        data: selectedProductIndicatorMetaDData,
+        type: 'line',
+        name: 'metaD',
         tooltip: {
           valueDecimals: 2
         },

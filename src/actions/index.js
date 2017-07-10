@@ -17,7 +17,7 @@ export const setGranularity = (id, granularity) => ({type: actionType.SET_GRANUL
 export const selectIndicator = (id) => ({type: actionType.SELECT_INDICATOR, id})
 export const editIndicator = (id, params) => ({type: actionType.EDIT_INDICATOR, id, params})
 export const updateOrderBook = (id, orderBook) => ({type: actionType.UPDATE_ORDER_BOOK, id, orderBook})
-export const updateHeartbeat = (time, connected) => ({type: actionType.UPDATE_HEARTBEAT, time, connected})
+export const updateHeartbeat = (status) => ({type: actionType.UPDATE_HEARTBEAT, status})
 
 // dashpbard: scratchpad
 export const addScript = () => ({type: actionType.ADD_SCRIPT, id: nextScriptId++ })

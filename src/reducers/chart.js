@@ -15,6 +15,16 @@ let INITAL_CHART_STATE = {
     active: true
   },
   {
+    id: "metasrsi",
+    params: {
+      rsiPeriod: 14,
+      stochPeriod: 14,
+      kPeriod: 3,
+      dPeriod: 3
+    },
+    active: false
+  },
+  {
     id: "rsi",
     params: {
       period: 14,
@@ -26,7 +36,7 @@ let INITAL_CHART_STATE = {
     params: {
       period: 20
     },
-    active: false
+    active: true
   }],
   websocket: {
     heartbeatTime: 0,
@@ -50,16 +60,8 @@ let INITAL_CHART_STATE = {
 export const chart = (state = INITAL_CHART_STATE, action) => {
   switch(action.type){
     case actionType.UPDATE_HEARTBEAT:
-      if(moment(action.time).unix() - moment(state.websocket.heartbeatTime).unix() > 10){
-        return { ...state,
-          websocket: {
-            heartbeatTime: action.time,
-            connected: action.connected
-          }
-        }
-      } else {
-        return state
-      }
+      let websocket = { ...state.websocket, connected: action.status }
+      return { ...state, websocket }
     case actionType.SELECT_INDICATOR:
       return { ...state,
         indicators: state.indicators.map( i => {
@@ -88,7 +90,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
         })
       }
     case actionType.SELECT_PRODUCT_DOC:
-      return { ...state, products: state.map( p => {
+      return { ...state, products: state.products.map( p => {
           p.docSelected = p.id === action.id ? !p.docSelected : p.docSelected
           return p
         })
@@ -149,7 +151,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
               return false
             })
             let inds = indicators(state.indicators, data)
-            return { ...product, data, srsi: inds.srsi, rsi: inds.rsi, cci: inds.cci}
+            return { ...product, data, srsi: inds.srsi, rsi: inds.rsi, cci: inds.cci, metasrsi: inds.metasrsi}
           }
           return product
         })
@@ -164,7 +166,12 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
       price: 2590.02
       size: 0.35052233
       */
-      return { ...state, products: state.products.map( product => {
+      return { ...state,
+        websocket: {
+          heartbeatTime: action.ws_data[0].time,
+          connected: true
+        },
+        products: state.products.map( product => {
           if(product.id === action.id){
             // get procut historical data
             let data = product.data ? [ ...product.data ] : []
@@ -224,7 +231,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
               })
               data = [ ...data, newdata ]
               let inds = indicators(state.indicators, data)
-              return { ...product, data, ws_data: clean_ws_data, srsi: inds.srsi, rsi: inds.rsi, cci: inds.cci }
+              return { ...product, data, ws_data: clean_ws_data, srsi: inds.srsi, rsi: inds.rsi, cci: inds.cci, metasrsi: inds.metasrsi }
             }
             // return product with new ws_data and new data
             return { ...product, data , ws_data: clean_ws_data }

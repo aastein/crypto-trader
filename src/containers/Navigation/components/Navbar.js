@@ -10,16 +10,15 @@ export default class Navigation extends Component {
   componentDidMount(){
 
     getProducts().then(products => {
-      let productIds = products.map( p => (p.id))
-
-      this.props.setProducts(products)
-      this.props.selectProduct('LTC-USD')
-
-      initWSConnection(productIds, this.props.setProductWSData, this.props.updateHeartbeat)
-
-      for (const product of products) {
-        fetchProductData(product.id, (60*24), 240, this.props.setProductData)
-        setOrderBook(product.id, this.props.updateOrderBook)
+      if(products){
+        let productIds = products.map( p => (p.id))
+        this.props.setProducts(products)
+        this.props.selectProduct('LTC-USD')
+        initWSConnection(productIds, this.props.setProductWSData)
+        for (const product of products) {
+          fetchProductData(product.id, (60*24), 240, this.props.setProductData)
+          setOrderBook(product.id, this.props.updateOrderBook)
+        }
       }
     })
 
@@ -39,11 +38,10 @@ export default class Navigation extends Component {
     }, 30000)
 
     setInterval(() => {
-      let heartbeatTime = this.props.websocket.heartbeatTime
       if(moment().unix() - moment(this.props.websocket.heartbeatTime).unix() > 20){
-        this.props.updateHeartbeat(heartbeatTime, false)
+        this.props.updateHeartbeat(false)
       }
-    }, 5000)
+    }, 10000)
 
   }
 

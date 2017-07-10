@@ -4,13 +4,13 @@ let INITAL_SCRIPTS_STATE = [
   {
     id: 0,
     name: 'Buy LTC',
-    script: 'limitOrder("buy", "LTC-USD")',
+    script: 'log(p.data[now])',//'limitOrder("buy", p.id)',
     active: true
   },
   {
     id: 1,
     name: 'Sell LTC',
-    script: 'limitOrder("sell", "LTC-USD")',
+    script: 'limitOrder("sell", p.id)',
     active: false
   }
 ]

@@ -10,27 +10,33 @@ WIP @ https://crypto-trader-2b0ce.firebaseapp.com
 
 Write scripts to trigger trades on GDAX
 
-Click on the Product Data list item to see avalable data for the product 
+Click on the Product Data list item to see available data for the product
+
+Reference the selected product on the chart with `p`
 ```
-BTC_USD.data[0].close
+p.data[0].close
 ```
 
-Write conditions based on the data to execute limit orders 
-
+Use `now` when you want to reference the current data
 ```
-if(BTC_USD.rsi[lastIndex].value > 70){
-  limitOrder('sell', 'BTC-USD')
+p.data[now].close
+```
+
+Write conditions based on the data to execute all in / all out limit orders
+```
+if(p.rsi[now].value < 70){
+  sell()
+} else if(p.rsi[now].value > 30){
+  buy()
 }
 ```
 
 Print to the log with log()
-
 ```
-log('RSI is' + BTC_USD.rsi[0].value)
+log('First RSI is' + p.rsi[0].value)
 ```
 
-Reserved variables
-
+Reserved viable names
 ```
 product
 profile
@@ -39,6 +45,9 @@ script
 prods
 prof
 appendLog
+now
+buy
+sell
 ```
 
 ## Getting Started

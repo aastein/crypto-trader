@@ -104,6 +104,14 @@ form button.btn {
   padding: 5px;
 }
 
+.log-message {
+  display: block;
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid #9d9d9d;
+  word-wrap: break-word;
+}
+
 .doc-list .docs{
   overflow-y: scroll;
   max-height: 200px;
@@ -262,6 +270,15 @@ button.list-group-item {
   line-height: 0px;
 }
 
+.btn-test {
+  position: absolute;
+  right: 100px;
+  top: 190px;
+  width: 80px;
+  height: 30px;
+  line-height: 0px;
+}
+
 .doc-desc {
   cursor: text;
   padding: 10px;
@@ -324,10 +341,6 @@ button.list-group-item {
   margin-bottom: 10px;
 }
 
-.log-message {
-  display: block;
-}
-
 .navbar-inverse.live span {
   color: #fff;
 }
@@ -335,8 +348,6 @@ button.list-group-item {
 .navbar-inverse.live label {
   color: #fff;
 }
-
-
 
 .accounts  {
   margin: 0px;

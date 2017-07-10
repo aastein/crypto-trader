@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { ObjectInspector } from 'react-inspector'
 import { run } from '../../../utils/scriptEnv'
+import { test } from '../../../utils/scriptTestEnv'
 import { getAccounts } from '../../../utils/api'
 
 const ScriptList = ({ addNew, scripts, onScriptClick }) => (
@@ -41,7 +42,7 @@ const ProductDataList = ({ products, onClick }) => (
             className='list-group-item list-group-item-action'
             onClick={() => onClick(p.id)}
           >
-          {p.display_name}
+          {p.id.replace('-','_')}
           </button>
           { p.docSelected &&
             <div className='doc-desc'>
@@ -81,6 +82,11 @@ class CodeEditor extends Component {
     run(this.props.script.script, this.props.products, this.props.profile, this.props.appendLog, this.updateAccounts)
   }
 
+  testScript = (event) => {
+    event.preventDefault()
+    test(this.props.script.script, this.props.products, this.props.appendLog)
+  }
+
   render(){
     return(
       <div className='code-editor col-md-6'>
@@ -98,7 +104,10 @@ class CodeEditor extends Component {
           </div>
           <textarea className='form-group col-md-12' rows={'3'} cols={'30'} value={this.props.script.script} onChange={this.handleTextAreaChange} />
           <div className='run-button'>
-            <button className='btn btn-success btn-run' onClick={this.runScript} >Run</button>
+            <button className='btn btn-success btn-run' onClick={this.runScript}>Run</button>
+          </div>
+          <div className='test-button'>
+            <button className='btn btn-warning btn-test' onClick={this.testScript}>Test</button>
           </div>
         </form>
       </div>

@@ -41,8 +41,8 @@ const mapDispatchToProps = dispatch => {
     setProductWSData: (id, ws_data) => {
         dispatch(setProductWSData(id, ws_data))
     },
-    updateHeartbeat: (time, connected) => {
-        dispatch(updateHeartbeat(time, connected))
+    updateHeartbeat: (status) => {
+        dispatch(updateHeartbeat(status))
     },
   }
 }

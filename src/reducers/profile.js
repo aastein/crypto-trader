@@ -5,8 +5,8 @@ const INITAL_PROFILE_STATE = {
   live: false,
   selectedProducts: [
     {label: 'LTC/USD', value:'LTC-USD'},
-    {label: 'BTC/USD', value:'BTC-USD'},
-    {label: 'ETH/USD', value:'ETH-USD'}
+    //{label: 'BTC/USD', value:'BTC-USD'},
+    //{label: 'ETH/USD', value:'ETH-USD'}
   ],
   accounts: [{available: 0, balance: 0, currency: 'USD'}]
 }

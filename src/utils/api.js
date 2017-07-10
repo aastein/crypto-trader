@@ -56,7 +56,7 @@ export const fetchProductData = (id, range, granularity, setProductData) => {
   serverTime().then( time => {
     tryGetHistoricalData(id, time, range, granularity).then( data => {
       setProductData(id, data)
-    }).catch((err) => {alert(err)})
+    }).catch((err) => {console.error(err)})
   })
 }
 

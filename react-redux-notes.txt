@@ -423,6 +423,25 @@ TODO:
     Sell Rules:
       crossover above buy line
 
+let buyLine = 0.2
+let sellLine = 0.8
+let lastK = p.srsi[now - 1].k
+let lastD = p.srsi[now - 1].d
+let nowK = p.srsi[now].k
+let nowD = p.srsi[now].d
+let lastKOverD = lastK > lastD
+let nowKOverD = nowK > nowD
+let lastKOverBuy = lastK > buyLine
+let nowKOverBuy = nowK > buyLine
+
+let rebound = !lastKOverD && nowKOverD && nowKOverBuy
+let kOverBuy = !lastKOverBuy && nowKOverBuy && nowKOverD
+
+if(rebound || kOverBuy){
+  buy()
+} else if (lastKOverD && !nowKOverD){
+  sell()
+}
 
 
   Script environment:

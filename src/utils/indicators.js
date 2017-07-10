@@ -1,9 +1,15 @@
 export const indicators = (indicators, data) => {
   let indicatorData = {}
+  indicators = indicators.filter( i => (
+    i.active
+  ))
   for(const i of indicators){
     switch (i.id) {
       case 'srsi':
         indicatorData = { ...indicatorData, ...srsi(data, i.params.rsiPeriod, i.params.stochPeriod, i.params.kPeriod, i.params.dPeriod)}
+        break;
+      case 'metasrsi':
+        indicatorData = { ...indicatorData, ...metasrsi(data, i.params.rsiPeriod, i.params.stochPeriod, i.params.kPeriod, i.params.dPeriod)}
         break;
       case 'cci':
         indicatorData = { ...indicatorData, ...cci(data, i.params.period)}
@@ -12,6 +18,7 @@ export const indicators = (indicators, data) => {
         break;
     }
   }
+  //console.log(indicatorData)
   return indicatorData
 }
 
@@ -93,11 +100,62 @@ const srsi = (data, rsiPeriod, stochPeriod, kPeriod, dPeriod) => {
   return { rsi, srsi }
 }
 
-const metaSrsi = data => {
+// TODO: eliminate unnessary looping
+const metasrsi = (data, rsiPeriod, stochPeriod, kPeriod, dPeriod) => {
 
-  let periods = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
-  let signalPeriod = 3
+  let periods = [  8, 13, 21, 34 , 55 ]
+  let allDerivatives = []
+  let dataLength = data.length
 
+  for (const p of periods) {
+
+    let s = srsi(data, p, p, kPeriod, dPeriod).srsi
+    let startPoint = p + p + kPeriod + dPeriod
+    let derivatives = []
+
+    for(let i = 0; i < dataLength; i++){
+
+      let dk = 0
+      let dd = 0
+      let time = s[i].time
+
+      if( i > startPoint ){
+        if( i === startPoint && i !== dataLength - 1){
+          dk = s[i + 1].k - s[startPoint].k
+          dd = s[i + 1].d - s[startPoint].d
+        } else if (i === s.length - 1) {
+          dk = s[i].k - s[i - 1].k
+          dd = s[i].d - s[i - 1].d
+        } else {
+          dk = s[i].k - s[i - 1].k
+          dd = s[i].d - s[i - 1].d
+        }
+      }
+      derivatives = [ ...derivatives, { time, dk, dd } ]
+    }
+    allDerivatives = [ ...allDerivatives, derivatives ]
+  }
+
+  let numPeriods = allDerivatives.length
+
+  let sumDerivatives = allDerivatives[0]
+  for(let i = 1; i < numPeriods; i++ ){
+    for(let j = 0; j < dataLength; j++){
+       sumDerivatives[j].dk = sumDerivatives[j].dk + allDerivatives[i][j].dk
+       sumDerivatives[j].dd = sumDerivatives[j].dd + allDerivatives[i][j].dd
+    }
+  }
+
+  let meta = [{ time: sumDerivatives[0].time, k: 0.5, d: 0.5 }]
+  for(let i = 1; i < dataLength; i++){
+     meta = [ ...meta, {
+       time: sumDerivatives[i].time,
+       k: meta[ i - 1 ].k + (sumDerivatives[i].dk / numPeriods),
+       d: meta[ i - 1 ].d + (sumDerivatives[i].dd / numPeriods)
+     }]
+  }
+
+  return { metasrsi: meta }
 }
 
 const cci = (data, period) => {

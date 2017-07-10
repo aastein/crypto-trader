@@ -34,9 +34,9 @@ export default class Dashboard extends Component {
               History
             </h2>
             <div className='log-messages'>
-              { this.props.log.map( l => {
+              { this.props.log.map((l, i) => {
                 return (
-                  <span className='log-message' key={l.time}>{`${moment(l.time).format('h:mm:ss a')}: ${l.message}`}</span>
+                  <p className='log-message' key={l.time + '' + i}>{`${moment(l.time).format('h:mm:ss a')}: ${l.message}`}</p>
                 )
               })}
             </div>
