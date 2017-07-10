@@ -138,7 +138,7 @@ export const tryGetHistoricalData = (productId, time, range, desiredGranularity)
 }
 
 export const placeOrder = (type, side, productId, price, size, session, log) => {
-  console.log('size', size)
+  //console.log('size', size)
   let uri ='/orders'
   let body = {
     type: type,

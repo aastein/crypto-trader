@@ -71,7 +71,6 @@ export const run = (script, prods, prof, appendLog, updateAccounts) => {
     // define variables avalable in the script
     let now = p.data ? p.data.length - 1 : 0
     eval(script)
-    updateAccounts()
   } catch(err) {
     appendLog('Script encountered error: ' + err)
   }

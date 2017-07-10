@@ -19,16 +19,15 @@ export default class PriceChart extends Component {
   componentWillReceiveProps = (nextProps) => {
     let chart = this.refs.chart.getChart();
     if (this.dataChanged(nextProps)) {
+      for(let script of nextProps.scripts){
+        if(script.live && nextProps.profile.live){
+          run(script.script, nextProps.chart.products, nextProps.profile, nextProps.appendLog, nextProps.updateAccounts)
+        }
+      }
       for(let i = 0 ; i < chart.series.length; i++){
         if(nextProps.config.series[i]){
             chart.series[i].setData(nextProps.config.series[i].data)
         }
-      }
-    }
-    for(let script of nextProps.scripts){
-      if(script.live && nextProps.profile.live){
-        console.log('running script')
-        run(script, nextProps.chart.products, nextProps.profile, nextProps.appendLog, nextProps.updateAccounts)
       }
     }
   }

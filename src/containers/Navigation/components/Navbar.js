@@ -38,7 +38,7 @@ export default class Navigation extends Component {
     }, 30000)
 
     setInterval(() => {
-      if(moment().unix() - moment(this.props.websocket.heartbeatTime).unix() > 20){
+      if(moment().unix() - moment(this.props.websocket.heartbeatTime).unix() > 30){
         this.props.updateHeartbeat(false)
       }
     }, 10000)
