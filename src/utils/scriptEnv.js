@@ -33,7 +33,7 @@ const limitOrder = (side, productId) => {
     // set account to account which will be handling the trade
     // set price to best price +/- quote increment
     if(side === 'buy'){
-      price = round(Number(ob.bid) + Number(quoteIncrement), 2)
+      price = round(Number(ob.bid), 2)
       size = floor(quoteAccount.available / price, 2)
     } else if(side === 'sell'){
       price = round(Number(ob.ask) - Number(quoteIncrement), 2)
