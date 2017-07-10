@@ -177,7 +177,7 @@ export const placeOrder = (type, side, productId, price, size, session, log) => 
     if (error.response) {
       log(`Order Error: ${error.response.data.message}`);
       // replace failed buy order by lowering the price
-      if(side === 'buy' && error.response.data.messag.contains('Insufficient')){
+      if(side === 'buy' && error.response.data.messag.includes('Insufficient')){
         placeOrder(type, side, productId, (price - 0.01), size, session, log)
       }
     } else {
