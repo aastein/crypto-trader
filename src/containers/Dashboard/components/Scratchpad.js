@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { ObjectInspector } from 'react-inspector'
+import ToggleSwitch from 'react-toggle-switch';
+
 import { run } from '../../../utils/scriptEnv'
 import { test } from '../../../utils/scriptTestEnv'
 import { getAccounts } from '../../../utils/api'
 
-const ScriptList = ({ addNew, scripts, onScriptClick }) => (
+const ScriptList = ({ addNew, scripts, onScriptClick, toggleScriptLive}) => (
   <div className='script-list list-group col-md-3'>
     <div>
       <button
@@ -22,6 +24,10 @@ const ScriptList = ({ addNew, scripts, onScriptClick }) => (
             onClick={() => onScriptClick(script.id)}
           >
             {script.name}
+            <ToggleSwitch
+              on={script.live}
+              onClick={() => toggleScriptLive(script.id)}
+            />
           </button>
       ))}
     </div>
@@ -124,16 +130,19 @@ export default class Scratchpad extends Component {
     return (
       <div>
         <ScriptList
-          addNew={this.props.addScript}
           scripts={this.props.scripts}
+
+          addNew={this.props.addScript}
+          toggleScriptLive={this.props.toggleScriptLive}
           onScriptClick={this.props.selectScript} />
         <CodeEditor
+          products={this.props.products}
+          profile={this.props.profile}
           script={activeScript}
+
           appendLog={this.props.appendLog}
           deleteScript={this.props.deleteScript}
           saveScript={this.props.saveScript}
-          products={this.props.products}
-          profile={this.props.profile}
           updateAccounts={this.props.updateAccounts}
         />
         <ProductDataList products={this.props.products} onClick={this.props.selectProductDoc}/>

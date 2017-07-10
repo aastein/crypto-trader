@@ -54,9 +54,9 @@ export const test = (script, prods, appendLog) => {
     let lastTrade = orderHist[i - 1].balance
     let tradeDiff = thisTrade + lastTrade
 
-    console.log('tradeDiff', tradeDiff)
-    console.log('thisTrade', thisTrade)
-    console.log('lastTrade', lastTrade)
+    // console.log('tradeDiff', tradeDiff)
+    // console.log('thisTrade', thisTrade)
+    // console.log('lastTrade', lastTrade)
     // for every sell
     if (thisTrade > 0){
       if(tradeDiff > 0){ // gain
@@ -67,8 +67,8 @@ export const test = (script, prods, appendLog) => {
     }
   }
 
-  console.log('gains', gains)
-  console.log('losses', losses)
+  //console.log('gains', gains)
+  //console.log('losses', losses)
 
   let avgLoss = round(losses.reduce((a, b) => ( a + b ), 0) / losses.length, 2)
   let avgGain = round(gains.reduce((a, b) => ( a + b ), 0) / losses.length, 2)

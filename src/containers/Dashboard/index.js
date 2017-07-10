@@ -14,7 +14,8 @@ import {
   editIndicator,
   appendLog,
   clearLog,
-  updateAccounts
+  updateAccounts,
+  toggleScriptLive
 } from '../../actions'
 
 import Dashboard from './components/Dashboard'
@@ -71,6 +72,9 @@ const mapDispatchToProps = dispatch => {
     },
     updateAccounts: accounts => {
       dispatch(updateAccounts(accounts))
+    },
+    toggleScriptLive: id => {
+      dispatch(toggleScriptLive(id))
     }
   }
 }

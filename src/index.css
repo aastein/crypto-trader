@@ -263,8 +263,8 @@ button.list-group-item {
 
 .btn-run {
   position: absolute;
-  right: 10px;
-  top: 190px;
+  right: 20px;
+  top: 195px;
   width: 80px;
   height: 30px;
   line-height: 0px;
@@ -272,8 +272,8 @@ button.list-group-item {
 
 .btn-test {
   position: absolute;
-  right: 100px;
-  top: 190px;
+  right: 110px;
+  top: 195px;
   width: 80px;
   height: 30px;
   line-height: 0px;
@@ -434,4 +434,22 @@ button.list-group-item {
     content: "\25cf";
     font-size: 1.5em;
     color: green;
+}
+
+.scripts .switch {
+  display: inline-block;
+  position: relative;
+  left: 200px;
+  height: 15px;
+  width: 38px;
+}
+
+.scripts .switch-toggle {
+  height: 13px;
+  width: 13px;
+}
+
+.scripts .list-group-item {
+  text-align: left;
+  margin: auto;
 }

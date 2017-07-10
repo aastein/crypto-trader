@@ -330,7 +330,14 @@ export default class Chart extends Component {
        <div style={{width: 1030, height: 390}}>
          { selectedProduct.data && selectedProduct.data.length > 0 ?
            <div>
-             <PriceChart config={config} />
+             <PriceChart
+               config={config}
+               chart={this.props.chart}
+               scripts={this.props.scripts}
+               profile={this.props.profile}
+               appendLog={this.props.appendLog}
+               updateAccounts={this.props.updateAccounts}
+             />
              <LineChart config={wsConfig} />
            </div>
          :<div>

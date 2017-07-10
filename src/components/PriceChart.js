@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import ReactHighstock from 'react-highcharts/ReactHighstock.src'
 
+import { run } from '../utils/scriptEnv'
+
 
 export default class PriceChart extends Component {
 
@@ -21,6 +23,12 @@ export default class PriceChart extends Component {
         if(nextProps.config.series[i]){
             chart.series[i].setData(nextProps.config.series[i].data)
         }
+      }
+    }
+    for(let script of nextProps.scripts){
+      if(script.live){
+        console.log('running script')
+        //run(script, nextProps.chart.products, nextProps.profile, nextProps.appendLog, nextProps.updateAccounts)
       }
     }
   }

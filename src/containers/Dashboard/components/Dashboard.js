@@ -27,6 +27,10 @@ export default class Dashboard extends Component {
             />
             <Chart
               chart={this.props.chart}
+              scripts={this.props.scripts}
+              profile={this.props.profile}
+              appendLog={this.props.appendLog}
+              updateAccounts={this.props.updateAccounts}
             />
           </div>
           <div className='log col-md-3' style={{height: 400}}>
@@ -55,6 +59,7 @@ export default class Dashboard extends Component {
               deleteScript={this.props.deleteScript}
               selectScript={this.props.selectScript}
               selectProductDoc={this.props.selectProductDoc}
+              toggleScriptLive={this.props.toggleScriptLive}
               updateAccounts={this.props.updateAccounts}
             />
           </div>
