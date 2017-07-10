@@ -5,7 +5,7 @@ import { indicators } from '../utils/indicators'
 
 let INITAL_CHART_STATE = {
   indicators: [{
-    id: "srsi",
+    id: "SRSI",
     params: {
       rsiPeriod: 14,
       stochPeriod: 14,
@@ -15,7 +15,7 @@ let INITAL_CHART_STATE = {
     active: true
   },
   {
-    id: "metasrsi",
+    id: "Meta RSI",
     params: {
       rsiPeriod: 14,
       stochPeriod: 14,
@@ -25,14 +25,14 @@ let INITAL_CHART_STATE = {
     active: false
   },
   {
-    id: "rsi",
+    id: "RSI",
     params: {
       period: 14,
     },
     active: false
   },
   {
-    id: "cci",
+    id: "CCI",
     params: {
       period: 20
     },
@@ -111,7 +111,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
       }
     case actionType.SET_PRODUCTS:
       return { ...state, products: action.products.map( p => (
-          { ...p, granularity: 240, range: (60*24), data: [], docSelected: false, bid:'' , ask: '' }
+          { ...p, granularity: 2, range: 60, data: [], docSelected: false, bid:'' , ask: '' }
         ))
       }
     case actionType.SELECT_PRODUCT:

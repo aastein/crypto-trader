@@ -411,6 +411,10 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO:
 
+  Button to connect to websocket
+  Only fetch product data that is selected
+  
+
   Order logic:
     Order history
     Order retries

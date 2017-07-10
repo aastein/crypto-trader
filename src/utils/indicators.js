@@ -5,13 +5,13 @@ export const indicators = (indicators, data) => {
   ))
   for(const i of indicators){
     switch (i.id) {
-      case 'srsi':
+      case 'SRSI':
         indicatorData = { ...indicatorData, ...srsi(data, i.params.rsiPeriod, i.params.stochPeriod, i.params.kPeriod, i.params.dPeriod)}
         break;
-      case 'metasrsi':
+      case 'Meta RSI':
         indicatorData = { ...indicatorData, ...metasrsi(data, i.params.rsiPeriod, i.params.stochPeriod, i.params.kPeriod, i.params.dPeriod)}
         break;
-      case 'cci':
+      case 'CCI':
         indicatorData = { ...indicatorData, ...cci(data, i.params.period)}
         break;
       default:

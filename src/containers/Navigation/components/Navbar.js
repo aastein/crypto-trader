@@ -15,10 +15,8 @@ export default class Navigation extends Component {
         this.props.setProducts(products)
         this.props.selectProduct('LTC-USD')
         initWSConnection(productIds, this.props.setProductWSData)
-        for (const product of products) {
-          fetchProductData(product.id, (60*24), 240, this.props.setProductData)
-          setOrderBook(product.id, this.props.updateOrderBook)
-        }
+        fetchProductData('LTC-USD', 60, 2, this.props.setProductData)
+        setOrderBook('LTC-USD', this.props.updateOrderBook)
       }
     })
 

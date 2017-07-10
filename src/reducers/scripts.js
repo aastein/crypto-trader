@@ -3,15 +3,22 @@ import * as actionType from '../actions/actionTypes'
 let INITAL_SCRIPTS_STATE = [
   {
     id: 0,
-    name: 'Buy LTC',
+    name: 'Custom',
     script: 'log(p.data[now])',//'buy()',
     active: true,
     live: false
   },
   {
     id: 1,
-    name: 'Sell LTC',
+    name: 'Sell',
     script: 'sell()',
+    active: false,
+    live: false
+  },
+  {
+    id: 2,
+    name: 'Buy',
+    script: 'buy()',
     active: false,
     live: false
   }

@@ -156,6 +156,11 @@ export const tryGetHistoricalData = (productId, time, range, desiredGranularity)
   "settled": false
 }
 */
+
+const floor = (value, decimals) => {
+  return Number(Math.floor(value+'e'+decimals)+'e-'+decimals);
+}
+
 export const placeOrder = (type, side, productId, price, size, session, log) => {
   //console.log('size', size)
   let uri ='/orders'
@@ -175,10 +180,10 @@ export const placeOrder = (type, side, productId, price, size, session, log) => 
     log(`Sent ${res.side} ${type} order of ${res.product_id}. Price ${res.price}, Size ${res.size}`)
   }).catch( error => {
     if (error.response) {
-      log(`Order Error: ${error.response.data.message}`);
-      // replace failed buy order by lowering the price
-      if(side === 'buy' && error.response.data.messag.includes('Insufficient')){
-        placeOrder(type, side, productId, (price - 0.01), size, session, log)
+      if(side === 'buy' && error.response.data.message.toLowerCase().includes('insufficient')){
+        placeOrder(type, side, productId, price, floor(size - 0.01, 2), session, log)
+      } else {
+        log(`Order Error: ${error.response.data.message}`);
       }
     } else {
       log('Error', error);

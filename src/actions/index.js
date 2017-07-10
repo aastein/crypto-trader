@@ -1,6 +1,6 @@
 import * as actionType from './actionTypes'
 
-let nextScriptId = 2
+let nextScriptId = 3
 
 // profile
 export const importProfile = userData => ({type: actionType.IMPORT_PROFILE, userData})
