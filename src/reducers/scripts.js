@@ -4,14 +4,14 @@ let INITAL_SCRIPTS_STATE = [
   {
     id: 0,
     name: 'Buy LTC',
-    script: 'log(p.data[now])',//'limitOrder("buy", p.id)',
+    script: 'log(p.data[now])',//'buy()',
     active: true,
     live: false
   },
   {
     id: 1,
     name: 'Sell LTC',
-    script: 'limitOrder("sell", p.id)',
+    script: 'sell()',
     active: false,
     live: false
   }
@@ -30,7 +30,8 @@ export const scripts = (state = INITAL_SCRIPTS_STATE, action) => {
           id: action.id,
           name: 'New Script',
           script: '',
-          active: false
+          active: false,
+          live: false
         }
       ]
     case actionType.SAVE_SCRIPT:

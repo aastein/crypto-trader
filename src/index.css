@@ -438,8 +438,8 @@ button.list-group-item {
 
 .scripts .switch {
   display: inline-block;
-  position: relative;
-  left: 200px;
+  margin-left:auto;
+  margin-right: 0px;
   height: 15px;
   width: 38px;
 }
@@ -451,5 +451,15 @@ button.list-group-item {
 
 .scripts .list-group-item {
   text-align: left;
-  margin: auto;
+  margin: 0px;
+  padding: 0px;
+}
+
+.script-button {
+  display: inline-flex;
+  width: 88%;
+  margin: 0px;
+  text-align: left;
+  background-color: rgba(255, 0, 0, 0.0);
+  border: none;
 }

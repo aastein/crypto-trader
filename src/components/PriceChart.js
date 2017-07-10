@@ -26,9 +26,9 @@ export default class PriceChart extends Component {
       }
     }
     for(let script of nextProps.scripts){
-      if(script.live){
+      if(script.live && nextProps.profile.live){
         console.log('running script')
-        //run(script, nextProps.chart.products, nextProps.profile, nextProps.appendLog, nextProps.updateAccounts)
+        run(script, nextProps.chart.products, nextProps.profile, nextProps.appendLog, nextProps.updateAccounts)
       }
     }
   }

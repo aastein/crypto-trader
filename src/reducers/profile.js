@@ -18,7 +18,10 @@ export const profile = (state=INITAL_PROFILE_STATE, action) => {
     case actionType.SAVE_PROFILE:
       return { ...state, ...action.settings.profile }
     case actionType.UPDATE_ACCOUNTS:
-      return { ...state, accounts: action.accounts }
+      if(action.accounts){
+        return { ...state, accounts: action.accounts }
+      }
+      return state
     default:
       return state
   }

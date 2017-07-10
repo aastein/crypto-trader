@@ -18,17 +18,20 @@ const ScriptList = ({ addNew, scripts, onScriptClick, toggleScriptLive}) => (
     </div>
     <div className='scripts'>
       { scripts.map( script => (
+        <div className={`list-group-item ${ script.active ? ' active' : ''}`}>
           <button
-            className={`list-group-item list-group-item-action ${ script.active ? ' active' : ''}`}
+            //className={`list-group-item list-group-item-action ${ script.active ? ' active' : ''}`}
+            className='script-button'
             key={script.id}
             onClick={() => onScriptClick(script.id)}
           >
             {script.name}
-            <ToggleSwitch
-              on={script.live}
-              onClick={() => toggleScriptLive(script.id)}
-            />
           </button>
+          <ToggleSwitch
+            on={script.live}
+            onClick={() => toggleScriptLive(script.id)}
+          />
+        </div>
       ))}
     </div>
   </div>
