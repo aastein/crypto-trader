@@ -40,9 +40,11 @@ const limitOrder = (side, productId) => {
       size = baseAccount.available
     }
     if(profile.live){
-      placeOrder('limit', side, productId, price, size, profile.session, log).then(res => {
-        return res.data
-      }).catch( err => (err))
+      if(size > 0){
+        placeOrder('limit', side, productId, price, size, profile.session, log).then(res => {
+          return res.data
+        }).catch( err => (err))
+      }
     } else {
       log('Turn on live mode to execute orders.')
     }

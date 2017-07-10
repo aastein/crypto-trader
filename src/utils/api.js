@@ -137,6 +137,25 @@ export const tryGetHistoricalData = (productId, time, range, desiredGranularity)
     })
 }
 
+/*
+{
+  "id": "d0c5340b-6d6c-49d9-b567-48c4bfca13d2",
+  "price": "0.10000000",
+  "size": "0.01000000",
+  "product_id": "BTC-USD",
+  "side": "buy",
+  "stp": "dc",
+  "type": "limit",
+  "time_in_force": "GTC",
+  "post_only": false,
+  "created_at": "2016-12-08T20:02:28.53864Z",
+  "fill_fees": "0.0000000000000000",
+  "filled_size": "0.00000000",
+  "executed_value": "0.0000000000000000",
+  "status": "pending",
+  "settled": false
+}
+*/
 export const placeOrder = (type, side, productId, price, size, session, log) => {
   //console.log('size', size)
   let uri ='/orders'
@@ -153,29 +172,14 @@ export const placeOrder = (type, side, productId, price, size, session, log) => 
   //uri, params, method, body, session
   return authRequest(uri, '', 'post', body, session).then(res => {
     res = res.data
-    /*
-    {
-      "id": "d0c5340b-6d6c-49d9-b567-48c4bfca13d2",
-      "price": "0.10000000",
-      "size": "0.01000000",
-      "product_id": "BTC-USD",
-      "side": "buy",
-      "stp": "dc",
-      "type": "limit",
-      "time_in_force": "GTC",
-      "post_only": false,
-      "created_at": "2016-12-08T20:02:28.53864Z",
-      "fill_fees": "0.0000000000000000",
-      "filled_size": "0.00000000",
-      "executed_value": "0.0000000000000000",
-      "status": "pending",
-      "settled": false
-    }
-    */
     log(`Sent ${res.side} ${type} order of ${res.product_id}. Price ${res.price}, Size ${res.size}`)
   }).catch( error => {
     if (error.response) {
       log(`Order Error: ${error.response.data.message}`);
+      // replace failed buy order by lowering the price
+      if(side === 'buy' && error.response.data.messag.contains('Insufficient')){
+        placeOrder(type, side, productId, (price - 0.01), size, session, log)
+      }
     } else {
       log('Error', error);
     }
