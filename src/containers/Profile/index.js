@@ -10,11 +10,12 @@ const mapStateToProps = state => {
     products: state.chart.products.map( p => (
       {
         id: p.id,
+        display_name: p.display_name,
         granularity: p.granularity,
         range: p.range,
         docSelected: p.docSelected,
         active: p.active
-      }  
+      }
     )),
   }
 }

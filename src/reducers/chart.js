@@ -54,7 +54,10 @@ let INITAL_CHART_STATE = {
     { label: '1 day', value: 1440},
     { label: '5 days', value: 7200},
     { label: '10 days', value: 14400},
-    { label: '30 days', value: 43200}
+    { label: '1 Month', value: 43200},
+    { label: '3 Months', value: 43200 * 3},
+    { label: '6 Months', value: 43200 * 6},
+    { label: '1 Year', value: 43200 * 12}
   ],
   products: [],
   testResult: {}
