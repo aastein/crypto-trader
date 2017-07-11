@@ -5,6 +5,12 @@ import { Input } from '../../../components/Input'
 import { fetchProductData } from '../../../utils/api'
 
 export default class Chart extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      granularity: this.selectedProduct().granularity ?  this.selectedProduct().granularity + '' : ''
+    }
+  }
 
   onProductChange = (event) => {
     if (event) {
@@ -28,24 +34,29 @@ export default class Chart extends Component {
   }
 
   onSetGanularity = (name, event) => {
-    let id = this.props.chart.products.reduce((a, p) => (
-      a = p.active ? p.id : a
-    ), '')
-    this.props.setGanularity(id, event.target.value)
+    let granularity = event.target.value
+    this.setState(() => (
+      { granularity }
+    ))
   }
 
   onApply = (startDate, endDate) => {
     let product = this.props.chart.products.reduce((a, p) => (
       a = p.active ? p : a
     ), {})
-     fetchProductData(product.id, product.range, product.granularity, this.props.setProductData)
+    this.props.setGanularity(product.id, this.state.granularity)
+    fetchProductData(product.id, product.range, this.state.granularity, this.props.setProductData)
    }
+
+  selectedProduct = () => (
+       this.props.chart.products.length > 0 ?  this.props.chart.products.reduce((a, p) => (
+       a = p.active ? p : a
+     ), {}) : {}
+   )
 
   render() {
 
-    let selectedProduct = this.props.chart.products.length > 0 ?  this.props.chart.products.reduce((a, p) => (
-      a = p.active ? p : a
-    ), {}) : {}
+    let selectedProduct = this.selectedProduct()
 
     let dropdownProductOptions = this.props.chart.products.map(product => {
       return { value: product.id, label: product.display_name}
@@ -85,7 +96,7 @@ export default class Chart extends Component {
             />
          </div>
          <div className='granularity chart-header-item'>
-           <Input name='granularity' onChange={this.onSetGanularity} placeholder='' value={selectedProduct.granularity ? selectedProduct.granularity + '' : ''} />
+           <Input name='granularity' onChange={this.onSetGanularity} placeholder='' value={this.state.granularity} />
          </div>
          <div className='granularity-label chart-header-item'>
            <label>s</label>

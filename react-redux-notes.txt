@@ -409,15 +409,70 @@ Advanced:
 Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 
+  Redux thunk notes:
+      - Write action creators that return functions, normally action creators always return objects
+
+      Example:
+
+        export function errorAfterFiveSeconds() {
+          return (dispatch) => {
+              setTimeout(() => {
+                  // This function is able to dispatch other action creators
+                  dispatch(itemsHasErrored(true));
+              }, 5000);
+          };
+        }
+
+        errorAfterFiveSeconrds returns
+        a method which has dispatch in its scope
+        inside of this method you can do asynchronous things, which call the dispatch with a regular action object on resolve
+
+        TL;DR wrap async methods in
+        (
+          dispatch => {
+            thing.then((stuff) => {
+              dispatch(stuff)
+            }
+          }
+        )
+
+
+      - Inside of createStore() add applyMiddleware(thunk)
+      - So just wrap the internals of your api methods in dispatch arrow function
+
+  SCSS:
+
+    - declare a variable by prefixing $ and suffix :
+    -
+
 TODO:
 
-  Button to connect to websocket
-  Only fetch product data that is selected
-  
+
+
+
+
 
   Order logic:
     Order history
+    Sell retries until balance is 0
     Order retries
+    pre-caclculate with WS data
+    Cancel after X minutes, parameterize cancel time
+
+  Utils:
+    Button to connect to websocket or retry connect on lost connection
+    Import state with formatted scripts
+
+  Chart:
+    Import https://github.com/anandanand84/technicalindicators/
+
+        @dandv @aastein Just to clarify this package uses babel to transpile es6 code so if you are using it in browser you should use regeneratorRuntime or use custom transpiler. If you want to use it in node or use a custom bundler like webpack we have module flag in https://github.com/anandanand84/technicalindicators/blob/master/package.json#L7 I am not familiar with webpack I use rollup. I tried your example and it did fail. A quick google search shows webpack didn't honor the module field, if we add the following in your webpack.config.js you should be good. I tested and it works fine. Let me know if it didn't work.
+
+      module.exports = {
+        resolve: {
+          mainFields: ["module", "main"]
+        }
+      }
 
   Script environment:
 
@@ -434,6 +489,7 @@ TODO:
     Move API and WS calls and responses into action creators, do this last
 
   Chart Header:
+    Only fetch product data that is selected
     Add spinner over apply button on isFetching
     Parameterize indicator params via modal
 

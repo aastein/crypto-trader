@@ -12,6 +12,12 @@ export default class PriceChart extends Component {
     return dataChanged
   }
 
+  testDataChanged = (nextProps) => {
+    let testDataChanged = JSON.stringify(this.props.config.xAxis.plotLines) !== JSON.stringify(nextProps.config.xAxis.plotLines)
+      || this.props.config.xAxis.plotLines.length !== this.props.config.xAxis.plotLines.length
+    return testDataChanged
+  }
+
   shouldComponentUpdate = (nextProps, nextState) => (
     this.props.config.series[0].name !== nextProps.config.series[0].name
   )
@@ -28,6 +34,14 @@ export default class PriceChart extends Component {
         if(nextProps.config.series[i]){
             chart.series[i].setData(nextProps.config.series[i].data)
         }
+      }
+    }
+
+    if(this.testDataChanged(nextProps)){
+      console.log(nextProps.config.xAxis.plotLines)
+      chart.xAxis[0].removePlotLine('testResult')
+      for(let plotLine of nextProps.config.xAxis.plotLines){
+        chart.xAxis[0].addPlotLine(plotLine)
       }
     }
   }

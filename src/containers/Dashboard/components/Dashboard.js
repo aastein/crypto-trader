@@ -57,6 +57,7 @@ export default class Dashboard extends Component {
               appendLog={this.props.appendLog}
               saveScript={this.props.saveScript}
               deleteScript={this.props.deleteScript}
+              saveTestResult={this.props.saveTestResult}
               selectScript={this.props.selectScript}
               selectProductDoc={this.props.selectProductDoc}
               toggleScriptLive={this.props.toggleScriptLive}

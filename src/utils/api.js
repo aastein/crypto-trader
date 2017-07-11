@@ -94,7 +94,7 @@ export let getHistorialData = (product, startDate, endDate, granularity) => {
 // granularity == 300000 = 30s => I want a data point ever 30s
 export const tryGetHistoricalData = (productId, time, range, desiredGranularity) => {
 
-    //console.log('time', time)
+    ///console.log('time', time)
     let rateConstant
     let requests = []
     let epochEnd = time.epoch

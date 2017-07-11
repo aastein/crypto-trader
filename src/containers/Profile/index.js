@@ -6,8 +6,16 @@ const mapStateToProps = state => {
   return {
     profile: state.profile,
     scripts: state.scripts,
-    indicators: state.indicators,
-    products: state.chart.products,
+    indicators: state.chart.indicators,
+    products: state.chart.products.map( p => (
+      {
+        id: p.id,
+        granularity: p.granularity,
+        range: p.range,
+        docSelected: p.docSelected,
+        active: p.active
+      }  
+    )),
   }
 }
 

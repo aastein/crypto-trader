@@ -92,7 +92,8 @@ class CodeEditor extends Component {
 
   testScript = (event) => {
     event.preventDefault()
-    test(this.props.script.script, this.props.products, this.props.appendLog)
+    let result = test(this.props.script.script, this.props.products, this.props.appendLog)
+    this.props.saveTestResult(result)
   }
 
   render(){
@@ -145,6 +146,7 @@ export default class Scratchpad extends Component {
           appendLog={this.props.appendLog}
           deleteScript={this.props.deleteScript}
           saveScript={this.props.saveScript}
+          saveTestResult={this.props.saveTestResult}
           updateAccounts={this.props.updateAccounts}
         />
         <ProductDataList products={this.props.products} onClick={this.props.selectProductDoc}/>

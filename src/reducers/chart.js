@@ -2,6 +2,7 @@ import moment from 'moment'
 
 import * as actionType from '../actions/actionTypes'
 import { indicators } from '../utils/indicators'
+import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants'
 
 let INITAL_CHART_STATE = {
   indicators: [{
@@ -51,14 +52,18 @@ let INITAL_CHART_STATE = {
     { label: '3 hours', value: 180},
     { label: '6 hours', value: 360},
     { label: '1 day', value: 1440},
+    { label: '5 days', value: 7200},
     { label: '10 days', value: 14400},
     { label: '30 days', value: 43200}
   ],
-  products: []
+  products: [],
+  testResult: {}
 }
 
 export const chart = (state = INITAL_CHART_STATE, action) => {
   switch(action.type){
+    case actionType.SAVE_TEST_RESULT:
+      return { ...state, testResult: action.result}
     case actionType.UPDATE_HEARTBEAT:
       let websocket = { ...state.websocket, connected: action.status }
       return { ...state, websocket }
@@ -111,7 +116,7 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
       }
     case actionType.SET_PRODUCTS:
       return { ...state, products: action.products.map( p => (
-          { ...p, granularity: 2, range: 60, data: [], docSelected: false, bid:'' , ask: '' }
+          { ...p, granularity: INIT_GRANULARITY, range: INIT_RANGE, data: [], docSelected: false, bid:'' , ask: '' }
         ))
       }
     case actionType.SELECT_PRODUCT:
@@ -241,7 +246,28 @@ export const chart = (state = INITAL_CHART_STATE, action) => {
         })
       }
     case actionType.IMPORT_PROFILE:
-      return  { ...state, indicators: action.userData.indicators }
+
+      let userProds = action.userData.products
+      let products = state.products.map( p => {
+        for(let i = 0; i < userProds.length; i++){
+          if(userProds[i].id === p.id){
+            return (
+              { ...p,
+                id: userProds[i].id,
+                granularity: userProds[i].granularity,
+                range: userProds[i].range,
+                docSelected: userProds[i].docSelected,
+                active: userProds[i].active}
+            )
+          }
+        }
+        return p
+      })
+
+      return  { ...state,
+        indicators: action.userData.indicators,
+        products
+      }
     default:
       return state
   }

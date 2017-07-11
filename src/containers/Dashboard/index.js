@@ -15,7 +15,8 @@ import {
   appendLog,
   clearLog,
   updateAccounts,
-  toggleScriptLive
+  toggleScriptLive,
+  saveTestResult
 } from '../../actions'
 
 import Dashboard from './components/Dashboard'
@@ -75,6 +76,9 @@ const mapDispatchToProps = dispatch => {
     },
     toggleScriptLive: id => {
       dispatch(toggleScriptLive(id))
+    },
+    saveTestResult: result => {
+      dispatch(saveTestResult(result))
     }
   }
 }

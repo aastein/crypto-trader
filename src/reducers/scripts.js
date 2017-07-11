@@ -4,7 +4,7 @@ let INITAL_SCRIPTS_STATE = [
   {
     id: 0,
     name: 'Custom',
-    script: 'log(p.data[now])',//'buy()',
+    script: '',//'buy()',
     active: true,
     live: false
   },

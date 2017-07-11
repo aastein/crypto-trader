@@ -11,6 +11,7 @@ export default class ProfileForm extends Component {
       profile: this.props.profile,
       scripts: this.props.scripts,
       indicators: this.props.indicators,
+      products: this.props.products
     }
     this.state = { ...this.state, 'textState': JSON.stringify(this.state, null, 2)}
   }

@@ -51,11 +51,11 @@ const limitOrder = (side, productId) => {
   })
 }
 
-const buy = () => {
+const buy = (id) => {
   limitOrder('buy', p.id)
 }
 
-const sell = () => {
+const sell = (id) => {
   limitOrder('sell', p.id)
 }
 

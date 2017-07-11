@@ -53,6 +53,29 @@ export default class Chart extends Component {
       [ d.time, d.size ]
     )) : []
 
+    /*
+    [{
+      color: 'red',
+      value: 1499744484000,
+      width: 2
+    }]
+    */
+    let testPlotLines = this.props.chart.testResult.data ? this.props.chart.testResult.data.map( d => (
+      {
+        id: 'testResult',
+        value: d.time,
+        width: 2,
+        color: d.balance < 0 ? 'green' : 'red',
+        dashStyle: d.loss ? 'dot' : 'solid',
+        label: {
+          text: d.label,
+          verticalAlign: 'top',
+          textAlign: 'left',
+          rotation: 0
+        }
+      }
+    )) : []
+
     let config = {
       chart: {
         marginBottom: 15
@@ -62,6 +85,9 @@ export default class Chart extends Component {
       },
       rangeSelector: {
         enabled: false
+      },
+      xAxis: {
+        plotLines: testPlotLines
       },
       yAxis: [{
         labels: {

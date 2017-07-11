@@ -4,6 +4,7 @@ import moment from 'moment'
 
 import { getAccounts, getProducts, fetchProductData, setOrderBook  } from '../../../utils/api'
 import { initWSConnection } from '../../../utils/websocket'
+import { INIT_RANGE, INIT_GRANULARITY } from '../../../utils/constants'
 
 export default class Navigation extends Component {
 
@@ -15,7 +16,7 @@ export default class Navigation extends Component {
         this.props.setProducts(products)
         this.props.selectProduct('LTC-USD')
         initWSConnection(productIds, this.props.setProductWSData)
-        fetchProductData('LTC-USD', 60, 2, this.props.setProductData)
+        fetchProductData('LTC-USD', INIT_RANGE, INIT_GRANULARITY, this.props.setProductData)
         setOrderBook('LTC-USD', this.props.updateOrderBook)
       }
     })
@@ -53,7 +54,7 @@ export default class Navigation extends Component {
       <nav className={`navbar navbar-inverse navbar-fixed-top ${this.props.live ? 'live' : ''}`}>
         <div className='container nav-container'>
           <div className='navbar-header'>
-            <a className="navbar-brand" href='https://github.com/aastein/crypto-trader'>
+            <a className="navbar-brand" target="_blank"  rel="noopener noreferrer" href='https://github.com/aastein/crypto-trader'>
               <img alt='logo' className='navbar-brand-img' height='50' src='https://avatars0.githubusercontent.com/u/18291415?v=3&s=460'/>
             </a>
           </div>

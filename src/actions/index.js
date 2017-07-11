@@ -26,6 +26,7 @@ export const deleteScript = () => ({type: actionType.DELETE_SCRIPT})
 export const selectScript = id => ({type: actionType.SELECT_SCRIPT, id})
 export const selectProductDoc = id => ({type: actionType.SELECT_PRODUCT_DOC, id})
 export const toggleScriptLive = id => ({type: actionType.TOGGLE_SCRIPT_LIVE, id})
+export const saveTestResult = result => ({type: actionType.SAVE_TEST_RESULT, result})
 
 // logging
 export const appendLog = (log) => ({type: actionType.APPEND_LOG, log})
