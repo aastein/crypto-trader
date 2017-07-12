@@ -1,112 +1,113 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-import { Dropdown } from '../../../components/Dropdown'
-import { Input } from '../../../components/Input'
-import { fetchProductData } from '../../../utils/api'
+import { Dropdown } from '../../../components/Dropdown';
+import { Input } from '../../../components/Input';
+import { fetchProductData } from '../../../utils/api';
 
 export default class Chart extends Component {
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
-      granularity: this.selectedProduct().granularity ?  this.selectedProduct().granularity + '' : ''
-    }
+      granularity: this.selectedProduct().granularity
+      ? `${this.selectedProduct().granularity}` : '',
+    };
   }
 
   onProductChange = (event) => {
     if (event) {
-      this.props.selectProduct(event.value)
+      this.props.selectProduct(event.value);
     }
   }
 
   onSelectIndicator = (event) => {
     if (event) {
-      this.props.selectIndicator(event.value)
+      this.props.selectIndicator(event.value);
     }
   }
 
   onSelectDateRange = (event) => {
-    let id = this.props.chart.products.reduce((a, p) => (
-      a = p.active ? p.id : a
-    ), '')
+    const id = this.props.chart.products.reduce((a, p) => (
+      p.active ? p.id : a
+    ), '');
     if (event) {
-      this.props.selectDateRange(id, event.value)
+      this.props.selectDateRange(id, event.value);
     }
   }
 
   onSetGanularity = (name, event) => {
-    let granularity = event.target.value
-    this.setState(() => (
-      { granularity }
-    ))
+    const granularity = event.target.value;
+    this.setState(() => ({ granularity }));
   }
 
-  onApply = (startDate, endDate) => {
-    let product = this.props.chart.products.reduce((a, p) => (
-      a = p.active ? p : a
-    ), {})
-    this.props.setGanularity(product.id, this.state.granularity)
-    fetchProductData(product.id, product.range, this.state.granularity, this.props.setProductData)
-   }
+  onApply = () => {
+    const product = this.props.chart.products.reduce((a, p) => (
+      p.active ? p : a
+    ), {});
+    this.props.setGanularity(product.id, this.state.granularity);
+    fetchProductData(product.id, product.range, this.state.granularity, this.props.setProductData);
+  }
 
   selectedProduct = () => (
-       this.props.chart.products.length > 0 ?  this.props.chart.products.reduce((a, p) => (
-       a = p.active ? p : a
-     ), {}) : {}
-   )
+    this.props.chart.products.length > 0 ? this.props.chart.products.reduce((a, p) => (
+      p.active ? p : a
+    ), {}) : {}
+  )
 
   render() {
-
-    let selectedProduct = this.selectedProduct()
-
-    let dropdownProductOptions = this.props.chart.products.map(product => {
-      return { value: product.id, label: product.display_name}
-    }).filter( p => (
+    const selectedProduct = this.selectedProduct();
+    const dropdownProductOptions = this.props.chart.products.map(product => (
+      { value: product.id, label: product.display_name }
+    )).filter(p => (
       this.props.selectedProductIds.indexOf(p.value) > -1
-    ))
+    ));
 
-    let dropdownIndicatorOptions = this.props.chart.indicators.map(indicator => {
-      return { value: indicator.id, label: indicator.id}
-    })
+    const dropdownIndicatorOptions = this.props.chart.indicators.map(indicator => (
+      { value: indicator.id, label: indicator.id }
+    ));
 
-    let activeIndicator = this.props.chart.indicators.reduce((a, b) => (
-       a = b.active ? b : a
-    ), {})
+    const activeIndicator = this.props.chart.indicators.reduce((a, b) => (
+      b.active ? b : a
+    ), {});
 
     return (
-       <div className='chart-header' style={{width: 950, height: 35}}>
-         <div className='product-dropdown chart-header-item'>
-           <Dropdown
+      <div className="chart-header">
+        <div className="product-dropdown chart-header-item">
+          <Dropdown
             options={dropdownProductOptions}
             onChange={this.onProductChange}
             value={selectedProduct.id}
           />
-         </div>
-         <div className='indicator-dropdown chart-header-item'>
-           <Dropdown
+        </div>
+        <div className="indicator-dropdown chart-header-item">
+          <Dropdown
             options={dropdownIndicatorOptions}
             onChange={this.onSelectIndicator}
             value={activeIndicator.id}
           />
-         </div>
-         <div className='date-picker chart-header-item'>
-            <Dropdown
-              options={this.props.chart.dateRanges}
-              onChange={this.onSelectDateRange}
-              value={selectedProduct.range}
-            />
-         </div>
-         <div className='granularity chart-header-item'>
-           <Input name='granularity' onChange={this.onSetGanularity} placeholder='' value={this.state.granularity} />
-         </div>
-         <div className='granularity-label chart-header-item'>
-           <label>s</label>
-         </div>
-         <button className="btn btn-primary chart-header-item" onClick={this.onApply}>Apply</button>
-         <div className='websocket-status chart-header-item'>
-           <label>Websocket</label>
-           <span className={`glyphicon glyphicon-dot chart-header-item ${this.props.chart.websocket.connected ? 'connected' : ''}`}></span>
-         </div>
-       </div>
-      )
-    }
+        </div>
+        <div className="date-picker chart-header-item">
+          <Dropdown
+            options={this.props.chart.dateRanges}
+            onChange={this.onSelectDateRange}
+            value={selectedProduct.range}
+          />
+        </div>
+        <div className="granularity chart-header-item">
+          <Input name="granularity" onChange={this.onSetGanularity} placeholder="" value={this.state.granularity} />
+        </div>
+        <div className="granularity-label chart-header-item">
+          <label htmlFor="granularity">s</label>
+        </div>
+        <button className="btn btn-primary chart-header-item" onClick={this.onApply}>Apply</button>
+        <div className="websocket-status chart-header-item">
+          <span>Websocket</span>
+          <span
+            className={`glyphicon glyphicon-dot chart-header-item
+              ${this.props.chart.websocket.connected ? 'connected' : ''}`
+            }
+          />
+        </div>
+      </div>
+    );
   }
+}

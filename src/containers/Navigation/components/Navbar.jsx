@@ -8,7 +8,7 @@ import { INIT_RANGE, INIT_GRANULARITY } from '../../../utils/constants';
 
 export default class Navigation extends Component {
 
-  componentDidMount(){
+  componentDidMount() {
     getProducts().then((products) => {
       if (products) {
         const productIds = products.map(p => (p.id));
@@ -76,7 +76,7 @@ export default class Navigation extends Component {
           <div className="order-book">
             <ul>
               {
-                this.props.products.filter( p => (
+                this.props.products.filter(p => (
                   this.props.selectedProductIds.indexOf(p.id) > -1
                 )).map(a => (
                   <li key={a.display_name}>
@@ -91,7 +91,7 @@ export default class Navigation extends Component {
           </div>
           <div className="accounts">
             <ul>
-              {this.props.accounts.map( a => (
+              {this.props.accounts.map(a => (
                 <li key={a.currency}>
                   <div>
                     <span>{a.currency}</span>

@@ -1,42 +1,42 @@
-import { connect } from 'react-redux'
-import { importProfile, saveProfile, updateAccounts } from '../../actions'
-import ProfileForm from './components/ProfileForm'
+import { connect } from 'react-redux';
+import { importProfile, saveProfile, updateAccounts } from '../../actions';
+import ProfileForm from './components/ProfileForm';
 
-const mapStateToProps = state => {
-  return {
+const mapStateToProps = state => (
+  {
     profile: state.profile,
     scripts: state.scripts,
     indicators: state.chart.indicators,
-    products: state.chart.products.map( p => (
+    products: state.chart.products.map(p => (
       {
         id: p.id,
         display_name: p.display_name,
         granularity: p.granularity,
         range: p.range,
         docSelected: p.docSelected,
-        active: p.active
+        active: p.active,
       }
     )),
   }
-}
+);
 
-const mapDispatchToProps = dispatch => {
-  return {
-    importProfile: userData => {
-      dispatch(importProfile(userData))
+const mapDispatchToProps = dispatch => (
+  {
+    importProfile: (userData) => {
+      dispatch(importProfile(userData));
     },
-    saveProfile: settigns => {
-      dispatch(saveProfile(settigns))
+    saveProfile: (settigns) => {
+      dispatch(saveProfile(settigns));
     },
-    updateAccounts: accounts => {
-      dispatch(updateAccounts(accounts))
-    }
+    updateAccounts: (accounts) => {
+      dispatch(updateAccounts(accounts));
+    },
   }
-}
+);
 
 const Profile = connect(
   mapStateToProps,
-  mapDispatchToProps
-)(ProfileForm)
+  mapDispatchToProps,
+)(ProfileForm);
 
-export default Profile
+export default Profile;

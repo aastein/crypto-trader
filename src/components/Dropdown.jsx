@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 import Select from 'react-select';
 
-export const Dropdown = ({ multi, options, onChange, value }) => (
+const Dropdown = ({ multi, options, onChange, value }) => (
   <div>
     <Select
       multi={multi}
@@ -11,4 +11,6 @@ export const Dropdown = ({ multi, options, onChange, value }) => (
       onChange={onChange}
     />
   </div>
-)
+);
+
+export default Dropdown;

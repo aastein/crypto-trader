@@ -8,8 +8,10 @@
     ]
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "babel-plugin-transform-eval": "^6.22.0",
     "babel-polyfill": "^6.23.0",
+    "bootstrap": "^3.3.7",
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
@@ -17,10 +19,13 @@
     "react-dates": "^12.2.1",
     "react-dom": "^15.6.1",
     "react-highcharts": "^12.0.0",
+    "react-inspector": "^2.1.1",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.1.1",
     "react-select": "^1.0.0-rc.5",
     "react-spinkit": "^3.0.0",
+    "react-toggle-switch": "^2.1.4",
+    "redux": "^3.7.1",
     "technicalindicators": "1.0.3"
   },
   "devDependencies": {
@@ -100,7 +105,8 @@
     "deploy": "npm run build && firebase deploy",
     "firebase-init": "firebase login && firebase init",
     "start": "node scripts/start.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "fix": "eslint --fix src"
   },
   "version": "0.1.0"
 }
