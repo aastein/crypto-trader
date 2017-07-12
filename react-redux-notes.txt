@@ -447,11 +447,6 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO:
 
-  On every WS message everything re-renders because ws data is in charts props
-
-  Break out websocket into own reducer and state branch
-  Break out websocket chart into separate container
-  Break out chart data update from websocket data logic outside of the reducer
   On receiving WS message
     -> do all logic to determine if chart data should be updated
       T -> calculate OHLC for period and call update chart data action

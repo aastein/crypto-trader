@@ -116,7 +116,7 @@ module.exports = {
           {
             options: {
               formatter: eslintFormatter,
-
+              extends: 'airbnb',
             },
             loader: require.resolve('eslint-loader'),
           },

@@ -1,13 +1,44 @@
-import moment from 'moment'
+import moment from 'moment';
 
-let connection
+let connection;
 
-export const initWSConnection = (productList, addWSData) => {
+/*
+  produstList: array of product.id
+  "product_ids": [
+      "BTC-USD",
+      "ETH-USD",
+      "ETH-BTC"
+  ]
+*/
+const subscribe = (productList) => {
+  connection.send(JSON.stringify(
+    {
+      type: 'subscribe',
+      product_ids: productList,
+    },
+  ));
+};
 
-  let url = 'wss://ws-feed.gdax.com'
-  connection = new WebSocket(url)
+const waitForConnected = (productList, initWSConnection) => {
+  let n = 0;
+  const t = setInterval(() => {
+    if (connection.readyState === 1) {
+      clearInterval(t);
+      subscribe(productList);
+    }
+    n += 1;
+    if (n > 4) {
+      clearInterval(t);
+      connection.close();
+      connection = null;
+      initWSConnection(productList);
+    }
+  }, 1000);
+};
 
-  console.log('Opening connection to ', url)
+const initWSConnection = (productList, addWSData) => {
+  const url = 'wss://ws-feed.gdax.com';
+  connection = new WebSocket(url);
 
   /*
     {
@@ -23,61 +54,22 @@ export const initWSConnection = (productList, addWSData) => {
       type: "match"
     }
   */
-  connection.onmessage = event => {
-    let data = JSON.parse(event.data)
+  connection.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.type === 'match' || (data.type === 'done' && data.reason === 'filled')) {
+      const price = parseFloat(data.price);
+      const time = moment(data.time).valueOf();
+      const size = parseFloat(data.size);
+      const id = data.product_id;
 
-    if(data.type === 'match' || (data.type === 'done' &&  data.reason === 'filled')){
-      let price = parseFloat(data.price)
-      let time = moment(data.time).valueOf()
-      let size = parseFloat(data.size)
-      let product = data.product_id
-
-      if(price && time && size && product){
-        if (typeof addWSData === "function") {
-          addWSData(product, [{
-            time : time,
-            price: price,
-            size: size
-          }])
+      if (price && time && size && id) {
+        if (typeof addWSData === 'function') {
+          addWSData(id, time, price, size);
         }
       }
     }
-  }
+  };
+  waitForConnected(productList, initWSConnection);
+};
 
-  waitForConnected(productList)
-}
-
-
-let waitForConnected = (productList) => {
-  let n = 0
-  let t = setInterval(() => {
-    if(connection.readyState === 1){
-      clearInterval(t);
-      subscribe(productList)
-    }
-    n++
-    if(n > 4) {
-      clearInterval(t);
-      connection.close()
-      connection = null
-      initWSConnection(productList)
-    }
-  }, 1000);
-}
-
-/*
-  produstList: array of product.id
-  "product_ids": [
-      "BTC-USD",
-      "ETH-USD",
-      "ETH-BTC"
-  ]
-*/
-let subscribe = productList => {
-  connection.send(JSON.stringify(
-    {
-      "type": "subscribe",
-      "product_ids": productList
-    }
-  ))
-}
+export default initWSConnection;
