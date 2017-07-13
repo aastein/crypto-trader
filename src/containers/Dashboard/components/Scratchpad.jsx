@@ -148,7 +148,7 @@ const Scratchpad = (props) => {
   ), {});
 
   return (
-    <div>
+    <div className={props.className}>
       <ScriptList
         scripts={props.scripts}
 

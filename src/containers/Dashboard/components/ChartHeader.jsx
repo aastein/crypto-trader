@@ -35,8 +35,10 @@ export default class Chart extends Component {
   }
 
   onSetGanularity = (name, event) => {
-    const granularity = event.target.value;
-    this.setState(() => ({ granularity }));
+    if (event.target.validity.valid && event.target.value.length < 9) {
+      const granularity = event.target.value;
+      this.setState(() => ({ granularity }));
+    }
   }
 
   onApply = () => {
@@ -71,34 +73,35 @@ export default class Chart extends Component {
 
     return (
       <div className="chart-header">
-        <div className="product-dropdown chart-header-item">
-          <Dropdown
-            options={dropdownProductOptions}
-            onChange={this.onProductChange}
-            value={selectedProduct.id}
-          />
-        </div>
-        <div className="indicator-dropdown chart-header-item">
-          <Dropdown
-            options={dropdownIndicatorOptions}
-            onChange={this.onSelectIndicator}
-            value={activeIndicator.id}
-          />
-        </div>
-        <div className="date-picker chart-header-item">
-          <Dropdown
-            options={this.props.chart.dateRanges}
-            onChange={this.onSelectDateRange}
-            value={selectedProduct.range}
-          />
-        </div>
-        <div className="granularity chart-header-item">
-          <Input name="granularity" onChange={this.onSetGanularity} placeholder="" value={this.state.granularity} />
-        </div>
-        <div className="granularity-label chart-header-item">
-          <label htmlFor="granularity">s</label>
-        </div>
-        <button className="btn btn-primary chart-header-item" onClick={this.onApply}>Apply</button>
+        <Dropdown
+          className="product-dropdown chart-header-item"
+          options={dropdownProductOptions}
+          onChange={this.onProductChange}
+          value={selectedProduct.id}
+        />
+        <Dropdown
+          className="indicator-dropdown chart-header-item"
+          options={dropdownIndicatorOptions}
+          onChange={this.onSelectIndicator}
+          value={activeIndicator.id}
+        />
+        <Dropdown
+          className="date-picker chart-header-item"
+          options={this.props.chart.dateRanges}
+          onChange={this.onSelectDateRange}
+          value={selectedProduct.range}
+        />
+        <Input
+          className="granularity chart-header-item"
+          maxLength={9}
+          name="granularity"
+          onChange={this.onSetGanularity}
+          placeholder=""
+          type="number"
+          value={this.state.granularity}
+        />
+        <span className="granularity-label">s</span>
+        <button className="btn chart-header-item" onClick={this.onApply}>Apply</button>
         <div className="websocket-status chart-header-item">
           <span>Websocket</span>
           <span

@@ -8,10 +8,12 @@ $active-color: #007eff;
 $background-color: #15232C;
 $danger-color: #ff6939;
 $profile-form-width: 500px;
+$left-container-width: 1050px;
+$websocket-chart-width: 300px;
 
 html * {
   color: #000;
-  font-family: Arial;
+  font-family: opensans, sans-serif, btcglyph;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -60,6 +62,14 @@ input {
   text-align: left;
   color: #FFF;
   background-color: transparent;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
 }
 
 button:hover {
@@ -224,4 +234,74 @@ button:hover {
   .import-export {
     display: flex;
   }
+}
+
+.top-container {
+  display: inline-flex;
+  width: $left-container-width - $websocket-chart-width;
+
+  .chart-header {
+    display: inline-flex;
+    input.granularity {
+      margin-top: 1px;
+      height: 38px;
+      padding: 8px 5px 8px 10px;
+      border: 1px solid #565f66;
+      border-radius: 2px;
+      outline: 0;
+      box-shadow: none;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: left;
+      color: #FFF;
+      background-color: #404a52;
+    }
+
+    span.granularity-label {
+      position: relative;
+      top: 30px;
+      right: 30px;
+      font-size: 14px;
+      font-weight: bold;
+      color: white; //hsla(0,0%,100%,.9);
+      transform: translateY(-50%);
+    }
+
+    .chart-header-item {
+      width: 100px;
+      margin-right: 10px;
+      .Select-clear {
+        display: none;
+      }
+      .Select {
+        border-radius: 2px;
+      }
+      .Select-value {
+        font-size: 15px;
+        font-weight: bold;
+        color: rgba(21,35,44,.8);
+      }
+    }
+  }
+
+  .chart-container {
+    display: inline-flex;
+    padding-top: 10px;
+    .price-chart {
+      width: $left-container-width - $websocket-chart-width;
+    }
+    .websocket-chart {
+      width: $websocket-chart-width;
+      background-color: green;
+    }
+  }
+
+  .right-container {
+    margin: auto;
+
+  }
+}
+
+.bottom-container {
+  display: inline-flex;
 }

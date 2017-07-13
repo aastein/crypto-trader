@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Input = ({ name, onChange, placeholder, value }) => (
+const Input = ({ name, onChange, placeholder, value, className, maxLength, type = 'text' }) => (
   (
     <div>
       <input
-        className="form-control"
+        className={className}
+        maxLength={maxLength}
         onChange={e => onChange(name, e)}
         placeholder={placeholder || ''}
-        type="text"
+        type={type}
         value={value}
       />
     </div>

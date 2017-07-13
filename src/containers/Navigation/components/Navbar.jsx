@@ -46,7 +46,6 @@ export default class Navigation extends Component {
     const round = (value, decimals) => (
       Number(Math.round(Number(`${value}e${decimals}`)) + `e-${decimals}`)
     );
-
     return (
       <nav className={`navbar ${this.props.live ? 'live' : ''}`}>
         <a
