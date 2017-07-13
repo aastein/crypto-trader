@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { ObjectInspector } from 'react-inspector';
 import ToggleSwitch from 'react-toggle-switch';
 
-import { run } from '../../../utils/scriptEnv';
-import { test } from '../../../utils/scriptTestEnv';
+import run from '../../../utils/scriptEnv';
+import test from '../../../utils/scriptTestEnv';
 import { getAccounts } from '../../../utils/api';
 
 const ScriptList = ({ addNew, scripts, onScriptClick, toggleScriptLive }) => (

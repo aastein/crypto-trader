@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Loader } from '../../../components/Loader';
+import Loader from '../../../components/Loader';
 import PriceChart from '../../../components/PriceChart';
 
 const Chart = ({ chart, scripts, profile, appendLog, updateAccounts }) => {

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import moment from 'moment';
 
 import { getAccounts, getProducts, fetchProductData, setOrderBook } from '../../../utils/api';
-import { initWSConnection } from '../../../utils/websocket';
+import initWSConnection from '../../../utils/websocket';
 import { INIT_RANGE, INIT_GRANULARITY } from '../../../utils/constants';
 
 export default class Navigation extends Component {
@@ -44,7 +44,7 @@ export default class Navigation extends Component {
 
   render() {
     const round = (value, decimals) => (
-      Number(Math.round(`${value}e${decimals}`)`e-${decimals}`)
+      Number(Math.round(Number(`${value}e${decimals}`)) + `e-${decimals}`)
     );
 
     return (

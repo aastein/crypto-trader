@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactHighstock from 'react-highcharts/ReactHighstock.src';
 
-import { run } from '../utils/scriptEnv';
+import run from '../utils/scriptEnv';
 
 export default class PriceChart extends Component {
 
@@ -33,12 +33,12 @@ export default class PriceChart extends Component {
     this.props.config.series[0].name !== nextProps.config.series[0].name
   )
 
-  dataChanged = (nextProps) => (
+  dataChanged = nextProps => (
     this.props.config.series[0].name !== nextProps.config.series[0].name
       || this.props.config.series[0].data.length !== nextProps.config.series[0].data.length
   )
 
-  testDataChanged = (nextProps) => (
+  testDataChanged = nextProps => (
     JSON.stringify(this.props.config.xAxis.plotLines)
     !== JSON.stringify(nextProps.config.xAxis.plotLines)
       || this.props.config.xAxis.plotLines.length !== nextProps.config.xAxis.plotLines.length

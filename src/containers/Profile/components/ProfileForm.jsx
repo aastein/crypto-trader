@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ToggleSwitch from 'react-toggle-switch';
-import { Input } from '../../../components/Input';
-import { Dropdown } from '../../../components/Dropdown';
+import Input from '../../../components/Input';
+import Dropdown from '../../../components/Dropdown';
 import { getAccounts } from '../../../utils/api';
 
 export default class ProfileForm extends Component {

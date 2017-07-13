@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import { Dropdown } from '../../../components/Dropdown';
-import { Input } from '../../../components/Input';
+import Dropdown from '../../../components/Dropdown';
+import Input from '../../../components/Input';
 import { fetchProductData } from '../../../utils/api';
 
 export default class Chart extends Component {
@@ -103,7 +103,7 @@ export default class Chart extends Component {
           <span>Websocket</span>
           <span
             className={`glyphicon glyphicon-dot chart-header-item
-              ${this.props.chart.websocket.connected ? 'connected' : ''}`
+              ${this.props.websocket.connected ? 'connected' : ''}`
             }
           />
         </div>

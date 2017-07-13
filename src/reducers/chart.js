@@ -1,5 +1,5 @@
 import * as actionType from '../actions/actionTypes';
-import { indicators } from '../utils/indicators';
+import calculateIndicators from '../utils/indicators';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
 
 const INITAL_CHART_STATE = {
@@ -130,6 +130,7 @@ const chart = (state = INITAL_CHART_STATE, action) => {
       return { ...state,
         products: state.products.map((p) => {
           const product = p;
+          console.log(p.id === action.id);
           product.active = p.id === action.id;
           return product;
         }),
@@ -159,7 +160,7 @@ const chart = (state = INITAL_CHART_STATE, action) => {
               }
               return false;
             });
-            const inds = indicators(state.indicators, data);
+            const inds = calculateIndicators(state.indicators, data);
             return { ...product,
               data,
               srsi: inds.srsi,

@@ -116,13 +116,15 @@ module.exports = {
           {
             options: {
               formatter: eslintFormatter,
-              extends: 'airbnb',
             },
             loader: require.resolve('eslint-loader'),
           },
         ],
         include: paths.appSrc,
-        exclude: /script.*Env.js/
+        exclude: [
+          /script.*Env.js/,
+          /registerServiceWorker.js/,
+        ],
       },
       // ** ADDING/UPDATING LOADERS **
       // The "file" loader handles all assets unless explicitly excluded.

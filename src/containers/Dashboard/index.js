@@ -27,6 +27,7 @@ const mapStateToProps = state => (
     scripts: state.scripts,
     profile: state.profile,
     log: state.log,
+    websocket: state.websocket,
   }
 );
 

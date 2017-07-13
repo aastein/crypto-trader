@@ -11,6 +11,7 @@ const websocket = (state = INIT_STATE, action) => {
     case actionType.SET_PRODUCTS:
       return { ...state, products: action.products.map(p => ({ id: p.id, data: [] })) };
     case actionType.SET_PRODUCT_WS_DATA:
+      console.log(action);
       return { ...state,
         products: state.products.map((p) => {
           const product = p;
@@ -20,7 +21,7 @@ const websocket = (state = INIT_STATE, action) => {
           return p;
         }),
         connected: true,
-        heartbeatTime: action.data.time,
+        heartbeatTime: action.time,
       };
     default:
       return state;

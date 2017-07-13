@@ -13,7 +13,7 @@ const Dashboard = props => (
           <ChartHeader
             chart={props.chart}
             selectedProductIds={props.profile.selectedProducts.map(p => (p.value))}
-
+            websocket={props.websocket}
             selectProduct={props.selectProduct}
             setGanularity={props.setGranularity}
             setProductData={props.setProductData}
