@@ -10,7 +10,7 @@ import App from './App';
 import reducer from './reducers';
 import registerServiceWorker from './registerServiceWorker';
 import '../node_modules/react-toggle-switch/dist/css/switch.min.css';
-import './index.css';
+import './index.scss';
 
 
 const store = createStore(

@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import ToggleSwitch from 'react-toggle-switch';
+import fileDownload from 'react-file-download';
+import Dropzone from 'react-dropzone';
+import axios from 'axios';
+
 import Input from '../../../components/Input';
 import Dropdown from '../../../components/Dropdown';
 import { getAccounts } from '../../../utils/api';
+
 
 export default class ProfileForm extends Component {
   constructor(props) {
@@ -51,58 +56,58 @@ export default class ProfileForm extends Component {
     this.props.saveProfile({ profile: this.state.profile });
   }
 
-  handleImport = (event) => {
+  handleImport = (acceptedFiles) => {
+    const instance = axios.create({ baseURL: '' });
+    instance.get(acceptedFiles[0].preview).then((d) => {
+      this.props.importProfile(d.data);
+    });
+  }
+
+  handleExport = (event) => {
     event.preventDefault();
-    this.props.importProfile(JSON.parse(this.state.textState));
+    fileDownload(this.state.textState, 'user_state.json');
   }
 
   render() {
     return (
-      <div className="profile col-md-6 col-md-offset-3">
+      <div className="page">
         <form onSubmit={this.props.onSaveClick}>
-          <button type="submit" className="btn btn-primary" onClick={this.handleSave}>
+          <button type="submit" className="form-group btn-med" onClick={this.handleSave}>
             Save
           </button>
-          <div className="form-group">
-            <label htmlFor="live">Live</label>
-            <div>
-              <ToggleSwitch
-                on={this.state.profile.live}
-                onClick={this.handleToggle}
-              />
-            </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="session">Session</label>
-            <Input
-              name="session"
-              placeholder="Session"
-              value={this.state.profile.session}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div className="product-multi-select">
-            <label htmlFor="watched-products">Watched Products</label>
-            <Dropdown
-              multi
-              simpleValue
-              options={this.props.products.map(p => ({ label: p.display_name, value: p.id }))}
-              onChange={this.onSelectProducts}
-              value={this.state.profile.selectedProducts}
-            />
-          </div>
-          <div>
-            <label htmlFor="settings">Settings</label>
-            <button type="submit" className="btn btn-success" onClick={this.handleImport}>
-              Import
+          <label className="form-group" htmlFor="live">Live</label>
+          <ToggleSwitch
+            className="form-group"
+            on={this.state.profile.live}
+            onClick={this.handleToggle}
+          />
+          <label className="form-group" htmlFor="session">Session</label>
+          <Input
+            className="form-group"
+            name="session"
+            placeholder="Session"
+            value={this.state.profile.session}
+            onChange={this.handleInputChange}
+          />
+          <label className="form-group" htmlFor="watched-products">Watched Products</label>
+          <Dropdown
+            className="form-group"
+            multi
+            simpleValue
+            options={this.props.products.map(p => ({ label: p.display_name, value: p.id }))}
+            onChange={this.onSelectProducts}
+            value={this.state.profile.selectedProducts}
+          />
+          <label className="form-group" htmlFor="settings">Settings</label>
+          <div className="import-export">
+            <Dropzone className="dropzone" onDrop={this.handleImport}>
+              <button type="submit" className="form-group btn-small" onClick={(e) => { e.preventDefault(); }}>
+                Import
+              </button>
+            </Dropzone>
+            <button type="submit" className="form-group btn-small" onClick={this.handleExport}>
+              Export
             </button>
-            <textarea
-              className="form-group col-md-12"
-              rows={'3'}
-              cols={'30'}
-              value={this.state.textState}
-              onChange={this.handleTextAreaChange}
-            />
           </div>
         </form>
       </div>

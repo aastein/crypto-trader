@@ -48,61 +48,51 @@ export default class Navigation extends Component {
     );
 
     return (
-      <nav className={`navbar navbar-inverse navbar-fixed-top ${this.props.live ? 'live' : ''}`}>
-        <div className="container nav-container">
-          <div className="navbar-header">
-            <a
-              className="navbar-brand"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://github.com/aastein/crypto-trader"
-            >
-              <img
-                alt="logo"
-                className="navbar-brand-img"
-                height="50"
-                src="https://avatars0.githubusercontent.com/u/18291415?v=3&s=460"
-              />
-            </a>
-          </div>
-          <ul className="nav navbar-nav">
-            <li>
-              <NavLink exact activeClassName="active" to="/">Dashboard</NavLink>
+      <nav className={`navbar ${this.props.live ? 'live' : ''}`}>
+        <a
+          className="nav-group"
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/aastein/crypto-trader"
+        >
+          <img
+            alt="logo"
+            src="https://avatars0.githubusercontent.com/u/18291415?v=3&s=460"
+          />
+        </a>
+        <ul className="nav-group links">
+          <li>
+            <NavLink exact activeClassName="active" to="/">Dashboard</NavLink>
+          </li>
+          <li>
+            <NavLink exact activeClassName="active" to="/profile">Profile</NavLink>
+          </li>
+        </ul>
+        <ul className="nav-group orderbook">
+          {
+            this.props.products.filter(p => (
+              this.props.selectedProductIds.indexOf(p.id) > -1
+            )).map(a => (
+              <li key={a.display_name}>
+                <div>
+                  <p>{a.display_name}</p>
+                  <p>{`Bid: ${a.bid}`}</p>
+                  <p>{`Ask: ${a.ask}`}</p>
+                </div>
+              </li>
+          ))}
+        </ul>
+        <ul className="nav-group-right accounts">
+          {this.props.accounts.map(a => (
+            <li key={a.currency}>
+              <div>
+                <p>{a.currency}</p>
+                <p>{`Available: ${round(a.available, 6)}`}</p>
+                <p>{`Balance: ${round(a.balance, 6)}`}</p>
+              </div>
             </li>
-            <li>
-              <NavLink exact activeClassName="active" to="/profile">Profile</NavLink>
-            </li>
-          </ul>
-          <div className="order-book">
-            <ul>
-              {
-                this.props.products.filter(p => (
-                  this.props.selectedProductIds.indexOf(p.id) > -1
-                )).map(a => (
-                  <li key={a.display_name}>
-                    <div>
-                      <span>{a.display_name}</span>
-                      <span>{`Bid: ${a.bid}`}</span>
-                      <span>{`Ask: ${a.ask}`}</span>
-                    </div>
-                  </li>
-              ))}
-            </ul>
-          </div>
-          <div className="accounts">
-            <ul>
-              {this.props.accounts.map(a => (
-                <li key={a.currency}>
-                  <div>
-                    <span>{a.currency}</span>
-                    <span>{`Available: ${round(a.available, 6)}`}</span>
-                    <span>{`Balance: ${round(a.balance, 6)}`}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+          ))}
+        </ul>
       </nav>
     );
   }

@@ -130,7 +130,6 @@ const chart = (state = INITAL_CHART_STATE, action) => {
       return { ...state,
         products: state.products.map((p) => {
           const product = p;
-          console.log(p.id === action.id);
           product.active = p.id === action.id;
           return product;
         }),
