@@ -5,7 +5,7 @@ import {
   setProducts,
   setProductData,
   selectProduct,
-  setProductWSData,
+  addProductWSData,
   updateHeartbeat,
 } from '../../actions';
 import Navbar from './components/Navbar';
@@ -38,8 +38,8 @@ const mapDispatchToProps = dispatch => (
     selectProduct: (id) => {
       dispatch(selectProduct(id));
     },
-    setProductWSData: (id, wsData) => {
-      dispatch(setProductWSData(id, wsData));
+    addProductWSData: (id, time, price, size) => {
+      dispatch(addProductWSData(id, time, price, size));
     },
     updateHeartbeat: (status) => {
       dispatch(updateHeartbeat(status));

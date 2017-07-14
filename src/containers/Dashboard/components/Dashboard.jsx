@@ -2,6 +2,7 @@ import React from 'react';
 
 import ChartHeader from './ChartHeader';
 import Chart from './Chart';
+import WebsocketChart from './WebsocketChart';
 import Scratchpad from './Scratchpad';
 import Log from './Log';
 
@@ -31,7 +32,12 @@ const Dashboard = props => (
               appendLog={props.appendLog}
               updateAccounts={props.updateAccounts}
             />
-            <div className="websocket-chart" />
+            <WebsocketChart
+              websocket={props.websocket}
+              products={props.chart.products}
+              setProductData={props.setProductData}
+              setProductWSData={props.setProductWSData}
+            />
           </div>
         </div>
         <div className="right-container">

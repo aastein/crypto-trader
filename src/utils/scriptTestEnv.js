@@ -87,10 +87,7 @@ const test = (script, prods, appendLog) => {
     data: orderHist,
   };
 
-  console.log(result);
-
   appendLog(`Avg. gain: ${avgGain} Avg. loss: ${avgLoss} Diff: ${round(avgGain + avgLoss, 2)} Total: ${total}`);
-
   return result;
 };
 

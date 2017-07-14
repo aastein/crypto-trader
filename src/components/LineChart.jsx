@@ -34,7 +34,7 @@ export default class PriceChart extends Component {
 
   render() {
     return (
-      <div className="line-chart chart" >
+      <div className="line-chart" >
         <ReactHighcharts config={this.props.config} ref={(c) => { this.wschart = c; }} />
       </div>
     );

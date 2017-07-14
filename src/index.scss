@@ -19,7 +19,7 @@ $websocket-chart-width: 10%;
 $chart-header-height: 50px;
 $chart-height: 400px;
 
-$bottom-container-height: 275px;
+$bottom-container-height: 255px;
 
 html * {
   color: #000;
@@ -421,7 +421,10 @@ button:hover {
       .websocket-chart {
         width: 30%;
         min-height: 100%;
-        background-color: green;
+        .line-chart {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }

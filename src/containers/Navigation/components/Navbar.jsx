@@ -14,7 +14,7 @@ export default class Navigation extends Component {
         const productIds = products.map(p => (p.id));
         this.props.setProducts(products);
         this.props.selectProduct('LTC-USD');
-        initWSConnection(productIds, this.props.setProductWSData);
+        initWSConnection(productIds, this.props.addProductWSData);
         fetchProductData('LTC-USD', INIT_RANGE, INIT_GRANULARITY, this.props.setProductData);
         setOrderBook('LTC-USD', this.props.updateOrderBook);
       }

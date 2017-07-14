@@ -8,8 +8,9 @@ export const saveProfile = settings => ({ type: actionType.SAVE_PROFILE, setting
 export const updateAccounts = accounts => ({ type: actionType.UPDATE_ACCOUNTS, accounts });
 
 // websocket
-export const setProductWSData = (id, time, price, size) =>
-  ({ type: actionType.SET_PRODUCT_WS_DATA, id, time, price, size });
+export const setProductWSData = (id, data) => ({ type: actionType.SET_PRODUCT_WS_DATA, id, data });
+export const addProductWSData = (id, time, price, size) =>
+    ({ type: actionType.ADD_PRODUCT_WS_DATA, id, time, price, size });
 
 // dashboard: charts
 export const setProducts = products => ({ type: actionType.SET_PRODUCTS, products });

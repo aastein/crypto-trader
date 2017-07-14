@@ -5,6 +5,7 @@ export const UPDATE_ACCOUNTS = 'UPDATE_ACCOUNTS';
 
 // websocket
 export const SET_PRODUCT_WS_DATA = 'SET_PRODUCT_WS_DATA';
+export const ADD_PRODUCT_WS_DATA = 'ADD_PRODUCT_WS_DATA';
 
 // dashboard: charts
 export const SET_PRODUCTS = 'SET_PRODUCTS';

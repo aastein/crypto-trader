@@ -17,6 +17,7 @@ import {
   updateAccounts,
   toggleScriptLive,
   saveTestResult,
+  setProductWSData,
 } from '../../actions';
 
 import Dashboard from './components/Dashboard';
@@ -80,6 +81,9 @@ const mapDispatchToProps = dispatch => (
     },
     saveTestResult: (result) => {
       dispatch(saveTestResult(result));
+    },
+    setProductWSData: (id, data) => {
+      dispatch(setProductWSData(id, data));
     },
   }
 );
