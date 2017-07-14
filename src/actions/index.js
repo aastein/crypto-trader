@@ -1,6 +1,6 @@
 import * as actionType from './actionTypes';
 
-const nextScriptId = 3;
+let nextScriptId = 3;
 
 // profile
 export const importProfile = userData => ({ type: actionType.IMPORT_PROFILE, userData });
@@ -25,7 +25,7 @@ export const updateOrderBook = (id, orderBook) =>
 export const updateHeartbeat = status => ({ type: actionType.UPDATE_HEARTBEAT, status });
 
 // dashpbard: scratchpad
-export const addScript = () => ({ type: actionType.ADD_SCRIPT, id: nextScriptId + 1 });
+export const addScript = () => ({ type: actionType.ADD_SCRIPT, id: nextScriptId += 1 });
 export const saveScript = script => ({ type: actionType.SAVE_SCRIPT, script });
 export const deleteScript = () => ({ type: actionType.DELETE_SCRIPT });
 export const selectScript = id => ({ type: actionType.SELECT_SCRIPT, id });

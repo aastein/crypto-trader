@@ -9,7 +9,7 @@ const Dashboard = props => (
   (
     <div className="dashboard">
       <div className="top-container">
-        <div className="left-conatiner">
+        <div className="left-container">
           <ChartHeader
             chart={props.chart}
             selectedProductIds={props.profile.selectedProducts.map(p => (p.value))}

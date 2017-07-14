@@ -275,7 +275,7 @@ const Chart = ({ chart, scripts, profile, appendLog, updateAccounts }) => {
   };
 
   return (
-    <div>
+    <div className="price-chart-container">
       { selectedProduct.data && selectedProduct.data.length > 0 ?
         <div>
           <PriceChart

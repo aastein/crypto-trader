@@ -163,6 +163,7 @@ export const placeOrder = (type, side, productId, price, size, session, log) => 
     size,
     time_in_force: 'GTT',
     cancel_after: 'min',
+    post_only: true,
   };
 
   return authRequest(uri, '', 'post', body, session).then((res) => {

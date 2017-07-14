@@ -7,22 +7,19 @@ import test from '../../../utils/scriptTestEnv';
 import { getAccounts } from '../../../utils/api';
 
 const ScriptList = ({ addNew, scripts, onScriptClick, toggleScriptLive }) => (
-  <div className="script-list list-group col-md-3">
-    <div>
-      <button
-        className="list-group-item list-group-item-action btn-primary"
-        key="add-new"
-        onClick={() => addNew()}
-      >
-        Add New
-      </button>
-    </div>
+  <div className="script-list">
+    <button
+      className="list-button-add"
+      key="add-new"
+      onClick={() => addNew()}
+    >
+      Add New
+    </button>
     <div className="scripts">
       { scripts.map(script => (
-        <div key={script.id} className={`list-group-item ${script.active ? 'active' : ''}`}>
+        <div key={script.id} className={`list-item ${script.active ? 'active' : ''}`}>
           <button
-           // className={`list-group-item list-group-item-action ${script.active ? ' active' : ''}`}
-            className="script-button"
+            className="list-button"
             onClick={() => onScriptClick(script.id)}
           >
             {script.name}
@@ -38,17 +35,15 @@ const ScriptList = ({ addNew, scripts, onScriptClick, toggleScriptLive }) => (
 );
 
 const ProductDataList = ({ products, onClick }) => (
-  <div className="doc-list list-group col-md-3">
-    <div>
-      <h3>
-        Product Data
-      </h3>
-    </div>
+  <div className="doc-list">
+    <h2>
+      Product Data
+    </h2>
     <div className="docs">
       { products.map(p => (
         <div key={p.id}>
           <button
-            className="list-group-item list-group-item-action"
+            className="list-button"
             onClick={() => onClick(p.id)}
           >
             {p.id.replace('-', '_')}
@@ -98,43 +93,36 @@ class CodeEditor extends Component {
     this.props.saveTestResult(result);
   }
 
+  deleteScript = (event) => {
+    event.preventDefault();
+    this.props.deleteScript();
+  }
+
   render() {
     return (
-      <div className="code-editor col-md-6">
+      <div className="code-editor">
         <form onSubmit={this.handleSave}>
-          <div className="editor-form row">
-            <div className="name-group">
-              <div className="input-group">
-                <div className="input-group-addon">Script Name:</div>
-                <input
-                  className="form-control"
-                  type="input"
-                  value={this.props.script.name}
-                  onChange={this.handleInputChange}
-                />
-              </div>
-            </div>
-            <div className="save-input">
-              <input
-                className="btn btn-danger"
-                type="button"
-                value="Delete"
-                onClick={this.props.deleteScript}
-              />
-            </div>
+          <div className="code-editor-header">
+            <span>Script Name:</span>
+            <input
+              className="name-input"
+              type="input"
+              value={this.props.script.name}
+              onChange={this.handleInputChange}
+            />
+            <button className="btn-delete" onClick={this.deleteScript}>Delete</button>
           </div>
-          <textarea
-            className="form-group col-md-12"
-            rows={'3'}
-            cols={'30'}
-            value={this.props.script.script}
-            onChange={this.handleTextAreaChange}
-          />
-          <div className="run-button">
-            <button className="btn btn-success btn-run" onClick={this.runScript}>Run</button>
+          <div className="textarea">
+            <textarea
+              rows={'3'}
+              cols={'30'}
+              value={this.props.script.script}
+              onChange={this.handleTextAreaChange}
+            />
           </div>
-          <div className="test-button">
-            <button className="btn btn-warning btn-test" onClick={this.testScript}>Test</button>
+          <div className="action-buttons">
+            <button className="btn-run" onClick={this.runScript}>Run</button>
+            <button className="btn-test" onClick={this.testScript}>Test</button>
           </div>
         </form>
       </div>
@@ -151,7 +139,6 @@ const Scratchpad = (props) => {
     <div className={props.className}>
       <ScriptList
         scripts={props.scripts}
-
         addNew={props.addScript}
         toggleScriptLive={props.toggleScriptLive}
         onScriptClick={props.selectScript}
@@ -160,7 +147,6 @@ const Scratchpad = (props) => {
         products={props.products}
         profile={props.profile}
         script={activeScript}
-
         appendLog={props.appendLog}
         deleteScript={props.deleteScript}
         saveScript={props.saveScript}
