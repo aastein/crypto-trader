@@ -8,14 +8,17 @@ import { getAccounts } from '../../../utils/api';
 
 const ScriptList = ({ addNew, scripts, onScriptClick, toggleScriptLive }) => (
   <div className="script-list">
-    <button
-      className="list-button-add"
-      key="add-new"
-      onClick={() => addNew()}
-    >
-      Add New
-    </button>
+    <h2>
+      Product Data
+    </h2>
     <div className="scripts">
+      <button
+        className="list-button-add"
+        key="add-new"
+        onClick={() => addNew()}
+      >
+        Add New
+      </button>
       { scripts.map(script => (
         <div key={script.id} className={`list-item ${script.active ? 'active' : ''}`}>
           <button

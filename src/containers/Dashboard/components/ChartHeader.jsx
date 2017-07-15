@@ -73,45 +73,47 @@ export default class Chart extends Component {
 
     return (
       <div className="chart-header">
-        <div className="chart-header-items">
-          <Dropdown
-            className="product-dropdown chart-header-item"
-            options={dropdownProductOptions}
-            onChange={this.onProductChange}
-            value={selectedProduct.id}
-          />
-          <Dropdown
-            className="indicator-dropdown chart-header-item"
-            options={dropdownIndicatorOptions}
-            onChange={this.onSelectIndicator}
-            value={activeIndicator.id}
-          />
-          <Dropdown
-            className="date-picker chart-header-item"
-            options={this.props.chart.dateRanges}
-            onChange={this.onSelectDateRange}
-            value={selectedProduct.range}
-          />
-          <div className="granularity chart-header-item">
-            <Input
-              className="granularity"
-              maxLength={9}
-              name="granularity"
-              onChange={this.onSetGanularity}
-              placeholder=""
-              type="number"
-              value={this.state.granularity}
+        <div className="chart-header-item-container">
+          <div className="chart-header-items">
+            <Dropdown
+              className="product-dropdown chart-header-item"
+              options={dropdownProductOptions}
+              onChange={this.onProductChange}
+              value={selectedProduct.id}
             />
-            <span className="granularity-label">s</span>
-          </div>
-          <button className="btn chart-header-item" onClick={this.onApply}>Apply</button>
-          <div className="websocket-status chart-header-item">
-            <span>Realtime data</span>
-            <span
-              className={`glyphicon glyphicon-dot chart-header-item
-                ${this.props.websocket.connected ? 'connected' : ''}`
-              }
+            <Dropdown
+              className="indicator-dropdown chart-header-item"
+              options={dropdownIndicatorOptions}
+              onChange={this.onSelectIndicator}
+              value={activeIndicator.id}
             />
+            <Dropdown
+              className="date-picker chart-header-item"
+              options={this.props.chart.dateRanges}
+              onChange={this.onSelectDateRange}
+              value={selectedProduct.range}
+            />
+            <div className="granularity chart-header-item">
+              <Input
+                className="granularity"
+                maxLength={9}
+                name="granularity"
+                onChange={this.onSetGanularity}
+                placeholder=""
+                type="number"
+                value={this.state.granularity}
+              />
+              <span className="granularity-label">s</span>
+            </div>
+            <button className="btn chart-header-item" onClick={this.onApply}>Apply</button>
+            <div className="websocket-status chart-header-item">
+              <span>Realtime data</span>
+              <span
+                className={`glyphicon glyphicon-dot chart-header-item
+                  ${this.props.websocket.connected ? 'connected' : ''}`
+                }
+              />
+            </div>
           </div>
         </div>
       </div>

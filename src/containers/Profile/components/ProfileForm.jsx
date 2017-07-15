@@ -70,7 +70,7 @@ export default class ProfileForm extends Component {
 
   render() {
     return (
-      <div className="page">
+      <div className="profile">
         <form onSubmit={this.props.onSaveClick}>
           <button type="submit" className="form-group btn-med" onClick={this.handleSave}>
             Save

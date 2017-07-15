@@ -49,41 +49,53 @@ const Chart = ({ chart, scripts, profile, appendLog, updateAccounts }) => {
     chart: {
       marginBottom: 15,
     },
+    credits: {
+      enabled: false,
+    },
     navigator: {
       height: 10,
+      xAxis: {
+        labels: {
+          y: 13,
+        },
+      },
     },
     rangeSelector: {
       enabled: false,
     },
     xAxis: {
       plotLines: testPlotLines,
+      labels: {
+        y: 13,
+      },
+      tickLength: 3,
     },
     yAxis: [{
       labels: {
-        align: 'right',
-        x: -3,
+        align: 'left',
+        x: 5,
       },
-      height: '60%',
-      lineWidth: 2,
+      height: '50%',
+      lineWidth: 1,
     },
     {
       labels: {
-        align: 'right',
-        x: -3,
+        enabled: false,
       },
-      top: '40%',
-      height: '20%',
+      top: '50%',
+      height: '10%',
       offset: 0,
-      lineWidth: 2,
+      lineWidth: 1,
     },
     {
       labels: {
-        align: 'right',
-        x: -3,
+        align: 'left',
+        x: 5,
       },
+      offset: 0,
       top: '62%',
       height: '17%',
-      lineWidth: 2,
+      lineWidth: 1,
       max: 1,
       min: 0,
       plotLines: [{
@@ -98,12 +110,13 @@ const Chart = ({ chart, scripts, profile, appendLog, updateAccounts }) => {
     },
     {
       labels: {
-        align: 'right',
-        x: -3,
+        align: 'left',
+        x: 5,
       },
+      offset: 0,
       top: '80%',
       height: '10%',
-      lineWidth: 2,
+      lineWidth: 1,
       softMax: 100,
       softMin: 0,
       plotLines: [{
@@ -118,12 +131,13 @@ const Chart = ({ chart, scripts, profile, appendLog, updateAccounts }) => {
     },
     {
       labels: {
-        align: 'right',
-        x: -3,
+        align: 'left',
+        x: 5,
       },
+      offset: 0,
       top: '90%',
       height: '10%',
-      lineWidth: 2,
+      lineWidth: 1,
       max: 400,
       min: -400,
       plotLines: [{

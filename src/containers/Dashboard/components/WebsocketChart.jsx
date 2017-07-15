@@ -91,24 +91,36 @@ export default class WebsocketChart extends Component {
     console.log(selectedProductWSPriceData);
 
     const wsConfig = {
+      rangeSelector: {
+        enabled: false,
+      },
+      credits: {
+        enabled: false,
+      },
+      chart: {
+        marginBottom: 51,
+      },
+      xAxis: [{
+        labels: {
+          y: 13,
+        },
+        tickLength: 3,
+      }],
       yAxis: [{
         labels: {
-          align: 'right',
-          x: -3,
+          align: 'left',
+          x: 5,
         },
-        height: '114%',
-        top: '-14%',
-        lineWidth: 2,
+        lineWidth: 1,
       },
       {
         labels: {
-          align: 'right',
-          x: -3,
+          enabled: false,
         },
         top: '85%',
         height: '15%',
         offset: 0,
-        lineWidth: 2,
+        lineWidth: 1,
       }],
       series: [{
         data: selectedProductWSPriceData,

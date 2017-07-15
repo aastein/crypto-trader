@@ -478,6 +478,9 @@ TODO:
         }
       }
 
+Backtest neural net?
+  http://karpathy.github.io/neuralnets/
+
   Script environment:
 
   Chart:
