@@ -31,17 +31,18 @@ const Chart = ({ chart }) => {
   const selectedProductCCIData = selectedProduct.cci ?
     selectedProduct.cci.map(d => ([d.time, d.value])) : [];
 
-  const testPlotLines = chart.testResult.data ? chart.testResult.data.map(d => (
+  const testPlotLines = chart.testResult.data ? chart.testResult.data.map((d, i) => (
     { id: 'testResult',
       value: d.time,
       width: 2,
-      color: d.balance < 0 ? 'green' : 'red',
+      color: d.price < 0 ? 'green' : 'red',
       dashStyle: d.loss ? 'dot' : 'solid',
       label: {
         text: d.label,
         verticalAlign: 'top',
         textAlign: 'left',
         rotation: 0,
+        y: (i % 4) * 10,
       },
     })) : [];
 

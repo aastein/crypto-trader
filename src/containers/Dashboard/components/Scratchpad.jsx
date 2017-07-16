@@ -87,7 +87,7 @@ class CodeEditor extends Component {
   runScript = (event) => {
     event.preventDefault();
     run(this.props.script.script, this.props.products, this.props.profile, this.props.appendLog,
-      this.updateAccounts);
+      this.props.addOrder);
   }
 
   testScript = (event) => {
@@ -150,6 +150,7 @@ const Scratchpad = (props) => {
         products={props.products}
         profile={props.profile}
         script={activeScript}
+        addOrder={props.addOrder}
         appendLog={props.appendLog}
         deleteScript={props.deleteScript}
         saveScript={props.saveScript}

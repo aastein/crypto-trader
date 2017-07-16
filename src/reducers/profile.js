@@ -9,10 +9,21 @@ const INITAL_PROFILE_STATE = {
     { label: 'ETH/USD', value: 'ETH-USD' },
   ],
   accounts: [{ available: 0, balance: 0, currency: 'USD' }],
+  orders: [],
 };
 
 const profile = (state = INITAL_PROFILE_STATE, action) => {
   switch (action.type) {
+    case actionType.ADD_ORDER:
+      return { ...state,
+        orders: [...state.orders,
+          {
+            id: action.id,
+            time: action.time,
+            price: action.price,
+          },
+        ],
+      };
     case actionType.IMPORT_PROFILE:
       return { ...state, ...action.userData.profile };
     case actionType.SAVE_PROFILE:

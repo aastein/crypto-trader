@@ -20,6 +20,7 @@ import {
   setProductWSData,
   addProductData,
   setFetchingStatus,
+  addOrder,
 } from '../../actions';
 
 import Dashboard from './components/Dashboard';
@@ -92,6 +93,9 @@ const mapDispatchToProps = dispatch => (
     },
     setFetchingStatus: (status) => {
       dispatch(setFetchingStatus(status));
+    },
+    addOrder: (id, time, price) => {
+      dispatch(addOrder(id, time, price));
     },
   }
 );

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import ReactHighstock from 'react-highcharts/ReactHighstock.src';
 
-import run from '../utils/scriptEnv';
-
 export default class PriceChart extends Component {
 
   componentWillReceiveProps = (nextProps) => {

@@ -475,6 +475,9 @@ button:hover {
           fill: $purple-a;
         }
       }
+      .highcharts-plot-line-label {
+        fill: #fff;
+      }
 
       .price-chart-container {
         width: $left-container-width;
@@ -505,10 +508,18 @@ button:hover {
           width: 100%;
           height: 100%;
         }
+
         .spinner {
           position: relative;
           left: $left-container-width / 1.5;
           top: 200px;
+        }
+
+        .loading-message {
+          padding: 30px;
+          color: #FFF;
+          text-align: center;
+          font-weight: bold;
         }
       }
     }
@@ -539,6 +550,7 @@ button:hover {
       color: #FFF;
       padding: 5px 10px;
       margin: 0px;
+      white-space: pre-line;
     }
 
     .log-messages {
@@ -547,7 +559,6 @@ button:hover {
       height: 400px;
       overflow-y: hidden;
       background-color: #29353D;
-
     }
     .log-messages:hover {
       overflow-y: overlay;
@@ -634,8 +645,6 @@ button:hover {
         margin: 1px;
         box-sizing: border-box;
         span {
-          position: relative;
-          top: 2px;
           font-size: 15px;
           color: #FFF;
           font-weight: bold;
@@ -643,9 +652,9 @@ button:hover {
           padding-right: 10px;
         }
         input {
-          position: relative;
-          top: 1px;
+          margin-top: 2px;
           width: 200px;
+          border-width: 1px;
         }
         button {
           position: absolute;
@@ -678,6 +687,13 @@ button:hover {
           outline: none;
           color: #FFF;
           background-color: #29353D;
+          overflow-y: hidden;
+        }
+        textarea:focus {
+          overflow-y: scroll;
+        }
+        textarea:hover{
+          overflow-y: scroll;
         }
       }
 
