@@ -108,3 +108,6 @@ Copy the cb-session in the request headers
 Go to the profile page on crypto-trader and paste in the cb-session to the session input and click save
 
 <img src="/public/step4.png" width="450">
+
+Because this is app isn't backed by any server, before ending a session you can export your current config. Before starting a new session you can upload the config to start where you left off.
+<img src="/public/importexport.png" width="500">
