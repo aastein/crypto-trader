@@ -50,7 +50,8 @@ export default class Chart extends Component {
       p.active ? p : a
     ), {});
     this.props.setGanularity(product.id, this.state.granularity);
-    fetchProductData(product.id, product.range, this.state.granularity, this.props.setProductData);
+    fetchProductData(product.id, product.range, this.state.granularity, this.props.setProductData,
+      this.props.setFetchingStatus);
   }
 
   selectedProduct = () => (
@@ -115,7 +116,7 @@ export default class Chart extends Component {
               />
               <span className="granularity-label">s</span>
             </div>
-            <button className="btn chart-header-item" onClick={this.onApply}>Apply</button>
+            <button className="btn chart-header-item" onClick={this.onApply} disabled={this.props.chart.isFetching}>Apply</button>
             <div className="websocket-status chart-header-item">
               <span>Realtime data</span>
               <span

@@ -55,14 +55,15 @@ const INITAL_CHART_STATE = {
   ],
   products: [],
   testResult: {},
+  isFetching: false,
 };
 
 const chart = (state = INITAL_CHART_STATE, action) => {
   switch (action.type) {
+    case actionType.SET_FETCHING_STATUS:
+      return { ...state, isFetching: action.status };
     case actionType.SAVE_TEST_RESULT:
       return { ...state, testResult: action.result };
-    case actionType.UPDATE_HEARTBEAT:
-      return { ...state, websocket: { ...state.websocket, connected: action.status } };
     case actionType.SELECT_INDICATOR:
       return { ...state,
         indicators: state.indicators.map((i) => {

@@ -25,6 +25,7 @@ export const editIndicator = (id, params) => ({ type: actionType.EDIT_INDICATOR,
 export const updateOrderBook = (id, orderBook) =>
   ({ type: actionType.UPDATE_ORDER_BOOK, id, orderBook });
 export const updateHeartbeat = status => ({ type: actionType.UPDATE_HEARTBEAT, status });
+export const setFetchingStatus = status => ({ type: actionType.SET_FETCHING_STATUS, status });
 
 // dashpbard: scratchpad
 export const addScript = () => ({ type: actionType.ADD_SCRIPT, id: nextScriptId += 1 });

@@ -29,7 +29,6 @@ const websocket = (state = INIT_STATE, action) => {
         }),
       };
     case actionType.ADD_PRODUCT_WS_DATA:
-
       return { ...state,
         products: state.products.map((p) => {
           const product = { ...p };
@@ -67,6 +66,8 @@ const websocket = (state = INIT_STATE, action) => {
           return product;
         }),
       };
+    case actionType.UPDATE_HEARTBEAT:
+      return { ...state, connected: action.status };
     default:
       return state;
   }

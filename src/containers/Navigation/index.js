@@ -7,6 +7,7 @@ import {
   selectProduct,
   addProductWSData,
   updateHeartbeat,
+  setFetchingStatus,
 } from '../../actions';
 import Navbar from './components/Navbar';
 
@@ -43,6 +44,9 @@ const mapDispatchToProps = dispatch => (
     },
     updateHeartbeat: (status) => {
       dispatch(updateHeartbeat(status));
+    },
+    setFetchingStatus: (status) => {
+      dispatch(setFetchingStatus(status));
     },
   }
 );

@@ -4,9 +4,11 @@ import moment from 'moment';
 // axios.defaults.baseURL = 'https://api-public.sandbox.gdax.com'
 axios.defaults.baseURL = 'https://api.gdax.com';
 
-const handleError = error => (
-  console.warn(error)
-);
+const handleError = (error, setFetchingStatus) => {
+  console.log('handling err');
+  if (setFetchingStatus) setFetchingStatus(false);
+  return console.warn(error);
+};
 
 const authRequest = (uri, params, method, body, session) => {
   const headers = { 'CB-SESSION': session };
@@ -18,7 +20,7 @@ export const serverTime = () => {
   const url = '/time';
   return axios.get(url).then(res => (
     res.data
-  ));
+  )).catch(handleError);
 };
 
 /*
@@ -51,7 +53,7 @@ export const getAccounts = (session) => {
   )).catch((err) => { alert('Session ID invalid', err); });
 };
 
-export const getHistorialData = (product, startDate, endDate, gran) => {
+export const getHistorialData = (product, startDate, endDate, gran, setFetchingStatus) => {
   const granularity = Math.ceil(gran);
   const url = `/products/${product}/candles?start=${startDate}&end=${endDate}&granularity=${granularity}`;
   return axios.get(url).then(res => (
@@ -73,7 +75,7 @@ export const getHistorialData = (product, startDate, endDate, gran) => {
 // GDAX also has a burst request limit so it is important to not initialize the app a rage so wide
 // that it needs to split the requests
 // granularity == 300000 = 30s => I want a data point ever 30s
-export const tryGetHistoricalData = (productId, time, range, desiredGranularity) => {
+export const tryGetHistoricalData = (productId, time, range, desiredGranularity, setFetchingStatus) => {
   // console.log('time', time)
   let rateConstant;
   let requests = [];
@@ -99,28 +101,37 @@ export const tryGetHistoricalData = (productId, time, range, desiredGranularity)
     for (let i = 0; i < numRequsts; i += 1) {
       const nStart = moment.unix(epochEnd - epochStep - (epochStep * i)).toISOString();
       const nEnd = moment.unix(epochEnd - (epochStep * i)).toISOString();
-      const request = getHistorialData(productId, nStart, nEnd, desiredGranularity);
+      const request = getHistorialData(productId, nStart, nEnd, desiredGranularity, setFetchingStatus);
       requests = [...requests, request];
     }
-
     return axios.all(requests).then(
       axios.spread((...d) => (
         {
           epochEnd,
           data: d.reduce((a, b) => ([...a, ...b]), []),
         }
-    ))).catch(handleError);
+    ))).catch(err => (
+      handleError(err, setFetchingStatus)
+    ));
   }
   return new Promise((resolve, reject) => (
     reject('Ganularity too small!')
   ));
 };
 
-export const fetchProductData = (id, range, granularity, setProductData) => {
+export const fetchProductData = (id, range, granularity, setProductData, setFetchingStatus) => {
+  setFetchingStatus(true);
   serverTime().then((time) => {
-    tryGetHistoricalData(id, time, range, granularity).then((data) => {
-      setProductData(id, data);
-    }).catch((err) => { alert('Granularity too small.', err); });
+    if (time) {
+      tryGetHistoricalData(id, time, range, granularity, setFetchingStatus).then((data) => {
+        setFetchingStatus(false);
+        setProductData(id, data);
+      }).catch((err) => {
+        setFetchingStatus(false);
+        alert(err);
+      });
+    }
+    setFetchingStatus(false);
   });
 };
 

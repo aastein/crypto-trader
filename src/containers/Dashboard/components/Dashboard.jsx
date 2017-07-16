@@ -23,6 +23,7 @@ const Dashboard = props => (
             selectDateRange={props.selectDateRange}
             setProducts={props.setProducts}
             setProductWSData={props.setProductWSData}
+            setFetchingStatus={props.setFetchingStatus}
           />
           <div className="chart-container">
             <Chart

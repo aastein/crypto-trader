@@ -331,6 +331,17 @@ button:hover {
             color: #FFF;
           }
 
+          button.chart-header-item:hover {
+            background-color: hsla(208, 100%, 31%, 0.4);
+            color: rgba(255,255,255, 0.4);
+          }
+
+          button.chart-header-item:disabled {
+            background-color: hsla(208, 100%, 31%, 0.4);
+            color: rgba(255,255,255, 0.4);
+            cursor: auto;
+          }
+
           .chart-header-item {
             width: 100px;
             margin: 0px;

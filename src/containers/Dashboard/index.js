@@ -19,6 +19,7 @@ import {
   saveTestResult,
   setProductWSData,
   addProductData,
+  setFetchingStatus,
 } from '../../actions';
 
 import Dashboard from './components/Dashboard';
@@ -88,6 +89,9 @@ const mapDispatchToProps = dispatch => (
     },
     addProductData: (id, data) => {
       dispatch(addProductData(id, data));
+    },
+    setFetchingStatus: (status) => {
+      dispatch(setFetchingStatus(status));
     },
   }
 );

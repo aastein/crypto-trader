@@ -18,6 +18,7 @@ export const SELECT_INDICATOR = 'SELECT_INDICATOR';
 export const EDIT_INDICATOR = 'EDIT_INDICATOR';
 export const UPDATE_ORDER_BOOK = 'UPDATE_ORDER_BOOK';
 export const UPDATE_HEARTBEAT = 'UPDATE_HEARTBEAT';
+export const SET_FETCHING_STATUS = 'SET_FETCHING_STATUS';
 
 // dashpbard: scratchpad
 export const ADD_SCRIPT = 'ADD_SCRIPT';

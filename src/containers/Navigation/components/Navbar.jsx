@@ -15,7 +15,8 @@ export default class Navigation extends Component {
         this.props.selectProduct(this.props.selectedProductIds[0]);
         initWSConnection(this.props.selectedProductIds, this.props.addProductWSData);
         for (let i = 0; i < this.props.selectedProductIds.length; i += 1) {
-          fetchProductData(this.props.selectedProductIds[i], INIT_RANGE, INIT_GRANULARITY, this.props.setProductData);
+          fetchProductData(this.props.selectedProductIds[i], INIT_RANGE, INIT_GRANULARITY,
+            this.props.setProductData, this.props.setFetchingStatus);
           setOrderBook(this.props.selectedProductIds[i], this.props.updateOrderBook);
         }
       }
@@ -37,7 +38,8 @@ export default class Navigation extends Component {
     }, 30000);
 
     setInterval(() => {
-      if (moment().unix() - moment(this.props.websocket.heartbeatTime).unix() > 30) {
+      if (moment().unix() - moment(this.props.websocket.heartbeatTime).unix() > 30
+          && this.props.websocket.connected === true) {
         this.props.updateHeartbeat(false);
       }
     }, 10000);
