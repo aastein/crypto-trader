@@ -61,7 +61,7 @@ const sell = (id) => {
   limitOrder('sell', p.id);
 };
 
-const run = (script, prods, prof, appendLog, dispatchAddOrder) => {
+const run = (header, script, prods, prof, appendLog, dispatchAddOrder) => {
   // set global variables
   addOrder = dispatchAddOrder;
   log = appendLog;
@@ -74,6 +74,7 @@ const run = (script, prods, prof, appendLog, dispatchAddOrder) => {
     o.id === p.id
   ));
   const lastOrder = orders.length > 0 ? orders[orders.length - 1] : {};
+  const scriptWithHeader = header + ';' + script;
 
   try {
     // define variables avalable in the script
@@ -81,7 +82,7 @@ const run = (script, prods, prof, appendLog, dispatchAddOrder) => {
     if (!profile.live) {
       log('Turn on live mode to execute orders.');
     }
-    eval(script);
+    eval(scriptWithHeader);
   } catch (err) {
     appendLog(`Script encountered error: ${err}`);
   }

@@ -3,20 +3,27 @@ import * as actionType from '../actions/actionTypes';
 const INITAL_SCRIPTS_STATE = [
   {
     id: 0,
-    name: 'Example',
-    script: "// This is an example script. Click the Test button to see how it works.\n\nlet buyLine = 0.2\nlet sellLine = 0.8\nlet lastK = p.srsi[now - 1].k\nlet lastD = p.srsi[now - 1].d\nlet nowK = p.srsi[now].k\nlet nowD = p.srsi[now].d\nlet lastKOverD = lastK > lastD\nlet nowKOverD = nowK > nowD\nlet lastKOverBuy = lastK > buyLine\nlet nowKOverBuy = nowK > buyLine\n\nlet rebound = !lastKOverD && nowKOverD && nowKOverBuy\nlet kOverBuy = !lastKOverBuy && nowKOverBuy && nowKOverD\n\nif(rebound){\n  buy('reboud')\n} else if(kOverBuy){\n  buy('kOverBuy')\n}else if (lastKOverD){\n  sell('lastKOverD')\n} else if(!nowKOverD) {\n  sell('!nowKOverD')\n}",
-    active: true,
+    name: 'Header',
+    script: "// This is a header script. You can declare variables here that will be in the scope of all custom sripts.\n\nlet buyLine = 0.2\nlet sellLine = 0.8\nlet lastK = p.srsi[now - 1].k\nlet lastD = p.srsi[now - 1].d\nlet nowK = p.srsi[now].k\nlet nowD = p.srsi[now].d\nlet lastKOverD = lastK > lastD\nlet nowKOverD = nowK > nowD\nlet lastKOverBuy = lastK > buyLine\nlet nowKOverBuy = nowK > buyLine\n\nlet rebound = !lastKOverD && nowKOverD && nowKOverBuy\nlet kOverBuy = !lastKOverBuy && nowKOverBuy && nowKOverD\n\n",
+    active: false,
     live: false,
   },
   {
     id: 1,
+    name: 'Example',
+    script: "// This is an example script. Click the Test button to see how it works.\n\nif(rebound){\n  buy('reboud')\n} else if(kOverBuy){\n  buy('kOverBuy')\n}else if (lastKOverD){\n  sell('lastKOverD')\n} else if(!nowKOverD) {\n  sell('!nowKOverD')\n}",
+    active: true,
+    live: false,
+  },
+  {
+    id: 2,
     name: 'Sell',
     script: 'sell()',
     active: false,
     live: false,
   },
   {
-    id: 2,
+    id: 3,
     name: 'Buy',
     script: 'buy()',
     active: false,
@@ -49,7 +56,7 @@ const scripts = (state = INITAL_SCRIPTS_STATE, action) => {
       ));
     case actionType.DELETE_SCRIPT:
       return state.filter(script =>
-        !script.active,
+        !script.active || script.id === 0,
       );
     case actionType.SELECT_SCRIPT:
       return state.map(script => (

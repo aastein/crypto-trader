@@ -19,7 +19,7 @@ const ScriptList = ({ addNew, scripts, onScriptClick, toggleScriptLive }) => (
       >
         Add New
       </button>
-      { scripts.map(script => (
+      { scripts.map((script, i) => (
         <div key={script.id} className={`list-item ${script.active ? 'active' : ''}`}>
           <button
             className="list-button"
@@ -27,10 +27,10 @@ const ScriptList = ({ addNew, scripts, onScriptClick, toggleScriptLive }) => (
           >
             {script.name}
           </button>
-          <ToggleSwitch
+          {i !== 0 && <ToggleSwitch
             on={script.live}
             onClick={() => toggleScriptLive(script.id)}
-          />
+          />}
         </div>
       ))}
     </div>
@@ -86,13 +86,13 @@ class CodeEditor extends Component {
 
   runScript = (event) => {
     event.preventDefault();
-    run(this.props.script.script, this.props.products, this.props.profile, this.props.appendLog,
+    run(this.props.scriptHeader, this.props.script.script, this.props.products, this.props.profile, this.props.appendLog,
       this.props.addOrder);
   }
 
   testScript = (event) => {
     event.preventDefault();
-    const result = test(this.props.script.script, this.props.products, this.props.appendLog);
+    const result = test(this.props.scriptHeader, this.props.script.script, this.props.products, this.props.appendLog);
     this.props.saveTestResult(result);
   }
 
@@ -137,6 +137,7 @@ const Scratchpad = (props) => {
   const activeScript = props.scripts.reduce((a, b) => (
     b.active ? b : a
   ), {});
+  const scriptHeader = props.scripts[0].script;
 
   return (
     <div className={props.className}>
@@ -149,6 +150,7 @@ const Scratchpad = (props) => {
       <CodeEditor
         products={props.products}
         profile={props.profile}
+        scriptHeader={scriptHeader}
         script={activeScript}
         addOrder={props.addOrder}
         appendLog={props.appendLog}

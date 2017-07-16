@@ -447,14 +447,14 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO:
 
-  On receiving WS message
-    -> do all logic to determine if chart data should be updated
-      T -> calculate OHLC for period and call update chart data action
-      F -> call action to update ws data in separate ws reducer
+  Add script header
 
-  Move WS status glyph to header
-    -> glyph on click should re-init ws connection
-  Move all WS init and stuff methods to header
+  textarea height on ios
+
+  Fix serviceworker for safari / firefox root content
+
+  Fetch orderbook data on profile save
+    (re init entire app on profile save)
 
   Order logic:
     Order history
@@ -465,7 +465,6 @@ TODO:
 
   Utils:
     Button to connect to websocket or retry connect on lost connection
-    Import state with formatted scripts
 
   Chart:
     Import https://github.com/anandanand84/technicalindicators/
@@ -478,7 +477,7 @@ TODO:
         }
       }
 
-Backtest neural net?
+  Backtest neural net?
   http://karpathy.github.io/neuralnets/
 
   Script environment:
@@ -493,10 +492,11 @@ Backtest neural net?
 
   General API:
     Queue promises and burst at 6 per second.
-    Move API and WS calls and responses into action creators, do this last
+    Move API and WS calls and responses into action creators with redux-thunk, do this last
 
   Chart Header:
-    Only fetch product data that is selected
+    Only lead only fetch product data that is selected
+      on chart switch if data.length === 0, fetch data
     Add spinner over apply button on isFetching
     Parameterize indicator params via modal
 
@@ -506,4 +506,3 @@ Backtest neural net?
     Pretty doc based on props
 
   Styling:
-    restyle in scss, do last
