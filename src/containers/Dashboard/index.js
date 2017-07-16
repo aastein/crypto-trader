@@ -18,6 +18,7 @@ import {
   toggleScriptLive,
   saveTestResult,
   setProductWSData,
+  addProductData,
 } from '../../actions';
 
 import Dashboard from './components/Dashboard';
@@ -84,6 +85,9 @@ const mapDispatchToProps = dispatch => (
     },
     setProductWSData: (id, data) => {
       dispatch(setProductWSData(id, data));
+    },
+    addProductData: (id, data) => {
+      dispatch(addProductData(id, data));
     },
   }
 );

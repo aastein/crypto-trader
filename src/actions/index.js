@@ -16,6 +16,7 @@ export const addProductWSData = (id, time, price, size) =>
 export const setProducts = products => ({ type: actionType.SET_PRODUCTS, products });
 export const selectProduct = id => ({ type: actionType.SELECT_PRODUCT, id });
 export const setProductData = (id, data) => ({ type: actionType.SET_PRODUCT_DATA, id, data });
+export const addProductData = (id, data) => ({ type: actionType.ADD_PRODUCT_DATA, id, data });
 export const selectDateRange = (id, range) => ({ type: actionType.SELECT_DATE_RANGE, id, range });
 export const setGranularity = (id, granularity) =>
   ({ type: actionType.SET_GRANULARITY, id, granularity });

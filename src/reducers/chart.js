@@ -171,6 +171,24 @@ const chart = (state = INITAL_CHART_STATE, action) => {
           return product;
         }),
       };
+    case actionType.ADD_PRODUCT_DATA:
+      return { ...state,
+        products: state.products.map((p) => {
+          const product = p;
+          if (product.id === action.id) {
+            const data = [...product.data, action.data];
+            const inds = calculateIndicators(state.indicators, data);
+            return { ...product,
+              data,
+              srsi: inds.srsi,
+              rsi: inds.rsi,
+              cci: inds.cci,
+              metasrsi: inds.metasrsi,
+            };
+          }
+          return product;
+        }),
+      };
     case actionType.IMPORT_PROFILE:
       return { ...state,
         indicators: action.userData.indicators,

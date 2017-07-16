@@ -3,19 +3,23 @@ import React, { Component } from 'react';
 import Dropdown from '../../../components/Dropdown';
 import Input from '../../../components/Input';
 import { fetchProductData } from '../../../utils/api';
+import { INIT_GRANULARITY } from '../../../utils/constants';
 
 export default class Chart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      granularity: this.selectedProduct().granularity
-      ? `${this.selectedProduct().granularity}` : '',
+      granularity: this.selectedProduct().granularity ?
+        `${this.selectedProduct().granularity}` : `${INIT_GRANULARITY}`,
     };
   }
 
   onProductChange = (event) => {
     if (event) {
+      const id = event.value;
+      const granularity = this.product(id).granularity + '';
       this.props.selectProduct(event.value);
+      this.setState(() => ({ granularity }));
     }
   }
 
@@ -52,6 +56,12 @@ export default class Chart extends Component {
   selectedProduct = () => (
     this.props.chart.products.length > 0 ? this.props.chart.products.reduce((a, p) => (
       p.active ? p : a
+    ), {}) : {}
+  )
+
+  product = id => (
+    this.props.chart.products.length > 0 ? this.props.chart.products.reduce((a, p) => (
+      p.id === id ? p : a
     ), {}) : {}
   )
 

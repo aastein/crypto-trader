@@ -81,6 +81,7 @@ button {
   overflow: visible;
   border: none;
   width: 100px;
+  outline: none;
 }
 
 h2 {
@@ -354,6 +355,10 @@ button:hover {
               font-weight: bold;
               color: rgba(21,35,44,.8);
             }
+          }
+
+          .date-picker {
+            width: 120px;
           }
 
           .granularity {

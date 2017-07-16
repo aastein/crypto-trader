@@ -27,14 +27,14 @@ const Dashboard = props => (
           <div className="chart-container">
             <Chart
               chart={props.chart}
-              scripts={props.scripts}
-              profile={props.profile}
-              appendLog={props.appendLog}
-              updateAccounts={props.updateAccounts}
             />
             <WebsocketChart
-              websocket={props.websocket}
+              scripts={props.scripts}
+              profile={props.profile}
               products={props.chart.products}
+              websocket={props.websocket}
+              appendLog={props.appendLog}
+              addProductData={props.addProductData}
               setProductData={props.setProductData}
               setProductWSData={props.setProductWSData}
             />

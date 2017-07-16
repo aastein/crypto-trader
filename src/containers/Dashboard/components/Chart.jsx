@@ -3,7 +3,7 @@ import React from 'react';
 import Loader from '../../../components/Loader';
 import PriceChart from '../../../components/PriceChart';
 
-const Chart = ({ chart, scripts, profile, appendLog, updateAccounts }) => {
+const Chart = ({ chart }) => {
   const selectedProduct = chart.products.length > 0 ?
     chart.products.reduce((a, p) => (p.active ? p : a), {}) : {};
 
@@ -294,11 +294,6 @@ const Chart = ({ chart, scripts, profile, appendLog, updateAccounts }) => {
         <div>
           <PriceChart
             config={config}
-            chart={chart}
-            scripts={scripts}
-            profile={profile}
-            appendLog={appendLog}
-            updateAccounts={updateAccounts}
           />
         </div>
         : <div>

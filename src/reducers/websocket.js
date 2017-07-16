@@ -64,7 +64,7 @@ const websocket = (state = INIT_STATE, action) => {
           if (p.id === action.id) {
             product.data = action.data;
           }
-          return p;
+          return product;
         }),
       };
     default:

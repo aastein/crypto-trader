@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 
 import LineChart from '../../../components/LineChart';
 import Loader from '../../../components/Loader';
+import run from '../../../utils/scriptEnv';
 
 export default class WebsocketChart extends Component {
 
   componentWillReceiveProps = (nextProps) => {
     // console.log('will receive props');
-    if (false) {
+    if (this.websocketDataChanged(this.props.websocket.products, nextProps.websocket.products)) {
       const product = this.selectedProduct(nextProps.products);
       // get procut historical data
       const data = product.data ? [...product.data] : [];
@@ -24,14 +25,15 @@ export default class WebsocketChart extends Component {
         const newestwsdatatime = wsData[wsData.length - 1].time;
         // add compiled ws data to historical data
         if (newestwsdatatime - newestdatatime >= product.granularity * 1000) {
+          // console.log('ws data order than granularity');
           // filter out data older than granularity time
           wsData = wsData.filter(d => (
             (newestwsdatatime - d.time < product.granularity * 1000)
           ));
-          this.props.setProductWSData(wsData);
+          this.props.setProductWSData(product.id, wsData);
 
           // comile ws data to OHLC data
-          wsData.reduce((ohlc, d) => (
+          const wsOHLC = wsData.reduce((ohlc, d) => (
             {
               ...ohlc,
               high: d.price > ohlc.high ? d.price : ohlc.high,
@@ -46,7 +48,19 @@ export default class WebsocketChart extends Component {
             time: newestwsdatatime,
             volume: 0,
           });
-          this.props.setProductData(data);
+          this.props.addProductData(product.id, wsOHLC);
+        }
+      }
+
+      for (let i = 0; i < nextProps.scripts.length; i += 1) {
+        if (nextProps.scripts[i].live && nextProps.profile.live) {
+          run(
+            nextProps.scripts[i].script,
+            nextProps.products,
+            nextProps.profile,
+            nextProps.appendLog,
+            nextProps.updateAccounts,
+          );
         }
       }
     }
@@ -87,8 +101,6 @@ export default class WebsocketChart extends Component {
 
     const selectedProductWSVolumeData = selectedProduct.data ?
       selectedProduct.data.map(d => ([d.time, d.size])) : [];
-
-    console.log(selectedProductWSPriceData);
 
     const wsConfig = {
       rangeSelector: {

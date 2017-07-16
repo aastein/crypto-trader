@@ -8,12 +8,6 @@ export default class PriceChart extends Component {
   componentWillReceiveProps = (nextProps) => {
     const chart = this.chart.getChart();
     if (this.dataChanged(nextProps)) {
-      for (let i = 0; i < nextProps.scripts.length; i += 1) {
-        if (nextProps.scripts[i].live && nextProps.profile.live) {
-          run(nextProps.scripts[i].script, nextProps.chart.products, nextProps.profile,
-            nextProps.appendLog, nextProps.updateAccounts);
-        }
-      }
       for (let i = 0; i < chart.series.length; i += 1) {
         if (nextProps.config.series[i]) {
           chart.series[i].setData(nextProps.config.series[i].data);

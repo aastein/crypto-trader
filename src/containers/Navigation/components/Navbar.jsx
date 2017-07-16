@@ -11,12 +11,13 @@ export default class Navigation extends Component {
   componentDidMount() {
     getProducts().then((products) => {
       if (products) {
-        const productIds = products.map(p => (p.id));
         this.props.setProducts(products);
-        this.props.selectProduct('LTC-USD');
-        initWSConnection(productIds, this.props.addProductWSData);
-        fetchProductData('LTC-USD', INIT_RANGE, INIT_GRANULARITY, this.props.setProductData);
-        setOrderBook('LTC-USD', this.props.updateOrderBook);
+        this.props.selectProduct(this.props.selectedProductIds[0]);
+        initWSConnection(this.props.selectedProductIds, this.props.addProductWSData);
+        for (let i = 0; i < this.props.selectedProductIds.length; i += 1) {
+          fetchProductData(this.props.selectedProductIds[i], INIT_RANGE, INIT_GRANULARITY, this.props.setProductData);
+          setOrderBook(this.props.selectedProductIds[i], this.props.updateOrderBook);
+        }
       }
     });
 
