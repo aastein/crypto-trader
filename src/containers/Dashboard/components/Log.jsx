@@ -8,11 +8,11 @@ const Log = ({ log }) => (
         History
       </h2>
       <div className="log-messages">
-        { log.map((l, i) => (
-          (
-            <p className="" key={l.time + l.message + i}>{`${moment(l.time).format('h:mm:ss a')}: ${l.message}`}</p>
-          )
-        ))}
+        { log.map((l, i) => ((
+          <p className="" key={`${l.time}${i}`}>
+            {`${moment(l.time).format('h:mm:ss a')}: ${l.message}`}
+          </p>
+        )))}
       </div>
     </div>
   )

@@ -34,6 +34,7 @@ const Dashboard = props => (
               profile={props.profile}
               products={props.chart.products}
               websocket={props.websocket}
+              addOrder={props.addOrder}
               appendLog={props.appendLog}
               addProductData={props.addProductData}
               setProductData={props.setProductData}
@@ -50,6 +51,7 @@ const Dashboard = props => (
         scripts={props.scripts}
         products={props.chart.products}
         profile={props.profile}
+        addOrder={props.addOrder}
         addScript={props.addScript}
         appendLog={props.appendLog}
         saveScript={props.saveScript}

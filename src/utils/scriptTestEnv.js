@@ -21,22 +21,22 @@ const test = (script, prods, appendLog) => {
   for (let i = 1; i < p.data.length - 1; i += 1) {
     const now = i;
     const lastOrder = orderHist.length > 0 ? orderHist[orderHist.length - 1] : {};
-    const order = { time: p.data[i + 1].time, balance: 0 };
+    const order = { time: p.data[i + 1].time, price: 0 };
 
     try {
       const buy = (id) => {
         if (orderHist.length === 0) {
-          orderHist = [...orderHist, { ...order, balance: (-1) * p.data[i + 1].open }];
-        } else if (orderHist[orderHist.length - 1].balance > 0) {
-          orderHist = [...orderHist, { ...order, label: id, balance: (-1) * p.data[i + 1].open }];
+          orderHist = [...orderHist, { ...order, label: id, price: (-1) * p.data[i + 1].open }];
+        } else if (orderHist[orderHist.length - 1].price > 0) {
+          orderHist = [...orderHist, { ...order, label: id, price: (-1) * p.data[i + 1].open }];
         }
       };
 
       const sell = (id) => {
         if (orderHist.length !== 0) {
-          if (orderHist[orderHist.length - 1].balance) {
-            if (orderHist[orderHist.length - 1].balance < 0) {
-              orderHist = [...orderHist, { ...order, label: id, balance: p.data[i + 1].open }];
+          if (orderHist[orderHist.length - 1].price) {
+            if (orderHist[orderHist.length - 1].price < 0) {
+              orderHist = [...orderHist, { ...order, label: id, price: p.data[i + 1].open }];
             }
           }
         }
@@ -53,8 +53,8 @@ const test = (script, prods, appendLog) => {
   const numTrades = orderHist.length;
 
   for (let i = 1; i < numTrades; i += 1) {
-    const thisTrade = orderHist[i].balance;
-    const lastTrade = orderHist[i - 1].balance;
+    const thisTrade = orderHist[i].price;
+    const lastTrade = orderHist[i - 1].price;
     const tradeDiff = thisTrade + lastTrade;
 
     // console.log('tradeDiff', tradeDiff)
@@ -76,18 +76,23 @@ const test = (script, prods, appendLog) => {
   const avgGain = round(gains.reduce((a, b) => (a + b), 0) / losses.length, 2);
   const total = round(losses.reduce((a, b) => (a + b), 0) + gains.reduce((a, b) => (a + b), 0), 2);
   const range = (p.data[p.data.length - 1].time - p.data[0].time) / 1000;
-
+  const rate = round((total / range) * 3600, 2);
   const result = {
     avgLoss,
     avgGain,
     avgTrade: round(avgGain + avgLoss, 2),
     numTrades,
     total,
-    rate: (total / range), // dollars per second per coin
+    rate, // dollars per hour per coin
     data: orderHist,
   };
 
-  appendLog(`Avg. gain: ${avgGain} Avg. loss: ${avgLoss} Diff: ${round(avgGain + avgLoss, 2)} Total: ${total}`);
+  appendLog(`Test Results:
+    Gain: ${avgGain} [ %/trade ]
+    Loss: ${avgLoss} [ %/trade ]
+    Rate: ${rate} [ $/hr/coin ]
+    Total Gain: ${total} [ $ ]`,
+  );
   return result;
 };
 

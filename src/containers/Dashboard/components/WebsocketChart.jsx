@@ -60,6 +60,7 @@ export default class WebsocketChart extends Component {
             nextProps.profile,
             nextProps.appendLog,
             nextProps.updateAccounts,
+            nextProps.addOrder,
           );
         }
       }
@@ -169,6 +170,8 @@ export default class WebsocketChart extends Component {
           </div>
           : <div>
             <Loader />
+            <p className="loading-message">{`Chart will render when realtime data is received for
+              ${selectedProduct.display_name ? selectedProduct.display_name : 'the selected product'}`}</p>
           </div>
         }
       </div>

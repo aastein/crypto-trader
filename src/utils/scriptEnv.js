@@ -4,6 +4,8 @@ let products;
 let profile;
 let log;
 let p;
+let orderHist;
+let addOrder;
 
 const round = (value, decimals) => Number(`${Math.round(`${value}e${decimals}`)}e-${decimals}`);
 
@@ -37,7 +39,13 @@ const limitOrder = (side, productId) => {
     }
     if (profile.live) {
       if (size > 0) {
-        placeOrder('limit', side, productId, price, size, profile.session, log).then(res => res.data).catch(err => (err));
+        placeOrder('limit', side, productId, price, size, profile.session, log).then((data) => {
+          if (side === 'buy') {
+            addOrder(data.product_id, data.created_at, -1 * data.price);
+          } else if (side === 'sell') {
+            addOrder(data.product_id, data.created_at, data.price);
+          }
+        }).catch(err => (err));
       }
     } else {
       log('Turn on live mode to execute orders.');
@@ -53,18 +61,26 @@ const sell = (id) => {
   limitOrder('sell', p.id);
 };
 
-const run = (script, prods, prof, appendLog) => {
+const run = (script, prods, prof, appendLog, dispatchAddOrder) => {
   // set global variables
+  addOrder = dispatchAddOrder;
+  log = appendLog;
   products = prods;
   profile = prof;
-  log = appendLog;
   p = products.reduce((a, b) => (
     b.active ? b : a
   ), {});
+  const orders = profile.orders.filter(o => (
+    o.id === p.id
+  ));
+  const lastOrder = orders.length > 0 ? orders[orders.length - 1] : {};
 
   try {
     // define variables avalable in the script
     const now = p.data ? p.data.length - 1 : 0;
+    if (!profile.live) {
+      log('Turn on live mode to execute orders.');
+    }
     eval(script);
   } catch (err) {
     appendLog(`Script encountered error: ${err}`);

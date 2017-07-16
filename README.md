@@ -3,7 +3,7 @@
 Stand alone client side automated trading for GDAX
 </br>
 </br>
-WIP @ <a target="_blank" href="https://crypto-trader-2b0ce.firebaseapp.com">fireabase</a>
+WIP @ <a target="_blank" href="https://crypto-trader-2b0ce.firebaseapp.com">firebase</a>
 
 
 ## Usage
@@ -22,7 +22,7 @@ Use `now` when you want to reference the current data
 p.data[now].close
 ```
 
-Write conditions based on the data to execute all in / all out limit orders
+Write conditions based on the data to execute all in / all out <a href="https://docs.gdax.com/#post-only">post-only</a> limit orders with
 ```
 if(p.rsi[now].value < 70){
   sell()
@@ -31,10 +31,48 @@ if(p.rsi[now].value < 70){
 }
 ```
 
+Access order history for the current product with `orders`. Order history is recorded by strike price. If the order is a buy the price is negative. If the order is a sell the price is positive.
+```
+if(orders[0] > 0){
+  log('Last order you sold stuff')
+} else if(orders[0] < 0){
+  log('Last order you bought stuff')
+}
+```
+
+Use `lastOrder` to access the last order data
+```
+log(lastOrder)
+//  {"id":"BTC-USD","time":"2016-12-08T20:02:28.53864Z","price":-2000}
+```
+
 Print to the log with log()
 ```
-log('First RSI is' + p.rsi[0].value)
+log('First RSI is ' + p.rsi[0].value)
+// 12:21:00 am: First RSI is 0.70
 ```
+
+### Testing your scripts
+
+Write scripts using the `now` array index when accessing current data.
+Pass in custom id's to the buy() and sell() methods to label the plot lines.
+```
+if(rebound){
+  buy('reboud')
+} else if(kOverBuy){
+  buy('kOverBuy')
+}else if (lastKOverD){
+  sell('lastKOverD')
+} else if(!nowKOverD) {
+  sell('!nowKOverD')
+}
+```
+<img src="/public/chart.png" width="450">
+Red lines represent sells.
+Red dotted lines represent sells for a loss.
+Green lines represent buys.
+
+
 
 Reserved viable names
 ```
@@ -48,6 +86,8 @@ appendLog
 now
 buy
 sell
+lastOrder
+orders
 ```
 
 ## Getting Started

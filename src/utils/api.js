@@ -180,6 +180,7 @@ export const placeOrder = (type, side, productId, price, size, session, log) => 
   return authRequest(uri, '', 'post', body, session).then((res) => {
     const data = res.data;
     log(`Sent ${data.side} ${type} order of ${data.product_id}. Price ${data.price}, Size ${data.size}`);
+    return data;
   }).catch((error) => {
     if (error.response) {
       if (side === 'buy' && error.response.data.message.toLowerCase().includes('insufficient')) {
