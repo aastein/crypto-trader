@@ -3,7 +3,7 @@
 Stand alone client side automated trading for GDAX
 </br>
 </br>
-WIP @ <a target="_blank" href="https://crypto-trader-2b0ce.firebaseapp.com">firebase</a>
+WIP @ <a target="_blank" href="https://crypto-trader-2b0ce.firebaseapp.com/dashboard">firebase</a>
 
 
 ## Usage
