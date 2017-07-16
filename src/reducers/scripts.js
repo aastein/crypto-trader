@@ -3,8 +3,8 @@ import * as actionType from '../actions/actionTypes';
 const INITAL_SCRIPTS_STATE = [
   {
     id: 0,
-    name: 'Custom',
-    script: '',
+    name: 'Example',
+    script: '// This is an example script. Click the Test button to see how it works.\n\nlet buyLine = 0.2\nlet sellLine = 0.8\nlet lastK = p.srsi[now - 1].k\nlet lastD = p.srsi[now - 1].d\nlet nowK = p.srsi[now].k\nlet nowD = p.srsi[now].d\nlet lastKOverD = lastK > lastD\nlet nowKOverD = nowK > nowD\nlet lastKOverBuy = lastK > buyLine\nlet nowKOverBuy = nowK > buyLine\n\nlet rebound = !lastKOverD && nowKOverD && nowKOverBuy\nlet kOverBuy = !lastKOverBuy && nowKOverBuy && nowKOverD\n\nif(rebound || kOverBuy){\n  buy()\n} else if (lastKOverD && !nowKOverD){\n  sell()\n}',
     active: true,
     live: false,
   },
