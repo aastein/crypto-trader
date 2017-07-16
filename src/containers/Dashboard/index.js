@@ -1,4 +1,4 @@
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 import {
   selectProduct,
@@ -16,76 +16,89 @@ import {
   clearLog,
   updateAccounts,
   toggleScriptLive,
-  saveTestResult
-} from '../../actions'
+  saveTestResult,
+  setProductWSData,
+  addProductData,
+  setFetchingStatus,
+} from '../../actions';
 
-import Dashboard from './components/Dashboard'
+import Dashboard from './components/Dashboard';
 
-const mapStateToProps = state => {
-  return {
+const mapStateToProps = state => (
+  {
     chart: state.chart,
     scripts: state.scripts,
     profile: state.profile,
-    log: state.log
+    log: state.log,
+    websocket: state.websocket,
   }
-}
+);
 
-const mapDispatchToProps = dispatch => {
-  return {
+const mapDispatchToProps = dispatch => (
+  {
     setProductData: (id, data) => {
-      dispatch(setProductData(id, data))
+      dispatch(setProductData(id, data));
     },
-    selectProduct: id => {
-      dispatch(selectProduct(id))
+    selectProduct: (id) => {
+      dispatch(selectProduct(id));
     },
     addScript: () => {
-      dispatch(addScript())
+      dispatch(addScript());
     },
-    saveScript: script => {
-      dispatch(saveScript(script))
+    saveScript: (script) => {
+      dispatch(saveScript(script));
     },
-    deleteScript: id => {
-      dispatch(deleteScript(id))
+    deleteScript: (id) => {
+      dispatch(deleteScript(id));
     },
-    selectScript: id => {
-      dispatch(selectScript(id))
+    selectScript: (id) => {
+      dispatch(selectScript(id));
     },
-    selectProductDoc: name => {
-      dispatch(selectProductDoc(name))
+    selectProductDoc: (name) => {
+      dispatch(selectProductDoc(name));
     },
     setGranularity: (id, granularity) => {
-      dispatch(setGranularity(id, granularity))
+      dispatch(setGranularity(id, granularity));
     },
     selectIndicator: (id) => {
-      dispatch(selectIndicator(id))
+      dispatch(selectIndicator(id));
     },
     editIndicator: (id, params) => {
-      dispatch(editIndicator(id, params))
+      dispatch(editIndicator(id, params));
     },
     selectDateRange: (id, range) => {
-      dispatch(selectDateRange(id, range))
+      dispatch(selectDateRange(id, range));
     },
     appendLog: (log) => {
-      dispatch(appendLog(log))
+      dispatch(appendLog(log));
     },
     clearLog: () => {
-      dispatch(clearLog())
+      dispatch(clearLog());
     },
-    updateAccounts: accounts => {
-      dispatch(updateAccounts(accounts))
+    updateAccounts: (accounts) => {
+      dispatch(updateAccounts(accounts));
     },
-    toggleScriptLive: id => {
-      dispatch(toggleScriptLive(id))
+    toggleScriptLive: (id) => {
+      dispatch(toggleScriptLive(id));
     },
-    saveTestResult: result => {
-      dispatch(saveTestResult(result))
-    }
+    saveTestResult: (result) => {
+      dispatch(saveTestResult(result));
+    },
+    setProductWSData: (id, data) => {
+      dispatch(setProductWSData(id, data));
+    },
+    addProductData: (id, data) => {
+      dispatch(addProductData(id, data));
+    },
+    setFetchingStatus: (status) => {
+      dispatch(setFetchingStatus(status));
+    },
   }
-}
+);
 
 const DashboardContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
-)(Dashboard)
+  mapDispatchToProps,
+)(Dashboard);
 
-export default DashboardContainer
+export default DashboardContainer;
