@@ -256,11 +256,22 @@ button:hover {
     background-color: transparent;
     width: $profile-form-width + 15px;
     margin-bottom: 10px;
+    height: auto;
+    display: inline-flex;
+    position: relative;
+  }
+  .Select-arrow-zone {
+    position: absolute;
+    right: 0;
+    margin: 10px 0;
+  }
+  .Select-clear-zone {
+    display: none;
   }
   .Select-value {
     background-color: rgba(0, 126, 255, 0.4);
     border-color: rgba(0, 126, 255, 0.6);
-    margin: 3px;
+    margin-top: 6px;
   }
   .Select-value-label {
     color: #FFF;
