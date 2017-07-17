@@ -5,11 +5,13 @@ import PriceChart from '../../../components/PriceChart';
 
 export default class Chart extends Component {
 
-  // only render if chart data changed
+  // only render if chart data changed or test data
   shouldComponentUpdate(nextProps, nextState) {
     const dataChanged = JSON.stringify(this.selectedProduct(this.props).data)
       !== JSON.stringify(this.selectedProduct(nextProps).data);
-    return dataChanged;
+    const testDataChanged = JSON.stringify(this.props.chart.testResult.data)
+      !== JSON.stringify(nextProps.chart.testResult.data);
+    return dataChanged || testDataChanged;
   }
 
   selectedProduct = props => (

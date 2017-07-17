@@ -9,9 +9,8 @@ export default class Chart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      granularity: this.selectedProduct().granularity ?
-        `${this.selectedProduct().granularity}` : `${INIT_GRANULARITY}`,
-      range: this.selectedProduct().range ? this.selectedProduct().rang : INIT_RANGE,
+      granularity: `${INIT_GRANULARITY}`,
+      range: INIT_RANGE,
     };
   }
 
@@ -21,20 +20,22 @@ export default class Chart extends Component {
       !== JSON.stringify(nextProps.websocket.connected);
     const stateChanged = JSON.stringify(this.state)
        !== JSON.stringify(nextState);
-    return websocketStatusChanged || stateChanged;
+    const productChanged = this.selectedProduct(this.props).id !== this.selectedProduct(nextProps).id;
+    return websocketStatusChanged || stateChanged || productChanged;
   }
 
   onProductChange = (event) => {
     if (event) {
       const id = event.value;
       const granularity = this.product(id).granularity + '';
+      const range = this.product(id).range;
       const nextProduct = this.product(id);
       if (nextProduct.data.length === 0) {
         fetchProductData(nextProduct.id, nextProduct.range, nextProduct.granularity, this.props.setProductData,
           this.props.setFetchingStatus);
       }
       this.props.selectProduct(id);
-      this.setState(() => ({ granularity }));
+      this.setState(() => ({ granularity, range }));
     }
   }
 
@@ -45,8 +46,10 @@ export default class Chart extends Component {
   }
 
   onSelectDateRange = (event) => {
-    const range = event.value;
-    this.setState(() => ({ range }));
+    if (event.value) {
+      const range = event.value;
+      this.setState(() => ({ range }));
+    }
   }
 
   onSetGanularity = (name, event) => {
@@ -66,8 +69,8 @@ export default class Chart extends Component {
       this.props.setFetchingStatus);
   }
 
-  selectedProduct = () => (
-    this.props.chart.products.length > 0 ? this.props.chart.products.reduce((a, p) => (
+  selectedProduct = props => (
+    props.chart.products.length > 0 ? props.chart.products.reduce((a, p) => (
       p.active ? p : a
     ), {}) : {}
   )
@@ -79,7 +82,7 @@ export default class Chart extends Component {
   )
 
   render() {
-    const selectedProduct = this.selectedProduct();
+    const selectedProduct = this.selectedProduct(this.props);
     const dropdownProductOptions = this.props.chart.products.map(product => (
       { value: product.id, label: product.display_name }
     )).filter(p => (
