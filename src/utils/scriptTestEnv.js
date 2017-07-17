@@ -42,7 +42,6 @@ const test = (header, script, prods, appendLog) => {
           }
         }
       };
-      console.log(scriptWithHeader);
       eval(scriptWithHeader);
     } catch (err) {
       appendLog(`Script encountered error: ${err}`);

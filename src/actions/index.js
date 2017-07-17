@@ -6,7 +6,7 @@ let nextScriptId = 4;
 export const importProfile = userData => ({ type: actionType.IMPORT_PROFILE, userData });
 export const saveProfile = settings => ({ type: actionType.SAVE_PROFILE, settings });
 export const updateAccounts = accounts => ({ type: actionType.UPDATE_ACCOUNTS, accounts });
-export const addOrder = (id, time, price) => ({ type: actionType.ADD_ORDER, id, time, price });
+export const addOrder = (id, productId, time, price) => ({ type: actionType.ADD_ORDER, id, productId, time, price });
 
 // websocket
 export const setProductWSData = (id, data) => ({ type: actionType.SET_PRODUCT_WS_DATA, id, data });

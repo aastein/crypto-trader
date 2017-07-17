@@ -34,9 +34,9 @@ if(p.rsi[now].value < 70){
 Access order history for the current product with `orders`. Order history is recorded by strike price. If the order is a buy the price is negative. If the order is a sell the price is positive.
 ```
 if(orders[0] > 0){
-  log('Last order you sold stuff')
+  log('First order you sold stuff')
 } else if(orders[0] < 0){
-  log('Last order you bought stuff')
+  log('First order you bought stuff')
 }
 ```
 
@@ -50,6 +50,28 @@ Print to the log with log()
 ```
 log('First RSI is ' + p.rsi[0].value)
 // 12:21:00 am: First RSI is 0.70
+```
+### Orders
+
+Orders are made with the <a href="https://docs.gdax.com/#time-in-force">GTT</a> flag set to `min`
+After one minute if the order has not been fully filled the triggering script will re-run. To take advantage of the retry logic it is best to write buy and sell conditions in a way that will be valid for a range in time, not a single instant.
+
+Bad
+```
+if(p.rsi[now].value === 70){
+  sell()
+} else if(p.rsi[now].value === 30){
+  buy()
+}
+```
+
+Good
+```
+if(p.rsi[now].value < 70){
+  sell()
+} else if(p.rsi[now].value > 30){
+  buy()
+}
 ```
 
 ### Testing your scripts
