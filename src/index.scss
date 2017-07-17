@@ -47,7 +47,9 @@ body {
 }
 
 .App {
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: column;
   flex-direction: column;
   height: 100%;
   min-width: 1000px;
@@ -150,7 +152,9 @@ button:hover {
 }
 
 .navbar {
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-flow: row nowrap;
   flex-flow: row nowrap;
   background-color: #FFFFFF;
   width: 100%;
@@ -177,11 +181,13 @@ button:hover {
 
   li {
     overflow: hidden;
+    display: -webkit-inline-flex;
     display: inline-flex;
     padding-left: 5px;
     padding-right: 5px;
     height: $navbar-height;
     justify-content: center;
+    -webkit-flex-direction: column;
     flex-direction: column;
   }
 
@@ -227,9 +233,12 @@ button:hover {
 }
 
 .profile {
+  -webkit-flex: 1;
   flex: 1;
   width: 100%;
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: column;
   flex-direction: column;
   form {
     display: block;
@@ -257,6 +266,7 @@ button:hover {
     width: $profile-form-width + 15px;
     margin-bottom: 10px;
     height: auto;
+    display: -webkit-inline-flex;
     display: inline-flex;
     position: relative;
   }
@@ -297,18 +307,23 @@ button:hover {
     margin-right: 10px;
   }
   .import-export {
+    display: -webkit-flex;
     display: flex;
   }
 }
 
 .dashboard {
+  -webkit-flex: 1;
   flex: 1;
   width: 100%;
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: column;
   flex-direction: column;
 }
 
 .top-container {
+  display: -webkit-inline-flex;
   display: inline-flex;
   width: 100%;
   min-height: 450px;
@@ -316,7 +331,9 @@ button:hover {
   .left-container {
     width: 70%;
     box-sizing: border-box; margin: 1px;
+    display: -webkit-flex;
     display: flex;
+    -webkit-flex-direction: column;
     flex-direction: column;
 
     .chart-header {
@@ -329,6 +346,7 @@ button:hover {
         background-color: #3A444D;
 
         .chart-header-items {
+          display: -webkit-inline-flex;
           display: inline-flex;
           width: 100%;
 
@@ -456,8 +474,10 @@ button:hover {
     }
 
     .chart-container {
+      -webkit-flex: 1;
       flex: 1;
       width: 100%;
+      display: -webkit-inline-flex;
       display: inline-flex;
 
       .highcharts-background {
@@ -580,7 +600,9 @@ button:hover {
 .bottom-container {
   width: 100%;
   min-height: 300px;
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex: 1;
   flex: 1;
 
   h2 {
@@ -594,7 +616,9 @@ button:hover {
     width: 15%;
     margin: 1px;
     height: 100%;
+    display: -webkit-flex;
     display: flex;
+    -webkit-flex-direction: column;
     flex-direction: column;
     background-color: #1E2B34;
     box-sizing: border-box;
@@ -647,7 +671,9 @@ button:hover {
 
     form {
       height: 100%;
+      display: -webkit-flex;
       display: flex;
+      -webkit-flex-direction: column;
       flex-direction: column;
       position: relative;
       .code-editor-header {
@@ -681,6 +707,7 @@ button:hover {
 
       .textarea {
         background-color: #29353D;
+        -webkit-flex: 1;
         flex: 1;
         margin: 1px;
         box-sizing: border-box;
@@ -734,7 +761,9 @@ button:hover {
     width: 30%;
     box-sizing: border-box;
     margin: 1px;
+    display: -webkit-flex;
     display: flex;
+    -webkit-flex-direction: column;
     flex-direction: column;
     display: -moz-box;
     -moz-box-orient: vertical;

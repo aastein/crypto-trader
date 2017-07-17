@@ -94,8 +94,8 @@ const mapDispatchToProps = dispatch => (
     setFetchingStatus: (status) => {
       dispatch(setFetchingStatus(status));
     },
-    addOrder: (id, time, price) => {
-      dispatch(addOrder(id, time, price));
+    addOrder: (id, productId, time, price) => {
+      dispatch(addOrder(id, productId, time, price));
     },
   }
 );

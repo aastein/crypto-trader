@@ -9,7 +9,7 @@ import 'react-select/dist/react-select.css';
 import 'react-toggle-switch/dist/css/switch.min.css';
 import App from './App';
 import reducer from './reducers';
-import registerServiceWorker from './registerServiceWorker';
+// import registerServiceWorker from './registerServiceWorker';
 
 import './index.scss';
 
@@ -31,4 +31,4 @@ render(
     </BrowserRouter>
   </Provider>,
   document.getElementById('root'));
-registerServiceWorker();
+// registerServiceWorker();

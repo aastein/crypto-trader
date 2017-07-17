@@ -46,6 +46,17 @@ export const setOrderBook = (productId, updateOrderBook) => {
   });
 };
 
+export const getOrder = (id, session) => {
+  const uri = `/orders/${id}`;
+  return authRequest(uri, '', 'get', '', session).then(res => (
+    res.data
+  )).catch((error) => {
+    if (error.response.status >= 400) {
+      console.warn(`Cannot find order ${id}`);
+    }
+  });
+};
+
 export const getAccounts = (session) => {
   const uri = '/accounts';
   return authRequest(uri, '', 'get', '', session).then(res => (
@@ -179,7 +190,7 @@ export const placeOrder = (type, side, productId, price, size, session, log) => 
 
   return authRequest(uri, '', 'post', body, session).then((res) => {
     const data = res.data;
-    log(`Sent ${data.side} ${type} order of ${data.product_id}. Price ${data.price}, Size ${data.size}`);
+    log(`Sent ${data.side} ${type} order.\nProduct: ${data.product_id}.\nPrice: ${data.price}\nSize: ${data.size}`);
     return data;
   }).catch((error) => {
     if (error.response) {

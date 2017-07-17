@@ -447,27 +447,30 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO:
 
-  On receiving WS message
-    -> do all logic to determine if chart data should be updated
-      T -> calculate OHLC for period and call update chart data action
-      F -> call action to update ws data in separate ws reducer
+  run prints two live mode warnings
 
-  Move WS status glyph to header
-    -> glyph on click should re-init ws connection
-  Move all WS init and stuff methods to header
+  performance:
+    investigate renders
+      -> have to break everything up into top level components
 
-  Order logic:
-    Order history
-    Sell retries until balance is 0
-    Order retries
+  Scripting:
+
+    Write script to paint time with in / out of the money, not execute at single point
+
+    Backtest neural net?
+    http://karpathy.github.io/neuralnets/
+
     pre-caclculate with WS data
-    Cancel after X minutes, parameterize cancel time
+      on ws chat will receive props
+        dispatch preCalculateInds({time: , o:, h:, l:, c: })
+          preCalculateInds will get [...product.data, { ...newWSdata }]
+            calcaulateInds with preData
+            add Ind data to state
+        Then
+          dispatch action to run script
 
-  Utils:
-    Button to connect to websocket or retry connect on lost connection
-    Import state with formatted scripts
-
-  Chart:
+  Indicators:
+    Parameterize indicator params via modal
     Import https://github.com/anandanand84/technicalindicators/
 
         @dandv @aastein Just to clarify this package uses babel to transpile es6 code so if you are using it in browser you should use regeneratorRuntime or use custom transpiler. If you want to use it in node or use a custom bundler like webpack we have module flag in https://github.com/anandanand84/technicalindicators/blob/master/package.json#L7 I am not familiar with webpack I use rollup. I tried your example and it did fail. A quick google search shows webpack didn't honor the module field, if we add the following in your webpack.config.js you should be good. I tested and it works fine. Let me know if it didn't work.
@@ -478,32 +481,32 @@ TODO:
         }
       }
 
-Backtest neural net?
-  http://karpathy.github.io/neuralnets/
+  Order logic:
+    if success
+      Order history, save order "id"
+      Get order after 61s with /orders/<order-id>, use setTimeout to dispatch the action
+        if status is cancelled || partially filled
+          re run the script to see if state is is "in the money"
+            if state is not in the money
+              execute sell order
+            if state is in the money
+              execute buy order
+    if error
+      is sell, ??? never seen sell orders get errors
 
-  Script environment:
 
-  Chart:
-
-  Order APIs:
-
-  Bugs:
-
-  Profile:
+  Utils:
+    Button to connect to websocket or retry connect on lost connection
 
   General API:
     Queue promises and burst at 6 per second.
-    Move API and WS calls and responses into action creators, do this last
+    Move API and WS calls and responses into action creators with redux-thunk, do this last
 
   Chart Header:
-    Only fetch product data that is selected
+    Only lead only fetch product data that is selected
+      on chart switch if data.length === 0, fetch data
     Add spinner over apply button on isFetching
-    Parameterize indicator params via modal
 
-  Script Area:
-
-  Documentation:
-    Pretty doc based on props
-
-  Styling:
-    restyle in scss, do last
+  Styling
+    mobile styling
+    flexbox item height on iOS

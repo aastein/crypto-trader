@@ -3,23 +3,39 @@ import React, { Component } from 'react';
 import Dropdown from '../../../components/Dropdown';
 import Input from '../../../components/Input';
 import { fetchProductData } from '../../../utils/api';
-import { INIT_GRANULARITY } from '../../../utils/constants';
+import { INIT_GRANULARITY, INIT_RANGE } from '../../../utils/constants';
 
 export default class Chart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      granularity: this.selectedProduct().granularity ?
-        `${this.selectedProduct().granularity}` : `${INIT_GRANULARITY}`,
+      granularity: `${INIT_GRANULARITY}`,
+      range: INIT_RANGE,
     };
+  }
+
+  // only render if websocket status or internal state changed
+  shouldComponentUpdate(nextProps, nextState) {
+    const websocketStatusChanged = JSON.stringify(this.props.websocket.connected)
+      !== JSON.stringify(nextProps.websocket.connected);
+    const stateChanged = JSON.stringify(this.state)
+       !== JSON.stringify(nextState);
+    const productChanged = this.selectedProduct(this.props).id !== this.selectedProduct(nextProps).id;
+    return websocketStatusChanged || stateChanged || productChanged;
   }
 
   onProductChange = (event) => {
     if (event) {
       const id = event.value;
       const granularity = this.product(id).granularity + '';
-      this.props.selectProduct(event.value);
-      this.setState(() => ({ granularity }));
+      const range = this.product(id).range;
+      const nextProduct = this.product(id);
+      if (nextProduct.data.length === 0) {
+        fetchProductData(nextProduct.id, nextProduct.range, nextProduct.granularity, this.props.setProductData,
+          this.props.setFetchingStatus);
+      }
+      this.props.selectProduct(id);
+      this.setState(() => ({ granularity, range }));
     }
   }
 
@@ -30,11 +46,9 @@ export default class Chart extends Component {
   }
 
   onSelectDateRange = (event) => {
-    const id = this.props.chart.products.reduce((a, p) => (
-      p.active ? p.id : a
-    ), '');
-    if (event) {
-      this.props.selectDateRange(id, event.value);
+    if (event.value) {
+      const range = event.value;
+      this.setState(() => ({ range }));
     }
   }
 
@@ -50,12 +64,13 @@ export default class Chart extends Component {
       p.active ? p : a
     ), {});
     this.props.setGanularity(product.id, this.state.granularity);
-    fetchProductData(product.id, product.range, this.state.granularity, this.props.setProductData,
+    this.props.selectDateRange(product.id, this.state.range);
+    fetchProductData(product.id, this.state.range, this.state.granularity, this.props.setProductData,
       this.props.setFetchingStatus);
   }
 
-  selectedProduct = () => (
-    this.props.chart.products.length > 0 ? this.props.chart.products.reduce((a, p) => (
+  selectedProduct = props => (
+    props.chart.products.length > 0 ? props.chart.products.reduce((a, p) => (
       p.active ? p : a
     ), {}) : {}
   )
@@ -67,7 +82,7 @@ export default class Chart extends Component {
   )
 
   render() {
-    const selectedProduct = this.selectedProduct();
+    const selectedProduct = this.selectedProduct(this.props);
     const dropdownProductOptions = this.props.chart.products.map(product => (
       { value: product.id, label: product.display_name }
     )).filter(p => (
@@ -102,7 +117,7 @@ export default class Chart extends Component {
               className="date-picker chart-header-item"
               options={this.props.chart.dateRanges}
               onChange={this.onSelectDateRange}
-              value={selectedProduct.range}
+              value={this.state.range}
             />
             <div className="granularity chart-header-item">
               <Input

@@ -10,7 +10,8 @@ if(p.srsi[now - 1].k < 0.2 && p.srsi[now].k >= 0.2){
 */
 const round = (value, decimals) => Number(`${Math.round(`${value}e${decimals}`)}e-${decimals}`);
 
-const test = (script, prods, appendLog) => {
+const test = (header, script, prods, appendLog) => {
+  const scriptWithHeader = header + ';' + script;
   const log = appendLog;
   orderHist = [];
   products = prods;
@@ -41,8 +42,7 @@ const test = (script, prods, appendLog) => {
           }
         }
       };
-
-      eval(script);
+      eval(scriptWithHeader);
     } catch (err) {
       appendLog(`Script encountered error: ${err}`);
     }

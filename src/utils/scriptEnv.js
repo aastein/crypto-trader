@@ -1,4 +1,4 @@
-import { orderBook, placeOrder } from './api';
+import { orderBook, placeOrder, getOrder } from './api';
 
 let products;
 let profile;
@@ -6,6 +6,7 @@ let log;
 let p;
 let orderHist;
 let addOrder;
+let config;
 
 const round = (value, decimals) => Number(`${Math.round(`${value}e${decimals}`)}e-${decimals}`);
 
@@ -41,9 +42,9 @@ const limitOrder = (side, productId) => {
       if (size > 0) {
         placeOrder('limit', side, productId, price, size, profile.session, log).then((data) => {
           if (side === 'buy') {
-            addOrder(data.product_id, data.created_at, -1 * data.price);
+            addOrder(data.id, data.product_id, data.created_at, -1 * data.price);
           } else if (side === 'sell') {
-            addOrder(data.product_id, data.created_at, data.price);
+            addOrder(data.id, data.product_id, data.created_at, data.price);
           }
         }).catch(err => (err));
       }
@@ -61,12 +62,23 @@ const sell = (id) => {
   limitOrder('sell', p.id);
 };
 
-const run = (script, prods, prof, appendLog, dispatchAddOrder) => {
+const run = (header, script, prods, prof, appendLog, dispatchAddOrder) => {
+  // set config object for async retry
+  config = {
+    header,
+    script,
+    prods,
+    prof,
+    appendLog,
+    dispatchAddOrder,
+  };
+
   // set global variables
-  addOrder = dispatchAddOrder;
-  log = appendLog;
   products = prods;
   profile = prof;
+  log = appendLog;
+  addOrder = dispatchAddOrder;
+
   p = products.reduce((a, b) => (
     b.active ? b : a
   ), {});
@@ -74,6 +86,7 @@ const run = (script, prods, prof, appendLog, dispatchAddOrder) => {
     o.id === p.id
   ));
   const lastOrder = orders.length > 0 ? orders[orders.length - 1] : {};
+  const scriptWithHeader = header + ';' + script;
 
   try {
     // define variables avalable in the script
@@ -81,10 +94,25 @@ const run = (script, prods, prof, appendLog, dispatchAddOrder) => {
     if (!profile.live) {
       log('Turn on live mode to execute orders.');
     }
-    eval(script);
+    eval(scriptWithHeader);
   } catch (err) {
     appendLog(`Script encountered error: ${err}`);
   }
+};
+
+const checkOrderStatus = (id, session) => {
+  setTimeout(() => {
+    getOrder(id, session).then((res) => {
+      if (res.settled) {
+        if (res.size !== res.filled_size) {
+          // rerun script to reexecute order maybe
+          run(config.header, config.script, config.prods, config.prof, config.appendLog, config.dispatchAddOrder);
+        }
+      } else {
+        run(config.header, config.script, config.prods, config.prof, config.appendLog, config.dispatchAddOrder);
+      }
+    });
+  }, 61000);
 };
 
 export default run;

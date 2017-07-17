@@ -66,60 +66,48 @@ const chart = (state = INITAL_CHART_STATE, action) => {
       return { ...state, testResult: action.result };
     case actionType.SELECT_INDICATOR:
       return { ...state,
-        indicators: state.indicators.map((i) => {
-          const indicator = i;
-          if (i.id === action.id) {
-            indicator.active = true;
-          } else {
-            indicator.active = false;
-          }
-          return indicator;
-        }),
+        indicators: state.indicators.map(i => (
+          { ...i, active: i.id === action.id }
+        )),
       };
     case actionType.EDIT_INDICATOR:
       return { ...state,
-        indicators: state.indicators.map((i) => {
-          const indicator = i;
-          if (i.id === action.id) {
-            indicator.params = action.params;
-          }
-          return i;
-        }),
+        indicators: state.indicators.map(i => (
+          { ...i, params: i.id === action.id ? action.params : i.params }
+        )),
       };
     case actionType.UPDATE_ORDER_BOOK:
       return { ...state,
-        products: state.products.map((p) => {
-          const product = p;
-          product.bid = p.id === action.id ? action.orderBook.bid : p.bid;
-          product.ask = p.id === action.id ? action.orderBook.ask : p.ask;
-          return product;
-        }),
+        products: state.products.map(p => (
+          { ...p,
+            bid: p.id === action.id ? action.orderBook.bid : p.bid,
+            ask: p.id === action.id ? action.orderBook.ask : p.ask,
+          }
+        )),
       };
     case actionType.SELECT_PRODUCT_DOC:
       return { ...state,
-        products: state.products.map((p) => {
-          const product = p;
-          product.docSelected = p.id === action.id ? !p.docSelected : p.docSelected;
-          return product;
-        }),
+        products: state.products.map(p => (
+          { ...p,
+            docSelected: p.id === action.id ? !p.docSelected : p.docSelected,
+          }
+        )),
       };
     case actionType.SELECT_DATE_RANGE:
       return { ...state,
-        products: state.products.map((p) => {
-          const product = p;
-          product.range = p.id === action.id ? action.range : p.range;
-          return product;
-        }),
+        products: state.products.map(p => (
+          { ...p,
+            range: p.id === action.id ? action.range : p.range,
+          }
+        )),
       };
     case actionType.SET_GRANULARITY:
       return { ...state,
-        products: state.products.map((p) => {
-          const product = p;
-          if (product.id === action.id) {
-            return { ...product, granularity: parseInt(action.granularity, 10) };
+        products: state.products.map(p => (
+          { ...p,
+            granularity: p.id === action.id ? parseInt(action.granularity, 10) : p.granularity,
           }
-          return product;
-        }),
+        )),
       };
     case actionType.SET_PRODUCTS:
       return { ...state,
@@ -129,16 +117,14 @@ const chart = (state = INITAL_CHART_STATE, action) => {
       };
     case actionType.SELECT_PRODUCT:
       return { ...state,
-        products: state.products.map((p) => {
-          const product = p;
-          product.active = p.id === action.id;
-          return product;
-        }),
+        products: state.products.map(p => (
+          { ...p, active: p.id === action.id }
+        )),
       };
     case actionType.SET_PRODUCT_DATA:
       return { ...state,
         products: state.products.map((p) => {
-          const product = p;
+          const product = { ...p };
           if (product.id === action.id && action.data) {
             let data = [...action.data.data];
             const endDate = action.data.epochEnd * 1000;
@@ -175,7 +161,7 @@ const chart = (state = INITAL_CHART_STATE, action) => {
     case actionType.ADD_PRODUCT_DATA:
       return { ...state,
         products: state.products.map((p) => {
-          const product = p;
+          const product = { ...p };
           if (product.id === action.id) {
             const data = [...product.data, action.data];
             const inds = calculateIndicators(state.indicators, data);

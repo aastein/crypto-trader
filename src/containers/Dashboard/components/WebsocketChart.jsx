@@ -55,6 +55,7 @@ export default class WebsocketChart extends Component {
       for (let i = 0; i < nextProps.scripts.length; i += 1) {
         if (nextProps.scripts[i].live && nextProps.profile.live) {
           run(
+            nextProps.scripts[0].script,
             nextProps.scripts[i].script,
             nextProps.products,
             nextProps.profile,
@@ -94,7 +95,6 @@ export default class WebsocketChart extends Component {
   )
 
   render() {
-    // console.log(this.props);
     const selectedProduct = this.selectedProduct(this.props.websocket.products);
 
     const selectedProductWSPriceData = selectedProduct.data ?
@@ -116,6 +116,7 @@ export default class WebsocketChart extends Component {
       xAxis: [{
         labels: {
           y: 13,
+          staggerLines: 2,
         },
         tickLength: 3,
       }],
