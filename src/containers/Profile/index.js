@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { importProfile, saveProfile, updateAccounts } from '../../actions';
+import { importProfile, saveProfile, updateAccounts, updateOrderBook } from '../../actions';
 import ProfileForm from './components/ProfileForm';
 
 const mapStateToProps = state => (
@@ -30,6 +30,9 @@ const mapDispatchToProps = dispatch => (
     },
     updateAccounts: (accounts) => {
       dispatch(updateAccounts(accounts));
+    },
+    updateOrderBook: (id, orderBook) => {
+      dispatch(updateOrderBook(id, orderBook));
     },
   }
 );

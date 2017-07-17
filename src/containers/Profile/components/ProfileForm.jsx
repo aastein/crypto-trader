@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import Input from '../../../components/Input';
 import Dropdown from '../../../components/Dropdown';
-import { getAccounts } from '../../../utils/api';
+import { getAccounts, setOrderBook } from '../../../utils/api';
 
 
 export default class ProfileForm extends Component {
@@ -19,6 +19,16 @@ export default class ProfileForm extends Component {
       products: this.props.products,
     };
     this.state = { ...this.state, textState: JSON.stringify(this.state, null, 2) };
+  }
+
+  // only render if profile, product length, or internal state changed
+  shouldComponentUpdate(nextProps, nextState) {
+    const profileChanged = JSON.stringify(this.props.profile)
+      !== JSON.stringify(nextProps.profile);
+    const stateChanged = JSON.stringify(this.state)
+      !== JSON.stringify(nextState);
+    const productLengthChanged = this.props.products.length !== nextProps.products.length;
+    return profileChanged || stateChanged || productLengthChanged;
   }
 
   onSelectProducts = (value) => {
@@ -50,10 +60,16 @@ export default class ProfileForm extends Component {
 
   handleSave = (event) => {
     event.preventDefault();
-    getAccounts(this.state.profile.session).then((res) => {
-      if (res) this.props.updateAccounts(res);
-    });
+    if (this.state.profile.session.length > 0) {
+      getAccounts(this.state.profile.session).then((res) => {
+        if (res) this.props.updateAccounts(res);
+      });
+    }
     this.props.saveProfile({ profile: this.state.profile });
+    console.log(this.state.profile.selectedProducts);
+    for (let i = 0; i < this.state.profile.selectedProducts.length; i += 1) {
+      setOrderBook(this.state.profile.selectedProducts[i].value, this.props.updateOrderBook);
+    }
   }
 
   handleImport = (acceptedFiles) => {

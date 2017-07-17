@@ -14,9 +14,9 @@ export default class Navigation extends Component {
         this.props.setProducts(products);
         this.props.selectProduct(this.props.selectedProductIds[0]);
         initWSConnection(this.props.selectedProductIds, this.props.addProductWSData);
+        fetchProductData(this.props.selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY,
+          this.props.setProductData, this.props.setFetchingStatus);
         for (let i = 0; i < this.props.selectedProductIds.length; i += 1) {
-          fetchProductData(this.props.selectedProductIds[i], INIT_RANGE, INIT_GRANULARITY,
-            this.props.setProductData, this.props.setFetchingStatus);
           setOrderBook(this.props.selectedProductIds[i], this.props.updateOrderBook);
         }
       }
@@ -43,6 +43,33 @@ export default class Navigation extends Component {
         this.props.updateHeartbeat(false);
       }
     }, 10000);
+  }
+
+  // only render if accounts or orderbook changed
+  shouldComponentUpdate(nextProps) {
+    const accountsChanged = JSON.stringify(this.props.accounts)
+      !== JSON.stringify(nextProps.accounts);
+    const thisOrderBook = this.props.products.filter(p => (
+      this.props.selectedProductIds.indexOf(p.id) > -1
+    )).map(a => (
+      {
+        id: a.id,
+        ask: a.ask,
+        bid: a.bid,
+      }
+    ));
+    const nextOrderBook = nextProps.products.filter(p => (
+      nextProps.selectedProductIds.indexOf(p.id) > -1
+    )).map(a => (
+      {
+        id: a.id,
+        ask: a.ask,
+        bid: a.bid,
+      }
+    ));
+    const orderbookChanged = JSON.stringify(thisOrderBook)
+      !== JSON.stringify(nextOrderBook);
+    return accountsChanged || orderbookChanged;
   }
 
   render() {

@@ -447,6 +447,12 @@ Left off @ http://redux.js.org/docs/advanced/AsyncActions.html
 
 TODO:
 
+  run prints two live mode warnings
+
+  performance:
+    investigate renders
+      -> have to break everything up into top level components
+
   Scripting:
 
     Write script to paint time with in / out of the money, not execute at single point

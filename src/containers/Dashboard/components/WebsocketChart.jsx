@@ -95,7 +95,7 @@ export default class WebsocketChart extends Component {
   )
 
   render() {
-    // console.log(this.props);
+    console.log('rendering ws chart');
     const selectedProduct = this.selectedProduct(this.props.websocket.products);
 
     const selectedProductWSPriceData = selectedProduct.data ?

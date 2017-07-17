@@ -110,6 +110,7 @@ buy
 sell
 lastOrder
 orders
+config
 ```
 
 ## Getting Started

@@ -1,6 +1,6 @@
 import * as actionType from './actionTypes';
 
-let nextScriptId = 4;
+let nextScriptId = 2;
 
 // profile
 export const importProfile = userData => ({ type: actionType.IMPORT_PROFILE, userData });
@@ -31,7 +31,7 @@ export const setFetchingStatus = status => ({ type: actionType.SET_FETCHING_STAT
 // dashpbard: scratchpad
 export const addScript = () => ({ type: actionType.ADD_SCRIPT, id: nextScriptId += 1 });
 export const saveScript = script => ({ type: actionType.SAVE_SCRIPT, script });
-export const deleteScript = () => ({ type: actionType.DELETE_SCRIPT });
+export const deleteScript = id => ({ type: actionType.DELETE_SCRIPT, id });
 export const selectScript = id => ({ type: actionType.SELECT_SCRIPT, id });
 export const selectProductDoc = id => ({ type: actionType.SELECT_PRODUCT_DOC, id });
 export const toggleScriptLive = id => ({ type: actionType.TOGGLE_SCRIPT_LIVE, id });

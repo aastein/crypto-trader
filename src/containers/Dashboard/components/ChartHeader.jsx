@@ -14,11 +14,25 @@ export default class Chart extends Component {
     };
   }
 
+  // only render if websocket status or internal state changed
+  shouldComponentUpdate(nextProps, nextState) {
+    const websocketStatusChanged = JSON.stringify(this.props.websocket.connected)
+      !== JSON.stringify(nextProps.websocket.connected);
+    const stateChanged = JSON.stringify(this.state)
+       !== JSON.stringify(nextState);
+    return websocketStatusChanged || stateChanged;
+  }
+
   onProductChange = (event) => {
     if (event) {
       const id = event.value;
       const granularity = this.product(id).granularity + '';
-      this.props.selectProduct(event.value);
+      const nextProduct = this.product(id);
+      if (nextProduct.data.length === 0) {
+        fetchProductData(nextProduct.id, nextProduct.range, nextProduct.granularity, this.props.setProductData,
+          this.props.setFetchingStatus);
+      }
+      this.props.selectProduct(id);
       this.setState(() => ({ granularity }));
     }
   }
