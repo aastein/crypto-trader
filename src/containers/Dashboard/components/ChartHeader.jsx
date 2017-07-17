@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Dropdown from '../../../components/Dropdown';
 import Input from '../../../components/Input';
 import { fetchProductData } from '../../../utils/api';
-import { INIT_GRANULARITY } from '../../../utils/constants';
+import { INIT_GRANULARITY, INIT_RANGE } from '../../../utils/constants';
 
 export default class Chart extends Component {
   constructor(props) {
@@ -11,6 +11,7 @@ export default class Chart extends Component {
     this.state = {
       granularity: this.selectedProduct().granularity ?
         `${this.selectedProduct().granularity}` : `${INIT_GRANULARITY}`,
+      range: this.selectedProduct().range ? this.selectedProduct().rang : INIT_RANGE,
     };
   }
 
@@ -44,12 +45,8 @@ export default class Chart extends Component {
   }
 
   onSelectDateRange = (event) => {
-    const id = this.props.chart.products.reduce((a, p) => (
-      p.active ? p.id : a
-    ), '');
-    if (event) {
-      this.props.selectDateRange(id, event.value);
-    }
+    const range = event.value;
+    this.setState(() => ({ range }));
   }
 
   onSetGanularity = (name, event) => {
@@ -64,7 +61,8 @@ export default class Chart extends Component {
       p.active ? p : a
     ), {});
     this.props.setGanularity(product.id, this.state.granularity);
-    fetchProductData(product.id, product.range, this.state.granularity, this.props.setProductData,
+    this.props.selectDateRange(product.id, this.state.range);
+    fetchProductData(product.id, this.state.range, this.state.granularity, this.props.setProductData,
       this.props.setFetchingStatus);
   }
 
@@ -116,7 +114,7 @@ export default class Chart extends Component {
               className="date-picker chart-header-item"
               options={this.props.chart.dateRanges}
               onChange={this.onSelectDateRange}
-              value={selectedProduct.range}
+              value={this.state.range}
             />
             <div className="granularity chart-header-item">
               <Input

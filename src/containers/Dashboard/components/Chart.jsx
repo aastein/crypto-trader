@@ -18,7 +18,6 @@ export default class Chart extends Component {
   )
 
   render() {
-    console.log('rendering chart');
     const selectedProduct = this.selectedProduct(this.props);
 
     const selectedProductPriceData = selectedProduct.data ?

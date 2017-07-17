@@ -66,7 +66,6 @@ export default class ProfileForm extends Component {
       });
     }
     this.props.saveProfile({ profile: this.state.profile });
-    console.log(this.state.profile.selectedProducts);
     for (let i = 0; i < this.state.profile.selectedProducts.length; i += 1) {
       setOrderBook(this.state.profile.selectedProducts[i].value, this.props.updateOrderBook);
     }
