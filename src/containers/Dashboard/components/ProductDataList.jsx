@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ObjectInspector } from 'react-inspector';
 
 export default class ProductDataList extends Component {
-  // only render if product price data changed
+  // only render if product price data changed or product doc selection changed
   shouldComponentUpdate(nextProps, nextState) {
     const thisData = this.props.products.map(p => (
       p.data.length
@@ -10,9 +10,17 @@ export default class ProductDataList extends Component {
     const nextData = nextProps.products.map(p => (
       p.data.length
     ));
+    const thisSelectedDocs = this.props.products.map(p => (
+      p.docSelected
+    ));
+    const nextSelectedDocs = nextProps.products.map(p => (
+      p.docSelected
+    ));
     const dataChanged = JSON.stringify(thisData)
       !== JSON.stringify(nextData);
-    return dataChanged;
+    const selectedDocsChanged = JSON.stringify(thisSelectedDocs)
+      !== JSON.stringify(nextSelectedDocs);
+    return dataChanged || selectedDocsChanged;
   }
 
   render() {
