@@ -1,4 +1,4 @@
-<img src="https://circleci.com/gh/aastein/crypto-trader.svg?style=shield&circle-token=ed13989cea476fd5f00e9e3abaa47c6bcc563c6f">
+[![CircleCI](https://circleci.com/gh/aastein/crypto-trader/tree/master.svg?style=svg&circle-token=ed13989cea476fd5f00e9e3abaa47c6bcc563c6f)](https://circleci.com/gh/aastein/crypto-trader/tree/master)
 
 # crypto-trader
 
