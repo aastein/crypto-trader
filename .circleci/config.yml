@@ -40,5 +40,5 @@ jobs:
           name: Maybe Deploy
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              npm run build && firebase deploy --token=$FIREBASE_TOKEN --non-interactive
+              yarn deploy-ci
             fi
