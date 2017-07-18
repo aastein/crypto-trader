@@ -19,12 +19,6 @@ $profile-form-width: 500px;
 
 $left-container-width: 70%;
 $right-container-width: 30%;
-$websocket-chart-width: 10%;
-
-$chart-header-height: 30px;
-$chart-height: 400px;
-
-$bottom-container-height: 255px;
 
 html * {
   //color: #000;
@@ -599,7 +593,7 @@ button:hover {
 
 .bottom-container {
   width: 100%;
-  min-height: 300px;
+  min-height: 250px;
   display: -webkit-flex;
   display: flex;
   -webkit-flex: 1;

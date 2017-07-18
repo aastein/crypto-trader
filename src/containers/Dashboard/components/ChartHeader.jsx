@@ -46,7 +46,7 @@ export default class Chart extends Component {
   }
 
   onSelectDateRange = (event) => {
-    if (event.value) {
+    if (event && event.value) {
       const range = event.value;
       this.setState(() => ({ range }));
     }
