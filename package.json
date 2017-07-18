@@ -110,7 +110,8 @@
     "firebase-init": "firebase login && firebase init",
     "start": "node scripts/start.js",
     "test": "node scripts/test.js --env=jsdom",
-    "fix": "eslint --fix src"
+    "fix": "eslint --fix src",
+    "firebase-token": "firebase login:ci"
   },
   "version": "0.1.0"
 }
