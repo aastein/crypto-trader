@@ -1,14 +1,8 @@
+import { round } from './math';
+
 let products;
 let p;
 let orderHist;
-/*
-if(p.srsi[now - 1].k < 0.2 && p.srsi[now].k >= 0.2){
-  buy()
-} else if (p.srsi[now - 1].k > 0.8 && p.srsi[now].k <= 0.8){
-  sell()
-}
-*/
-const round = (value, decimals) => Number(`${Math.round(`${value}e${decimals}`)}e-${decimals}`);
 
 const test = (header, script, prods, appendLog) => {
   const scriptWithHeader = header + ';' + script;

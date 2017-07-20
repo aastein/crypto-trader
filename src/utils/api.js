@@ -1,6 +1,8 @@
 import axios from 'axios';
 import moment from 'moment';
 
+import { floor } from './math';
+
 // axios.defaults.baseURL = 'https://api-public.sandbox.gdax.com'
 axios.defaults.baseURL = 'https://api.gdax.com';
 
@@ -168,10 +170,6 @@ export const getProducts = () => {
   const url = '/products';
   return axios.get(url);
 };
-
-const floor = (value, decimals) => (
-  Number(Math.floor(`${value}e${decimals}`)`e-${decimals}`)
-);
 
 export const placeOrder = (type, side, productId, price, size, session, log) => {
   const uri = '/orders';

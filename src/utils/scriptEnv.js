@@ -1,4 +1,5 @@
 import { orderBook, placeOrder, getOrder } from './api';
+import { round, floor } from './math';
 
 let products;
 let profile;
@@ -7,10 +8,6 @@ let p;
 let orderHist;
 let addOrder;
 let config;
-
-const round = (value, decimals) => Number(`${Math.round(`${value}e${decimals}`)}e-${decimals}`);
-
-const floor = (value, decimals) => Number(`${Math.floor(`${value}e${decimals}`)}e-${decimals}`);
 
 const limitOrder = (side, productId) => {
   orderBook(productId).then((ob) => {
