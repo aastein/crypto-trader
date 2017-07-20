@@ -30,9 +30,6 @@ const mapDispatchToProps = dispatch => (
     fetchOrderBook: (id) => {
       dispatch(fetchOrderBook(id));
     },
-    fetchProductData: (id, range, granularity) => {
-      dispatch(fetchProductData(id, range, granularity));
-    },
     initProducts: () => {
       dispatch(initProducts());
     },

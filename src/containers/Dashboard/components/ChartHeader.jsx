@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import Dropdown from '../../../components/Dropdown';
 import Input from '../../../components/Input';
-import { fetchProductData } from '../../../utils/api';
 import { INIT_GRANULARITY, INIT_RANGE } from '../../../utils/constants';
 
 export default class Chart extends Component {
@@ -31,8 +30,7 @@ export default class Chart extends Component {
       const range = this.product(id).range;
       const nextProduct = this.product(id);
       if (nextProduct.data.length === 0) {
-        fetchProductData(nextProduct.id, nextProduct.range, nextProduct.granularity, this.props.setProductData,
-          this.props.setFetchingStatus);
+        this.props.fetchProductData(nextProduct.id, nextProduct.range, nextProduct.granularity);
       }
       this.props.selectProduct(id);
       this.setState(() => ({ granularity, range }));
@@ -65,8 +63,7 @@ export default class Chart extends Component {
     ), {});
     this.props.setGanularity(product.id, this.state.granularity);
     this.props.selectDateRange(product.id, this.state.range);
-    fetchProductData(product.id, this.state.range, this.state.granularity, this.props.setProductData,
-      this.props.setFetchingStatus);
+    this.props.fetchProductData(product.id, this.state.range, this.state.granularity);
   }
 
   selectedProduct = props => (

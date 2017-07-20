@@ -15,6 +15,7 @@ const Dashboard = props => (
             chart={props.chart}
             selectedProductIds={props.profile.selectedProducts.map(p => (p.value))}
             websocket={props.websocket}
+            fetchProductData={props.fetchProductData}
             selectProduct={props.selectProduct}
             setGanularity={props.setGranularity}
             setProductData={props.setProductData}
