@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import run from '../../../utils/scriptEnv';
 import test from '../../../utils/scriptTestEnv';
-import { getAccounts } from '../../../utils/api';
 
 export default class CodeEditor extends Component {
 
@@ -21,16 +20,6 @@ export default class CodeEditor extends Component {
   handleInputChange = (event) => {
     const name = event.target.value;
     this.props.saveScript({ ...this.props.script, name });
-  }
-
-  updateAccounts = () => {
-    if (this.props.profile.session.length > 5) {
-      setTimeout(() => {
-        getAccounts(this.props.profile.session).then((res) => {
-          this.props.updateAccounts(res);
-        });
-      }, 5000);
-    }
   }
 
   runScript = (event) => {
