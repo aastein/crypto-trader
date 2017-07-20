@@ -4,6 +4,7 @@ import {
   saveProfile,
   fetchAccounts,
   fetchOrderBook,
+  setLocation,
 } from '../../actions';
 import ProfileForm from './components/ProfileForm';
 
@@ -38,6 +39,9 @@ const mapDispatchToProps = dispatch => (
     },
     fetchOrderBook: (id) => {
       dispatch(fetchOrderBook(id));
+    },
+    setLocation: (location) => {
+      dispatch(setLocation(location));
     },
   }
 );

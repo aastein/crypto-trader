@@ -23,6 +23,7 @@ import {
   addOrder,
   fetchAccounts,
   fetchProductData,
+  setLocation,
 } from '../../actions';
 
 import Dashboard from './components/Dashboard';
@@ -104,6 +105,9 @@ const mapDispatchToProps = dispatch => (
     },
     fetchProductData: (id, range, granularity) => {
       dispatch(fetchProductData(id, range, granularity));
+    },
+    setLocation: (location) => {
+      dispatch(setLocation(location));
     },
   }
 );

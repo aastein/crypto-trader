@@ -8,7 +8,7 @@ import Profile from './containers/Profile';
 const App = () => (
   (
     <div className="App">
-      <Navigation />
+      <Route component={Navigation} />
       <Switch>
         <Route exact path="/" component={DashboardContainer} />
         <Route exact path="/profile" component={Profile} />

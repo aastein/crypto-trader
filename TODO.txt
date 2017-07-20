@@ -1,3 +1,9 @@
+Bugs:
+
+Code quality:
+  Unit tests
+  PropTypes
+
 Scripting:
 
   Backtest neural net?

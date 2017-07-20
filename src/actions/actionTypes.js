@@ -33,3 +33,6 @@ export const SAVE_TEST_RESULT = 'SAVE_TEST_RESULT';
 // logging
 export const APPEND_LOG = 'APPEND_LOG';
 export const CLEAR_LOG = 'CLEAR_LOG';
+
+// location
+export const SET_LOCATION = 'SET_LOCATION';

@@ -4,6 +4,7 @@ import profile from './profile';
 import scripts from './scripts';
 import log from './log';
 import websocket from './websocket';
+import location from './location';
 
 const reducer = combineReducers({
   chart,
@@ -11,6 +12,7 @@ const reducer = combineReducers({
   scripts,
   log,
   websocket,
+  location,
 });
 
 export default reducer;

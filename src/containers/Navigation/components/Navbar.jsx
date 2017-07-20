@@ -29,7 +29,7 @@ export default class Navigation extends Component {
     }, 10000);
   }
 
-  // only render if accounts or orderbook changed
+  // only render if accounts or orderbook or location changed
   shouldComponentUpdate(nextProps) {
     const accountsChanged = JSON.stringify(this.props.accounts)
       !== JSON.stringify(nextProps.accounts);
@@ -53,7 +53,9 @@ export default class Navigation extends Component {
     ));
     const orderbookChanged = JSON.stringify(thisOrderBook)
       !== JSON.stringify(nextOrderBook);
-    return accountsChanged || orderbookChanged;
+    const locationChanged = JSON.stringify(this.props.location)
+      !== JSON.stringify(nextProps.location);
+    return accountsChanged || orderbookChanged || locationChanged;
   }
 
   render() {
@@ -72,10 +74,22 @@ export default class Navigation extends Component {
         </a>
         <ul className="nav-group links">
           <li>
-            <NavLink exact activeClassName="active" to="/">Dashboard</NavLink>
+            <NavLink
+              exact
+              activeClassName="active"
+              to="/"
+            >
+                Dashboard
+            </NavLink>
           </li>
           <li>
-            <NavLink exact activeClassName="active" to="/profile">Profile</NavLink>
+            <NavLink
+              exact
+              activeClassName="active"
+              to="/profile"
+            >
+              Profile
+            </NavLink>
           </li>
         </ul>
         <ul className="nav-group orderbook">

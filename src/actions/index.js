@@ -43,6 +43,9 @@ export const saveTestResult = result => ({ type: actionType.SAVE_TEST_RESULT, re
 export const appendLog = log => ({ type: actionType.APPEND_LOG, log });
 export const clearLog = () => ({ type: actionType.CLEAR_LOG });
 
+// location
+export const setLocation = location => ({ type: actionType.SET_LOCATION, location });
+
 // api
 export const fetchAccounts = session => (
   dispatch => (

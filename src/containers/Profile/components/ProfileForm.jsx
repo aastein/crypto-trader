@@ -19,6 +19,9 @@ export default class ProfileForm extends Component {
     this.state = { ...this.state, textState: JSON.stringify(this.state, null, 2) };
   }
 
+  componentDidMount() {
+    this.props.setLocation(this.props.location);
+  }
   // only render if profile, product length, or internal state changed
   shouldComponentUpdate(nextProps, nextState) {
     const profileChanged = JSON.stringify(this.props.profile)

@@ -5,6 +5,7 @@ import {
   fetchOrderBook,
   fetchProductData,
   initProducts,
+  setLocation,
 } from '../../actions';
 import Navbar from './components/Navbar';
 
@@ -16,6 +17,7 @@ const mapStateToProps = state => (
     products: state.chart.products,
     websocket: state.websocket,
     selectedProductIds: state.profile.selectedProducts.map(p => (p.value)),
+    location: state.location,
   }
 );
 
