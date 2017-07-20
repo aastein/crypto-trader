@@ -14,7 +14,7 @@ export default class ScriptList extends Component {
     return (
       <div className="script-list">
         <h2>
-          Product Data
+          Scripts
         </h2>
         <div className="scripts">
           <button
