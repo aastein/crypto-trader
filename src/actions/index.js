@@ -1,4 +1,7 @@
 import * as actionType from './actionTypes';
+import { getAccounts, getOrderBook, getProductData, getProducts } from '../utils/api';
+import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
+import connect, { setAction, subscribe } from '../utils/websocket';
 
 let nextScriptId = 2;
 
@@ -10,8 +13,7 @@ export const addOrder = (id, productId, time, price) => ({ type: actionType.ADD_
 
 // websocket
 export const setProductWSData = (id, data) => ({ type: actionType.SET_PRODUCT_WS_DATA, id, data });
-export const addProductWSData = (id, time, price, size) =>
-    ({ type: actionType.ADD_PRODUCT_WS_DATA, id, time, price, size });
+export const addProductWSData = data => ({ type: actionType.ADD_PRODUCT_WS_DATA, data });
 
 // dashboard: charts
 export const setProducts = products => ({ type: actionType.SET_PRODUCTS, products });
@@ -40,3 +42,56 @@ export const saveTestResult = result => ({ type: actionType.SAVE_TEST_RESULT, re
 // logging
 export const appendLog = log => ({ type: actionType.APPEND_LOG, log });
 export const clearLog = () => ({ type: actionType.CLEAR_LOG });
+
+// api
+export const fetchAccounts = session => (
+  dispatch => (
+    getAccounts(session).then((accounts) => {
+      if (accounts) dispatch(updateAccounts(accounts));
+    })
+  )
+);
+
+export const fetchOrderBook = id => (
+  dispatch => (
+    getOrderBook(id).then((ob) => {
+      dispatch(updateOrderBook(id, ob));
+    })
+  )
+);
+
+export const fetchProductData = (id, range, granularity) => (
+  (dispatch) => {
+    dispatch(setFetchingStatus(true));
+    return getProductData(id, range, granularity).then((data) => {
+      dispatch(setProductData(id, data));
+      dispatch(setFetchingStatus(false));
+    });
+  }
+);
+
+export const initWebsocket = ids => (
+  dispatch => (
+    connect().then(() => {
+      setAction((data) => {
+        dispatch(addProductWSData(data));
+      });
+      subscribe(ids);
+    })
+  )
+);
+
+export const initProducts = () => (
+  (dispatch, getState) => (
+    getProducts().then((products) => {
+      dispatch(setProducts(products.data));
+      const selectedProductIds = getState().profile.selectedProducts.map(p => (p.value));
+      dispatch(selectProduct(selectedProductIds[0]));
+      dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
+      for (let i = 0; i < selectedProductIds.length; i += 1) {
+        dispatch(fetchOrderBook(selectedProductIds[i]));
+      }
+      dispatch(initWebsocket(selectedProductIds));
+    })
+  )
+);

@@ -40,6 +40,16 @@ export const orderBook = (productId) => {
   ));
 };
 
+export const getOrderBook = (productId) => {
+  const url = `/products/${productId}/book`;
+  return axios.get(url).then(res => (
+    {
+      bid: res.data.bids[0][0],
+      ask: res.data.asks[0][0],
+    }
+  ));
+};
+
 export const setOrderBook = (productId, updateOrderBook) => {
   orderBook(productId).then((ob) => {
     updateOrderBook(productId, ob);
@@ -64,7 +74,7 @@ export const getAccounts = (session) => {
   )).catch((err) => { alert('Session ID invalid', err); });
 };
 
-export const getHistorialData = (product, startDate, endDate, gran, setFetchingStatus) => {
+export const getHistorialData = (product, startDate, endDate, gran) => {
   const granularity = Math.ceil(gran);
   const url = `/products/${product}/candles?start=${startDate}&end=${endDate}&granularity=${granularity}`;
   return axios.get(url).then(res => (
@@ -86,7 +96,7 @@ export const getHistorialData = (product, startDate, endDate, gran, setFetchingS
 // GDAX also has a burst request limit so it is important to not initialize the app a rage so wide
 // that it needs to split the requests
 // granularity == 300000 = 30s => I want a data point ever 30s
-export const tryGetHistoricalData = (productId, time, range, desiredGranularity, setFetchingStatus) => {
+export const tryGetHistoricalData = (productId, time, range, desiredGranularity) => {
   // console.log('time', time)
   let rateConstant;
   let requests = [];
@@ -112,7 +122,7 @@ export const tryGetHistoricalData = (productId, time, range, desiredGranularity,
     for (let i = 0; i < numRequsts; i += 1) {
       const nStart = moment.unix(epochEnd - epochStep - (epochStep * i)).toISOString();
       const nEnd = moment.unix(epochEnd - (epochStep * i)).toISOString();
-      const request = getHistorialData(productId, nStart, nEnd, desiredGranularity, setFetchingStatus);
+      const request = getHistorialData(productId, nStart, nEnd, desiredGranularity);
       requests = [...requests, request];
     }
     return axios.all(requests).then(
@@ -122,7 +132,7 @@ export const tryGetHistoricalData = (productId, time, range, desiredGranularity,
           data: d.reduce((a, b) => ([...a, ...b]), []),
         }
     ))).catch(err => (
-      handleError(err, setFetchingStatus)
+      handleError(err)
     ));
   }
   return new Promise((resolve, reject) => (
@@ -146,30 +156,18 @@ export const fetchProductData = (id, range, granularity, setProductData, setFetc
   });
 };
 
+export const getProductData = (id, range, granularity) => (
+  serverTime().then(time => (
+    tryGetHistoricalData(id, time, range, granularity).then(data => (
+      data
+    ))
+  ))
+);
+
 export const getProducts = () => {
   const url = '/products';
-  return axios.get(url).then(res => (res.data)).catch(handleError);
+  return axios.get(url);
 };
-
-/*
-{
-  "id": "d0c5340b-6d6c-49d9-b567-48c4bfca13d2",
-  "price": "0.10000000",
-  "size": "0.01000000",
-  "product_id": "BTC-USD",
-  "side": "buy",
-  "stp": "dc",
-  "type": "limit",
-  "time_in_force": "GTC",
-  "post_only": false,
-  "created_at": "2016-12-08T20:02:28.53864Z",
-  "fill_fees": "0.0000000000000000",
-  "filled_size": "0.00000000",
-  "executed_value": "0.0000000000000000",
-  "status": "pending",
-  "settled": false
-}
-*/
 
 const floor = (value, decimals) => (
   Number(Math.floor(`${value}e${decimals}`)`e-${decimals}`)

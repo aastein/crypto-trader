@@ -21,6 +21,7 @@ import {
   addProductData,
   setFetchingStatus,
   addOrder,
+  fetchAccounts,
 } from '../../actions';
 
 import Dashboard from './components/Dashboard';
@@ -96,6 +97,9 @@ const mapDispatchToProps = dispatch => (
     },
     addOrder: (id, productId, time, price) => {
       dispatch(addOrder(id, productId, time, price));
+    },
+    fetchAccounts: (session) => {
+      dispatch(fetchAccounts(session));
     },
   }
 );

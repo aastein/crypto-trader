@@ -6,8 +6,6 @@ import axios from 'axios';
 
 import Input from '../../../components/Input';
 import Dropdown from '../../../components/Dropdown';
-import { getAccounts, setOrderBook } from '../../../utils/api';
-
 
 export default class ProfileForm extends Component {
   constructor(props) {
@@ -61,13 +59,11 @@ export default class ProfileForm extends Component {
   handleSave = (event) => {
     event.preventDefault();
     if (this.state.profile.session.length > 0) {
-      getAccounts(this.state.profile.session).then((res) => {
-        if (res) this.props.updateAccounts(res);
-      });
+      this.props.fetchAccounts(this.state.profile.session);
     }
     this.props.saveProfile({ profile: this.state.profile });
     for (let i = 0; i < this.state.profile.selectedProducts.length; i += 1) {
-      setOrderBook(this.state.profile.selectedProducts[i].value, this.props.updateOrderBook);
+      this.props.fetchOrderBook(this.state.profile.selectedProducts[i].value);
     }
   }
 

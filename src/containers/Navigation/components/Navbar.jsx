@@ -1,39 +1,23 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import moment from 'moment';
-
-import { getAccounts, getProducts, fetchProductData, setOrderBook } from '../../../utils/api';
-import initWSConnection from '../../../utils/websocket';
-import { INIT_RANGE, INIT_GRANULARITY } from '../../../utils/constants';
+import { round } from '../../../utils/math';
 
 export default class Navigation extends Component {
 
   componentDidMount() {
-    getProducts().then((products) => {
-      if (products) {
-        this.props.setProducts(products);
-        this.props.selectProduct(this.props.selectedProductIds[0]);
-        initWSConnection(this.props.selectedProductIds, this.props.addProductWSData);
-        fetchProductData(this.props.selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY,
-          this.props.setProductData, this.props.setFetchingStatus);
-        for (let i = 0; i < this.props.selectedProductIds.length; i += 1) {
-          setOrderBook(this.props.selectedProductIds[i], this.props.updateOrderBook);
-        }
-      }
-    });
+    this.props.initProducts();
 
     setInterval(() => {
       if (this.props.session.length > 5) {
-        getAccounts(this.props.session).then((res) => {
-          this.props.updateAccounts(res);
-        });
+        this.props.fetchAccounts(this.props.session);
       }
     }, 5000);
 
     setInterval(() => {
       const ids = this.props.selectedProductIds;
       for (let i = 0; i < ids.length; i += 1) {
-        setOrderBook(ids[i], this.props.updateOrderBook);
+        this.props.fetchOrderBook(ids[i]);
       }
     }, 30000);
 
@@ -73,9 +57,6 @@ export default class Navigation extends Component {
   }
 
   render() {
-    const round = (value, decimals) => (
-      Number(Math.round(Number(`${value}e${decimals}`)) + `e-${decimals}`)
-    );
     return (
       <nav className={`navbar ${this.props.live ? 'live' : ''}`}>
         <a

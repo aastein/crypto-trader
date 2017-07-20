@@ -1,5 +1,10 @@
 import { connect } from 'react-redux';
-import { importProfile, saveProfile, updateAccounts, updateOrderBook } from '../../actions';
+import {
+  importProfile,
+  saveProfile,
+  fetchAccounts,
+  fetchOrderBook,
+} from '../../actions';
 import ProfileForm from './components/ProfileForm';
 
 const mapStateToProps = state => (
@@ -28,11 +33,11 @@ const mapDispatchToProps = dispatch => (
     saveProfile: (settigns) => {
       dispatch(saveProfile(settigns));
     },
-    updateAccounts: (accounts) => {
-      dispatch(updateAccounts(accounts));
+    fetchAccounts: (session) => {
+      dispatch(fetchAccounts(session));
     },
-    updateOrderBook: (id, orderBook) => {
-      dispatch(updateOrderBook(id, orderBook));
+    fetchOrderBook: (id) => {
+      dispatch(fetchOrderBook(id));
     },
   }
 );

@@ -1,13 +1,10 @@
 import { connect } from 'react-redux';
 import {
-  updateAccounts,
-  updateOrderBook,
-  setProducts,
-  setProductData,
-  selectProduct,
-  addProductWSData,
   updateHeartbeat,
-  setFetchingStatus,
+  fetchAccounts,
+  fetchOrderBook,
+  fetchProductData,
+  initProducts,
 } from '../../actions';
 import Navbar from './components/Navbar';
 
@@ -24,29 +21,20 @@ const mapStateToProps = state => (
 
 const mapDispatchToProps = dispatch => (
   {
-    updateAccounts: (accounts) => {
-      dispatch(updateAccounts(accounts));
-    },
-    updateOrderBook: (id, orderBook) => {
-      dispatch(updateOrderBook(id, orderBook));
-    },
-    setProducts: (products) => {
-      dispatch(setProducts(products));
-    },
-    setProductData: (id, data) => {
-      dispatch(setProductData(id, data));
-    },
-    selectProduct: (id) => {
-      dispatch(selectProduct(id));
-    },
-    addProductWSData: (id, time, price, size) => {
-      dispatch(addProductWSData(id, time, price, size));
-    },
     updateHeartbeat: (status) => {
       dispatch(updateHeartbeat(status));
     },
-    setFetchingStatus: (status) => {
-      dispatch(setFetchingStatus(status));
+    fetchAccounts: (session) => {
+      dispatch(fetchAccounts(session));
+    },
+    fetchOrderBook: (id) => {
+      dispatch(fetchOrderBook(id));
+    },
+    fetchProductData: (id, range, granularity) => {
+      dispatch(fetchProductData(id, range, granularity));
+    },
+    initProducts: () => {
+      dispatch(initProducts());
     },
   }
 );

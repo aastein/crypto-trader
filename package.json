@@ -28,6 +28,8 @@
     "react-spinkit": "^3.0.0",
     "react-toggle-switch": "^2.1.4",
     "redux": "^3.7.1",
+    "redux-promise": "^0.5.3",
+    "redux-thunk": "^2.2.0",
     "technicalindicators": "1.0.3"
   },
   "devDependencies": {

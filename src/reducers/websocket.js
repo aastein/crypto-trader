@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import * as actionType from '../actions/actionTypes';
 
 const INIT_STATE = {
@@ -32,12 +34,14 @@ const websocket = (state = INIT_STATE, action) => {
       return { ...state,
         products: state.products.map((p) => {
           const product = { ...p };
-          if (product.id === action.id) {
-            product.data = [...product.data, {
-              time: action.time,
-              price: action.price,
-              size: action.size,
-            }];
+          if (product.id === action.data.product_id && action.data.price && action.data.size) {
+            product.data = [...product.data,
+              {
+                ...action.data,
+                time: moment(action.data.time).valueOf(),
+                size: Number(action.data.size),
+                price: Number(action.data.price),
+              }];
             // if multiple transactions per ms, average the transactions
             const cleanData = [];
             for (let i = 0; i < product.data.length; i += 1) {
