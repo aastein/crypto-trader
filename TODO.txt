@@ -1,5 +1,10 @@
 Bugs:
 
+Unit tests:
+  look into different fetching lib that wont fail tests
+  delete the app will render test
+  unit test components, general -> specific
+
 Code quality:
   Unit tests
   PropTypes
@@ -41,7 +46,18 @@ General API:
 Chart Header:
   Add spinner over apply button on isFetching
 
-Styling
+Styling:
   page is always like 10px too tall?
   mobile styling
   flexbox item height on iOS?
+  wrap header items
+  add nav buttons to quickly scroll to main components
+  dashboard vertical arrangement at breakpoint
+    header
+    chart header
+    chart
+    ws chart -> reduce height
+    log
+    scripting area
+    script selector
+    doc list

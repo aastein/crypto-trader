@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Loader from '../../../components/Loader';
 import PriceChart from '../../../components/PriceChart';
+import { round } from '../../../utils/math';
 
 export default class Chart extends Component {
 
@@ -26,7 +27,7 @@ export default class Chart extends Component {
       selectedProduct.data.map(d => ([d.time, d.open, d.high, d.low, d.close])) : [];
 
     const selectedProductVolumeData = selectedProduct.data ?
-      selectedProduct.data.map(d => ([d.time, d.volume])) : [];
+      selectedProduct.data.map(d => ([d.time, round(d.volume, 2)])) : [];
 
     const selectedProductIndicatorKData = selectedProduct.srsi ?
       selectedProduct.srsi.map(d => ([d.time, d.k])) : [];

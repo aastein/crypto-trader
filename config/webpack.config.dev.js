@@ -136,6 +136,7 @@ module.exports = {
         include: paths.appSrc,
         exclude: [
           /script.*Env.js/,
+          /.*test.js/,
           /registerServiceWorker.js/,
         ],
       },
