@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Input = ({ className, maxLength, name, onChange, placeholder, type, value }) => (
+const Input = props => (
   (
     <div>
       <input
-        className={className}
-        maxLength={maxLength}
-        name={name}
-        onChange={e => onChange(name, e)}
-        placeholder={placeholder}
-        type={type}
-        value={value}
+        className={`${props.className} ${props.invalid ? 'invalid' : ''}`}
+        maxLength={props.maxLength}
+        name={props.name}
+        onChange={e => props.onChange(name, e)}
+        placeholder={props.placeholder}
+        type={props.type}
+        value={props.value}
       />
     </div>
   )
@@ -19,6 +19,7 @@ const Input = ({ className, maxLength, name, onChange, placeholder, type, value 
 
 Input.propTypes = {
   className: PropTypes.string.isRequired,
+  invalid: PropTypes.bool,
   maxLength: PropTypes.number,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -27,6 +28,7 @@ Input.propTypes = {
 };
 
 Input.defaultProps = {
+  invalid: false,
   maxLength: Number.MAX_SAFE_INTEGER,
   placeholder: '',
   value: '',

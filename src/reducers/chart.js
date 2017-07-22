@@ -55,13 +55,13 @@ const INITAL_CHART_STATE = {
   ],
   products: [],
   testResult: {},
-  isFetching: false,
+  fetchingStatus: 'success',
 };
 
 const chart = (state = INITAL_CHART_STATE, action) => {
   switch (action.type) {
     case actionType.SET_FETCHING_STATUS:
-      return { ...state, isFetching: action.status };
+      return { ...state, fetchingStatus: action.status };
     case actionType.SAVE_TEST_RESULT:
       return { ...state, testResult: action.result };
     case actionType.SELECT_INDICATOR:

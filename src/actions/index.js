@@ -66,10 +66,12 @@ export const fetchOrderBook = id => (
 
 export const fetchProductData = (id, range, granularity) => (
   (dispatch) => {
-    dispatch(setFetchingStatus(true));
+    dispatch(setFetchingStatus('fetching'));
     return getProductData(id, range, granularity).then((data) => {
       dispatch(setProductData(id, data));
-      dispatch(setFetchingStatus(false));
+      dispatch(setFetchingStatus('success'));
+    }).catch(() => {
+      dispatch(setFetchingStatus('failure'));
     });
   }
 );

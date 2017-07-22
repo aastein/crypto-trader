@@ -20,7 +20,7 @@ export default class Chart extends Component {
       !== JSON.stringify(nextProps.websocket.connected);
     const stateChanged = JSON.stringify(this.state)
        !== JSON.stringify(nextState);
-    const fetchingChanged = this.props.chart.isFetching !== nextProps.chart.isFetching;
+    const fetchingChanged = this.props.chart.fetchingStatus !== nextProps.chart.fetchingStatus;
     const productChanged = this.selectedProduct(this.props).id !== this.selectedProduct(nextProps).id;
     return websocketStatusChanged || stateChanged || productChanged || fetchingChanged;
   }
@@ -122,6 +122,7 @@ export default class Chart extends Component {
             <div className="granularity chart-header-item">
               <Input
                 className="granularity"
+                invalid={this.props.chart.fetchingStatus === 'failure'}
                 maxLength={9}
                 name="granularity"
                 onChange={this.onSetGanularity}
@@ -134,7 +135,7 @@ export default class Chart extends Component {
             <FetchButton
               className="btn chart-header-item"
               onClick={this.onApply}
-              isFetching={this.props.chart.isFetching}
+              isFetching={this.props.chart.fetchingStatus === 'fetching'}
               text="Apply"
             />
             <div className="websocket-status chart-header-item">

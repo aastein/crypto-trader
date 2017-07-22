@@ -25,7 +25,7 @@ FetchButton.propTypes = {
   text: PropTypes.string.isRequired,
   loaderColor: PropTypes.string,
   loaderClassName: PropTypes.string,
-  loaderFadeIn: PropTypes.bool,
+  loaderFadeIn: PropTypes.string,
   loaderName: PropTypes.string,
 };
 

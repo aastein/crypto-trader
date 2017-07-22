@@ -14,6 +14,7 @@ $purple-a: hsla(259, 100%, 65%, 0.8);
 $background-color: #15232C;
 $danger-color: #ff6939;
 $success-color: #69C158;
+$trans-red: hsla(0, 100%, 50%, 0.7);
 
 $profile-form-width: 500px;
 
@@ -408,8 +409,8 @@ button:hover {
             position: relative;
 
             input {
-              width: 83px;
-              height: 18px!important;
+              width: 100px;
+              height: 36px!important;
               padding: 8px 5px 8px 10px;
               border: 1px solid #565f66;
               border-radius: 0px;
@@ -420,6 +421,11 @@ button:hover {
               text-align: left;
               color: #FFF;
               background-color: #404a52;
+              box-sizing: border-box;
+            }
+
+            input.invalid {
+              border: 1px solid $trans-red;
             }
 
             .granularity-label {
@@ -460,7 +466,7 @@ button:hover {
             .glyphicon-dot:before{
                 content: "\25cf";
                 font-size: 1.5em;
-                color: red;
+                color: $trans-red;
             }
             .glyphicon-dot.connected:before{
                 content: "\25cf";
