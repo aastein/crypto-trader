@@ -20,21 +20,17 @@ $success-color: #69C158;
 $trans-red: hsla(0, 100%, 50%, 0.7);
 
 @mixin breakpoint($point) {
-  @if $point == desktop {
-    @media (min-width: 70em) { @content ; }
+ @if $point == xlarge {
+    @media (max-width: 88em) { @content ; }
  }
-  @else if $point == laptop {
-    @media (min-width: 64em) { @content ; }
+   @else if $point == large {
+    @media (max-width: 65em) { @content ; }
  }
-   @else if $point == tablet {
-    @media (min-width: 50em) { @content ; }
+  @else if $point == medium {
+    @media (max-width: 39em)  { @content ; }
  }
-  @else if $point == phablet {
-    @media (min-width: 37.5em)  { @content ; }
- }
- @else if $point == mobileonly {
-    @media (max-width: 37.5em)  { @content ; }
-
+ @else if $point == small {
+    @media (max-width: 30.5em)  { @content ; }
  }
 }
 

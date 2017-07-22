@@ -19,24 +19,26 @@ export default class Scratchpad extends Component {
 
     return (
       <div className={this.props.className}>
-        <ScriptList
-          scripts={this.props.scripts}
-          addNew={this.props.addScript}
-          toggleScriptLive={this.props.toggleScriptLive}
-          onScriptClick={this.props.selectScript}
-        />
-        <CodeEditor
-          products={this.props.products}
-          profile={this.props.profile}
-          scriptHeader={scriptHeader}
-          script={activeScript}
-          addOrder={this.props.addOrder}
-          appendLog={this.props.appendLog}
-          deleteScript={this.props.deleteScript}
-          saveScript={this.props.saveScript}
-          saveTestResult={this.props.saveTestResult}
-          updateAccounts={this.props.updateAccounts}
-        />
+        <div className="script-container">
+          <ScriptList
+            scripts={this.props.scripts}
+            addNew={this.props.addScript}
+            toggleScriptLive={this.props.toggleScriptLive}
+            onScriptClick={this.props.selectScript}
+          />
+          <CodeEditor
+            products={this.props.products}
+            profile={this.props.profile}
+            scriptHeader={scriptHeader}
+            script={activeScript}
+            addOrder={this.props.addOrder}
+            appendLog={this.props.appendLog}
+            deleteScript={this.props.deleteScript}
+            saveScript={this.props.saveScript}
+            saveTestResult={this.props.saveTestResult}
+            updateAccounts={this.props.updateAccounts}
+          />
+        </div>
         <ProductDataList products={this.props.products} onClick={this.props.selectProductDoc} />
       </div>
     );

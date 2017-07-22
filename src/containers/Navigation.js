@@ -111,6 +111,24 @@ class Navigation extends Component {
               Profile
             </NavLink>
           </li>
+          <li className="accounts-nav">
+            <NavLink
+              exact
+              activeClassName="active"
+              to="/accounts"
+            >
+              Accounts
+            </NavLink>
+          </li>
+          <li className="orderbook-nav">
+            <NavLink
+              exact
+              activeClassName="active"
+              to="/orderbook"
+            >
+              Orderbook
+            </NavLink>
+          </li>
         </ul>
         <ul className="nav-group orderbook">
           {

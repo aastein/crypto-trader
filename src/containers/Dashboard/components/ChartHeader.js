@@ -140,7 +140,7 @@ export default class Chart extends Component {
               text="Apply"
             />
             <div className="websocket-status chart-header-item">
-              <span>Realtime data</span>
+              <span className="realtime-data">Realtime data</span>
               <span
                 className={`glyphicon glyphicon-dot chart-header-item
                   ${this.props.websocket.connected ? 'connected' : ''}`

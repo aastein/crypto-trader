@@ -11,6 +11,10 @@
   width: 100%;
   border-bottom: 1px solid #1A2831;
 
+  @include breakpoint(small){
+      background-color: red;
+  };
+
   a {
     font-size: 15px;
   }
@@ -70,15 +74,35 @@
     }
   }
 
-  .orderbook {
-    li {
-      width: 75px;
-    }
+  .accounts-nav {
+    display: none;
+    @include breakpoint(xlarge){
+        display: flex;
+    };
   }
 
   .accounts {
     li {
       width: 100px;
     }
+    @include breakpoint(xlarge){
+        display: none;
+    };
+  }
+
+  .orderbook-nav {
+    display: none;
+    @include breakpoint(large){
+        display: flex;
+    };
+  }
+
+  .orderbook {
+    li {
+      width: 75px;
+    }
+    @include breakpoint(large){
+        display: none;
+    };
   }
 }
