@@ -7,7 +7,7 @@ const Input = props => (
       <input
         className={`${props.className} ${props.invalid ? 'invalid' : ''}`}
         maxLength={props.maxLength}
-        name={props.inputName}
+        name={props.name}
         onChange={e => props.onChange(name, e)}
         placeholder={props.placeholder}
         type={props.type}
@@ -21,7 +21,7 @@ Input.propTypes = {
   className: PropTypes.string.isRequired,
   invalid: PropTypes.bool,
   maxLength: PropTypes.number,
-  inputName: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   value: PropTypes.string,

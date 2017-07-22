@@ -146,7 +146,7 @@ class Profile extends Component {
           <label className="form-group" htmlFor="session">Session</label>
           <Input
             className="form-group"
-            inputName="session"
+            name="session"
             placeholder="Session"
             value={this.state.profile.session}
             onChange={this.handleInputChange}
