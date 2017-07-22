@@ -71,21 +71,24 @@ const test = (header, script, prods, appendLog) => {
   const total = round(losses.reduce((a, b) => (a + b), 0) + gains.reduce((a, b) => (a + b), 0), 2);
   const range = (p.data[p.data.length - 1].time - p.data[0].time) / 1000;
   const rate = round((total / range) * 3600, 2);
+  const baseGain = round(p.data[p.data.length - 1].open - p.data[1].open, 2);
   const result = {
     avgLoss,
     avgGain,
     avgTrade: round(avgGain + avgLoss, 2),
-    numTrades,
-    total,
-    rate, // dollars per hour per coin
+    baseGain,
     data: orderHist,
+    numTrades,
+    rate, // dollars per hour per coin
+    total,
   };
 
   appendLog(`Test Results:
     Gain: ${avgGain} [ %/trade ]
     Loss: ${avgLoss} [ %/trade ]
     Rate: ${rate} [ $/hr/coin ]
-    Total Gain: ${total} [ $ ]`,
+    Total Gain: ${total} [ $ ]
+    Base Gain: ${baseGain}`,
   );
   return result;
 };

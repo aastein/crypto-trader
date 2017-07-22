@@ -66,6 +66,7 @@ export default class Chart extends Component {
     this.props.setGanularity(product.id, this.state.granularity);
     this.props.selectDateRange(product.id, this.state.range);
     this.props.fetchProductData(product.id, this.state.range, this.state.granularity);
+    this.props.saveTestResult({});
   }
 
   selectedProduct = props => (

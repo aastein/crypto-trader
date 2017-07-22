@@ -27,6 +27,7 @@ export default class Dashboard extends Component {
               setProductData={this.props.setProductData}
               selectIndicator={this.props.selectIndicator}
               editIndicator={this.props.editIndicator}
+              saveTestResult={this.props.saveTestResult}
               selectDateRange={this.props.selectDateRange}
               setProducts={this.props.setProducts}
               setProductWSData={this.props.setProductWSData}
