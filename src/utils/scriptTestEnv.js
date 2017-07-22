@@ -7,6 +7,7 @@ let orderHist;
 const test = (header, script, prods, appendLog) => {
   const scriptWithHeader = header + ';' + script;
   const log = appendLog;
+  let maxGain = 0;
   orderHist = [];
   products = prods;
   p = products.reduce((a, b) => (
@@ -17,6 +18,10 @@ const test = (header, script, prods, appendLog) => {
     const now = i;
     const lastOrder = orderHist.length > 0 ? orderHist[orderHist.length - 1] : {};
     const order = { time: p.data[i + 1].time, price: 0 };
+
+    if (p.data[i].close > p.data[i].open) {
+      maxGain += p.data[i].close - p.data[i].open;
+    }
 
     try {
       const buy = (id) => {
@@ -72,6 +77,9 @@ const test = (header, script, prods, appendLog) => {
   const range = (p.data[p.data.length - 1].time - p.data[0].time) / 1000;
   const rate = round((total / range) * 3600, 2);
   const baseGain = round(p.data[p.data.length - 1].open - p.data[1].open, 2);
+  maxGain = round(maxGain, 2);
+  const efficiency = round((total / maxGain) * 100, 2);
+
   const result = {
     avgLoss,
     avgGain,
@@ -88,7 +96,9 @@ const test = (header, script, prods, appendLog) => {
     Loss: ${avgLoss} [ %/trade ]
     Rate: ${rate} [ $/hr/coin ]
     Total Gain: ${total} [ $ ]
-    Base Gain: ${baseGain}`,
+    Base Gain: ${baseGain}
+    Max Gain: ${maxGain}
+    η: ${efficiency}`,
   );
   return result;
 };
