@@ -1,17 +1,31 @@
 import React from 'react';
 import Select from 'react-select';
+import PropTypes from 'prop-types';
 
-const Dropdown = ({ multi, options, onChange, value, className }) => (
+const Dropdown = ({ className, multi, onChange, options, value }) => (
   <div>
     <Select
       className={className}
       multi={multi}
       name="form-field-name"
-      value={value}
-      options={options}
       onChange={onChange}
+      options={options}
+      value={value}
     />
   </div>
 );
+
+Dropdown.propTypes = {
+  className: PropTypes.string.isRequired,
+  multi: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.arrayOf(PropTypes.object)]).isRequired,
+};
+
+Dropdown.defaultProps = {
+  multi: false,
+  value: '',
+};
 
 export default Dropdown;
