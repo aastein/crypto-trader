@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Dropdown from '../../../components/Dropdown';
 import Input from '../../../components/Input';
-import Loader from '../../../components/Loader';
+import FetchButton from '../../../components/FetchButton';
 import { INIT_GRANULARITY, INIT_RANGE } from '../../../utils/constants';
 
 export default class Chart extends Component {
@@ -130,11 +130,12 @@ export default class Chart extends Component {
               />
               <span className="granularity-label">s</span>
             </div>
-            <button className="btn chart-header-item" onClick={this.onApply} disabled={this.props.chart.isFetching}>
-              { this.props.chart.isFetching
-                ? <Loader color="#FFF" className="fetching-loader" name="ball-clip-rotate" />
-                : 'Apply' }
-            </button>
+            <FetchButton
+              className="btn chart-header-item"
+              onClick={this.onApply}
+              isFetching={this.props.chart.isFetching}
+              text="Apply"
+            />
             <div className="websocket-status chart-header-item">
               <span>Realtime data</span>
               <span
