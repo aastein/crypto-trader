@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ToggleSwitch from 'react-toggle-switch';
 import fileDownload from 'react-file-download';
 import Dropzone from 'react-dropzone';
+import PropTypes from 'prop-types';
 
 import {
   saveProfile,
@@ -15,6 +16,28 @@ import Input from '../components/Input';
 import Dropdown from '../components/Dropdown';
 
 class Profile extends Component {
+  static propTypes = {
+    profile: PropTypes.object.isRequired,
+    scripts: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      script: PropTypes.string.isRequired,
+      active: PropTypes.bool.isRequired,
+      live: PropTypes.bool.isRequired,
+    })).isRequired,
+    indicators: PropTypes.arrayOf(PropTypes.object).isRequired,
+    products: PropTypes.arrayOf(PropTypes.shape(
+      {
+        id: PropTypes.string,
+        display_name: PropTypes.string,
+        granularity: PropTypes.number,
+        range: PropTypes.number,
+        docSelected: PropTypes.bool,
+        active: PropTypes.bool,
+      },
+    )).isRequired,
+  }
+
   constructor(props) {
     super(props);
     this.state = {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 import {
   updateHeartbeat,
@@ -14,6 +15,15 @@ import {
 import { round } from '../utils/math';
 
 class Navigation extends Component {
+  static propTypes = {
+    live: PropTypes.bool.isRequired,
+    accounts: PropTypes.arrayOf(PropTypes.object).isRequired,
+    session: PropTypes.string.isRequired,
+    products: PropTypes.arrayOf(PropTypes.object).isRequired,
+    websocket: PropTypes.object.isRequired,
+    selectedProductIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    location: PropTypes.object.isRequired,
+  }
 
   componentDidMount() {
     this.props.initProducts();
