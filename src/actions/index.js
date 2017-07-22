@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as actionType from './actionTypes';
 import { getAccounts, getOrderBook, getProductData, getProducts } from '../utils/api';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
@@ -95,6 +96,15 @@ export const initProducts = () => (
         dispatch(fetchOrderBook(selectedProductIds[i]));
       }
       dispatch(initWebsocket(selectedProductIds));
+    })
+  )
+);
+
+export const fetchSettings = acceptedFiles => (
+  dispatch => (
+    axios.create({ baseURL: '' }).get(acceptedFiles[0].preview).then((res) => {
+      dispatch(importProfile(res.data));
+      return res.data;
     })
   )
 );

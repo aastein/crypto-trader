@@ -1,13 +1,20 @@
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import ToggleSwitch from 'react-toggle-switch';
 import fileDownload from 'react-file-download';
 import Dropzone from 'react-dropzone';
-import axios from 'axios';
 
-import Input from '../../../components/Input';
-import Dropdown from '../../../components/Dropdown';
+import {
+  saveProfile,
+  fetchAccounts,
+  fetchOrderBook,
+  setLocation,
+  fetchSettings,
+} from '../actions';
+import Input from '../components/Input';
+import Dropdown from '../components/Dropdown';
 
-export default class ProfileForm extends Component {
+class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -68,12 +75,20 @@ export default class ProfileForm extends Component {
     for (let i = 0; i < this.state.profile.selectedProducts.length; i += 1) {
       this.props.fetchOrderBook(this.state.profile.selectedProducts[i].value);
     }
+    this.setState(() => (
+      { ...this.state, textState: JSON.stringify(this.state, null, 2) }
+    ));
   }
 
   handleImport = (acceptedFiles) => {
-    const instance = axios.create({ baseURL: '' });
-    instance.get(acceptedFiles[0].preview).then((d) => {
-      this.props.importProfile(d.data);
+    this.props.fetchSettings(acceptedFiles).then((data) => {
+      this.setState({
+        profile: data.profile,
+        scripts: data.scripts,
+        indicators: data.indicators,
+        products: data.products,
+        textState: JSON.stringify(data, null, 2),
+      });
     });
   }
 
@@ -128,3 +143,47 @@ export default class ProfileForm extends Component {
     );
   }
 }
+
+
+const mapStateToProps = state => (
+  {
+    profile: state.profile,
+    scripts: state.scripts,
+    indicators: state.chart.indicators,
+    products: state.chart.products.map(p => (
+      {
+        id: p.id,
+        display_name: p.display_name,
+        granularity: p.granularity,
+        range: p.range,
+        docSelected: p.docSelected,
+        active: p.active,
+      }
+    )),
+  }
+);
+
+const mapDispatchToProps = dispatch => (
+  {
+    fetchSettings: acceptedFiles => (
+      dispatch(fetchSettings(acceptedFiles))
+    ),
+    saveProfile: (settigns) => {
+      dispatch(saveProfile(settigns));
+    },
+    fetchAccounts: (session) => {
+      dispatch(fetchAccounts(session));
+    },
+    fetchOrderBook: (id) => {
+      dispatch(fetchOrderBook(id));
+    },
+    setLocation: (location) => {
+      dispatch(setLocation(location));
+    },
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Profile);

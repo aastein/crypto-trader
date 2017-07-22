@@ -10,8 +10,8 @@ import {
   fetchProductData,
   initProducts,
   setLocation,
-} from '../../actions';
-import { round } from '../../utils/math';
+} from '../actions';
+import { round } from '../utils/math';
 
 class Navigation extends Component {
 
