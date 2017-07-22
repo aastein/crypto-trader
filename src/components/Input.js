@@ -8,7 +8,7 @@ const Input = props => (
         className={`${props.className} ${props.invalid ? 'invalid' : ''}`}
         maxLength={props.maxLength}
         name={props.name}
-        onChange={e => props.onChange(name, e)}
+        onChange={e => props.onChange(props.name, e)}
         placeholder={props.placeholder}
         type={props.type}
         value={props.value}
