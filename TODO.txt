@@ -8,6 +8,7 @@ Unit tests:
 Code quality:
   Unit tests
   PropTypes
+  Take advantage of map state to props. Should do minimum data transformation within components.
 
 Scripting:
 
