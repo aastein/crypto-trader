@@ -98,7 +98,7 @@ const test = (header, script, prods, appendLog) => {
     Total Gain: ${total} [ $ ]
     Base Gain: ${baseGain} [ $ ]
     Max Gain: ${maxGain} [ $ ]
-    η: ${efficiency} [ %actual / %max ]`,
+    η: ${efficiency} [ % ]`,
   );
   return result;
 };
