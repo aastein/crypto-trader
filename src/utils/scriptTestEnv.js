@@ -92,13 +92,13 @@ const test = (header, script, prods, appendLog) => {
   };
 
   appendLog(`Test Results:
-    Gain: ${avgGain} [ %/trade ]
-    Loss: ${avgLoss} [ %/trade ]
-    Rate: ${rate} [ $/hr/coin ]
+    Gain: ${avgGain} [ % / trade ]
+    Loss: ${avgLoss} [ % / trade ]
+    Rate: ${rate} [ $ / hr / coin ]
     Total Gain: ${total} [ $ ]
-    Base Gain: ${baseGain}
-    Max Gain: ${maxGain}
-    η: ${efficiency}`,
+    Base Gain: ${baseGain} [ $ ]
+    Max Gain: ${maxGain} [ $ ]
+    η: ${efficiency} [ %actual / %max ]`,
   );
   return result;
 };
