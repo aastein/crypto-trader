@@ -124,7 +124,7 @@ export default class Chart extends Component {
                 className="granularity"
                 invalid={this.props.chart.fetchingStatus === 'failure'}
                 maxLength={9}
-                name="granularity"
+                inputName="granularity"
                 onChange={this.onSetGanularity}
                 placeholder=""
                 type="number"
