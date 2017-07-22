@@ -4,14 +4,14 @@ const INITAL_SCRIPTS_STATE = [
   {
     id: 0,
     name: 'Header',
-    script: "// This is the header script. Declare variables here that will be in the scope of all custom scripts.\n\nlet buyLine = 0.2\nlet sellLine = 0.8\nlet lastK = p.srsi[now - 1].k\nlet lastD = p.srsi[now - 1].d\nlet nowK = p.srsi[now].k\nlet nowD = p.srsi[now].d\nlet lastKOverD = lastK > lastD\nlet nowKOverD = nowK > nowD\nlet lastKOverBuy = lastK > buyLine\nlet nowKOverBuy = nowK > buyLine\n\nlet rebound = !lastKOverD && nowKOverD && nowKOverBuy\nlet kOverBuy = !lastKOverBuy && nowKOverBuy && nowKOverD\n\n",
+    script: "// This is the header script. Declare variables here that will be in the scope of all custom scripts.\n\nlet k = p.srsi[now].k\nlet d = p.srsi[now].d\nlet buyMin = 0.2\nlet buyMax = 0.3\nlet sellMin = 0.8\nlet kOverD = k > d\nlet kInBuy = k > buyMin && k < buyMax\nlet kInSell = k <= sellMin && !kOverD\n\n\n\n",
     active: false,
     live: false,
   },
   {
     id: 1,
     name: 'Example',
-    script: "// This is an example script. Click the Test button to see how it works.\n\nif(rebound){\n  buy('reboud')\n} else if(kOverBuy){\n  buy('kOverBuy')\n}else if (lastKOverD){\n  sell('lastKOverD')\n} else if(!nowKOverD) {\n  sell('!nowKOverD')\n}",
+    script: "// This is an example script. Click the Test button to see how it works.\n\nif (kInBuy) {\n  buy('kInBuy')\n} else if (kInSell) {\n  sell('kInSell')\n}",
     active: true,
     live: false,
   },

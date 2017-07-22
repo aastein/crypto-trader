@@ -240,9 +240,6 @@ button:hover {
     margin: auto;
     margin-top: 50px;
   }
-  button {
-    display: block;
-  }
   div {
     display: block;
   }
@@ -253,6 +250,22 @@ button:hover {
     font-size: 12px;
     font-weight: 700;
     color: #FFF;
+  }
+  .form-buttons {
+    display: -webkit-flex;
+    display: flex;
+    button {
+      margin-right: 10px;
+      height: 25px;
+    }
+  }
+  .switch {
+    height: 25px;
+    width: 49px;
+  }
+  .switch-toggle {
+    height: 23px;
+    width: 25px;
   }
   .Select-control {
     @include input-border();
@@ -290,19 +303,6 @@ button:hover {
   .Select-option {
     background-color: $background-color;
     color: #FFF;
-  }
-  .btn-med {
-    margin: auto;
-  }
-  .btn-med:hover {
-    width: 150px;
-  }
-  .btn-small {
-    margin-right: 10px;
-  }
-  .import-export {
-    display: -webkit-flex;
-    display: flex;
   }
 }
 
@@ -485,7 +485,7 @@ button:hover {
         fill: #1E2B34;
       }
       .highcharts-grid-line {
-        stroke: $background-color;
+        display: none;
       }
       .highcharts-axis-line {
         stroke: #4B555D;

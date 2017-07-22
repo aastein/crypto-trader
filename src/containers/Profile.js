@@ -124,9 +124,19 @@ class Profile extends Component {
     return (
       <div className="profile">
         <form onSubmit={this.props.onSaveClick}>
-          <button type="submit" className="form-group btn-med" onClick={this.handleSave}>
-            Save
-          </button>
+          <div className="form-buttons">
+            <button type="submit" className="form-group btn-small" onClick={this.handleSave}>
+              Save
+            </button>
+            <Dropzone className="dropzone" onDrop={this.handleImport}>
+              <button type="submit" className="form-group btn-small" onClick={(e) => { e.preventDefault(); }}>
+                Import
+              </button>
+            </Dropzone>
+            <button type="submit" className="form-group btn-small" onClick={this.handleExport}>
+              Export
+            </button>
+          </div>
           <label className="form-group" htmlFor="live">Live</label>
           <ToggleSwitch
             className="form-group"
@@ -150,17 +160,6 @@ class Profile extends Component {
             onChange={this.onSelectProducts}
             value={this.state.profile.selectedProducts}
           />
-          <label className="form-group" htmlFor="settings">Settings</label>
-          <div className="import-export">
-            <Dropzone className="dropzone" onDrop={this.handleImport}>
-              <button type="submit" className="form-group btn-small" onClick={(e) => { e.preventDefault(); }}>
-                Import
-              </button>
-            </Dropzone>
-            <button type="submit" className="form-group btn-small" onClick={this.handleExport}>
-              Export
-            </button>
-          </div>
         </form>
       </div>
     );
