@@ -2,11 +2,9 @@ Bugs:
 
 Unit tests:
   look into different fetching lib that wont fail tests
-  delete the app will render test
-  unit test components, general -> specific
 
 Code quality:
-  Unit tests
+  Unit tests, general -> specific
   PropTypes
   Take advantage of map state to props. Should do minimum data transformation within components.
 
@@ -35,11 +33,6 @@ Indicators:
         mainFields: ["module", "main"]
       }
     }
-
-Order logic:
-
-Utils:
-  Button to connect to websocket or retry connect on lost connection
 
 General API:
   Queue promises and burst at 6 per second.

@@ -352,6 +352,13 @@ button:hover {
             border-bottom-left-radius: 0px;
             background-color: rgba(0, 126, 255, 0.4);
             color: #FFF;
+            position: relative;
+
+            .fetching-loader {
+              position: absolute;
+              right: 33px;
+              top: 3px;
+            }
           }
 
           button.chart-header-item:hover {

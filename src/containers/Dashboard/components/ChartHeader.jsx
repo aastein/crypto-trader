@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Dropdown from '../../../components/Dropdown';
 import Input from '../../../components/Input';
+import Loader from '../../../components/Loader';
 import { INIT_GRANULARITY, INIT_RANGE } from '../../../utils/constants';
 
 export default class Chart extends Component {
@@ -13,14 +14,15 @@ export default class Chart extends Component {
     };
   }
 
-  // only render if websocket status or internal state changed
+  // only render if websocket status, internal state, product, or isFetching changed
   shouldComponentUpdate(nextProps, nextState) {
     const websocketStatusChanged = JSON.stringify(this.props.websocket.connected)
       !== JSON.stringify(nextProps.websocket.connected);
     const stateChanged = JSON.stringify(this.state)
        !== JSON.stringify(nextState);
+    const fetchingChanged = this.props.chart.isFetching !== nextProps.chart.isFetching;
     const productChanged = this.selectedProduct(this.props).id !== this.selectedProduct(nextProps).id;
-    return websocketStatusChanged || stateChanged || productChanged;
+    return websocketStatusChanged || stateChanged || productChanged || fetchingChanged;
   }
 
   onProductChange = (event) => {
@@ -128,7 +130,11 @@ export default class Chart extends Component {
               />
               <span className="granularity-label">s</span>
             </div>
-            <button className="btn chart-header-item" onClick={this.onApply} disabled={this.props.chart.isFetching}>Apply</button>
+            <button className="btn chart-header-item" onClick={this.onApply} disabled={this.props.chart.isFetching}>
+              { this.props.chart.isFetching
+                ? <Loader color="#FFF" className="fetching-loader" name="ball-clip-rotate" />
+                : 'Apply' }
+            </button>
             <div className="websocket-status chart-header-item">
               <span>Realtime data</span>
               <span
