@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactHighstock from 'react-highcharts/ReactHighstock.src';
+import PropTypes from 'prop-types';
 
 export default class PriceChart extends Component {
 
@@ -44,3 +45,8 @@ export default class PriceChart extends Component {
     );
   }
 }
+
+
+PriceChart.propTypes = {
+  config: PropTypes.object.isRequired,
+};

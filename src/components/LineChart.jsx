@@ -42,6 +42,6 @@ export default class PriceChart extends Component {
   }
 }
 
-PriceChart.propType = {
+PriceChart.propTypes = {
   config: PropTypes.object.isRequired,
 };
