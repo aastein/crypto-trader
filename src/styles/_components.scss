@@ -1,0 +1,113 @@
+html * {
+  font-family: opensans, sans-serif, btcglyph;
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0px;
+  background-color: $background-color;
+}
+
+#root {
+  height: 100%;
+}
+
+.App {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  height: 100%;
+  min-width: 1000px;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+a:visited
+{
+  color: #000;
+}
+
+li {
+  list-style: none;
+}
+
+button {
+  padding: 0 15px;
+  border-radius: 2px;
+  line-height: 31px;
+  color: $background-color;
+  background-color: #FFF;
+  transition-property: all;
+  transition-duration: 0.3s;
+  -webkit-transition-timing-function: ease;
+  transition-delay: initial;
+  cursor: pointer;
+  overflow: visible;
+  border: none;
+  width: 100px;
+  outline: none;
+}
+
+h2 {
+  background-color: #3A444D;
+  height: 27px;
+  margin: 0px;
+  padding: 10px;
+  line-height: 2;
+  font-size: 15px;
+  font-weight: bold;
+  color: #FFF;
+}
+
+input {
+  @include input-border();
+  height: auto!important;
+  padding: 4px 5px 5px;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+  color: #FFF;
+  background-color: transparent;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+button:hover {
+  outline: 0 none!important;
+  border: none;
+  background: #5B656B;
+}
+
+.form-group {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.btn-small {
+  height: 20px;
+  line-height: 1;
+}
+
+.switch {
+  background-color: #fff;
+}
+
+.switch.on {
+  background-color: $danger-color;
+}

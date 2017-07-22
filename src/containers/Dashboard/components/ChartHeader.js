@@ -36,6 +36,7 @@ export default class Chart extends Component {
       }
       this.props.selectProduct(id);
       this.setState(() => ({ granularity, range }));
+      this.props.saveTestResult({});
     }
   }
 

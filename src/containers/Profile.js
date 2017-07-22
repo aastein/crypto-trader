@@ -133,7 +133,7 @@ class Profile extends Component {
                 Import
               </button>
             </Dropzone>
-            <button type="submit" className="form-group btn-small" onClick={this.handleExport}>
+            <button type="submit" className="form-group btn-small btn-export" onClick={this.handleExport}>
               Export
             </button>
           </div>

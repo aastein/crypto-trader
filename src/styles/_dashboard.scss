@@ -1,0 +1,12 @@
+.dashboard {
+  -webkit-flex: 1;
+  flex: 1;
+  width: 100%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+
+  @import 'top-container';
+  @import 'bottom-container';
+}

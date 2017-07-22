@@ -78,7 +78,8 @@ const test = (header, script, prods, appendLog) => {
   const rate = round((total / range) * 3600, 2);
   const baseGain = round(p.data[p.data.length - 1].open - p.data[1].open, 2);
   maxGain = round(maxGain, 2);
-  const efficiency = round((total / maxGain) * 100, 2);
+  const baseEfficiency = round((total / baseGain) * 100, 2);
+  const maxEfficiency = round((total / maxGain) * 100, 2);
 
   const result = {
     avgLoss,
@@ -91,14 +92,15 @@ const test = (header, script, prods, appendLog) => {
     total,
   };
 
-  appendLog(`Test Results:
+  appendLog(`Test Results ${p.display_name}:
     Gain: ${avgGain} [ % / trade ]
     Loss: ${avgLoss} [ % / trade ]
     Rate: ${rate} [ $ / hr / coin ]
     Total Gain: ${total} [ $ ]
     Base Gain: ${baseGain} [ $ ]
     Max Gain: ${maxGain} [ $ ]
-    η: ${efficiency} [ % ]`,
+    η(base): ${total > 0 && baseGain > 0 ? baseEfficiency : '—'} [ % ],
+    η(max): ${total > 0 && maxGain > 0 ? maxEfficiency : '—'} [ % ]`,
   );
   return result;
 };

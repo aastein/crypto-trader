@@ -9,7 +9,7 @@ import 'react-select/dist/react-select.css';
 import 'react-toggle-switch/dist/css/switch.min.css';
 import App from './App';
 import reducer from './reducers';
-import './index.scss';
+import './styles/styles.scss';
 
 const store = createStore(
   reducer,
