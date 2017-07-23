@@ -1,3 +1,5 @@
+import * as Indicators from 'technicalindicators';
+
 const stochRSI = (data, rsiPeriod, stochPeriod, kPeriod, dPeriod) => {
   let rsi = [];
   let srsi = [];
@@ -61,74 +63,18 @@ const stochRSI = (data, rsiPeriod, stochPeriod, kPeriod, dPeriod) => {
         for (let j = 0; j < kPeriod; j += 1) {
           sumStoch += srsi[i - j].stoch;
         }
-        srsi[i] = { ...srsi[i], k: sumStoch / kPeriod };
+        srsi[i] = { ...srsi[i], K: sumStoch / kPeriod };
       }
       if (i >= rsiPeriod + stochPeriod + kPeriod + dPeriod) {
         let sumK = 0;
         for (let j = 0; j < dPeriod; j += 1) {
-          sumK += srsi[i - j].k;
+          sumK += srsi[i - j].K;
         }
-        srsi[i] = { ...srsi[i], d: sumK / dPeriod };
+        srsi[i] = { ...srsi[i], D: sumK / dPeriod };
       }
     }
   }
-  return { rsi, srsi };
-};
-
-// TODO: eliminate unnessary looping
-const metasrsi = (data, rsiPeriod, stochPeriod, kPeriod, dPeriod) => {
-  const periods = [8, 13, 21, 34, 55];
-  let allDerivatives = [];
-  const dataLength = data.length;
-
-  for (let i = 0; i < periods.length; i += 1) {
-    const p = periods[i];
-    const s = stochRSI(data, p, p, kPeriod, dPeriod).srsi;
-    const startPoint = p + p + kPeriod + dPeriod;
-    let derivatives = [];
-
-    for (let j = 0; j < dataLength; j += 1) {
-      let dk = 0;
-      let dd = 0;
-      const time = s[j].time;
-
-      if (j > startPoint) {
-        if (j === startPoint && j !== dataLength - 1) {
-          dk = s[j + 1].k - s[startPoint].k;
-          dd = s[j + 1].d - s[startPoint].d;
-        } else if (j === s.length - 1) {
-          dk = s[j].k - s[j - 1].k;
-          dd = s[j].d - s[j - 1].d;
-        } else {
-          dk = s[j].k - s[j - 1].k;
-          dd = s[j].d - s[j - 1].d;
-        }
-      }
-      derivatives = [...derivatives, { time, dk, dd }];
-    }
-    allDerivatives = [...allDerivatives, derivatives];
-  }
-
-  const numPeriods = allDerivatives.length;
-
-  const sumDerivatives = allDerivatives[0];
-  for (let i = 1; i < numPeriods; i += 1) {
-    for (let j = 0; j < dataLength; j += 1) {
-      sumDerivatives[j].dk += allDerivatives[i][j].dk;
-      sumDerivatives[j].dd += allDerivatives[i][j].dd;
-    }
-  }
-
-  let meta = [{ time: sumDerivatives[0].time, k: 0.5, d: 0.5 }];
-  for (let i = 1; i < dataLength; i += 1) {
-    meta = [...meta, {
-      time: sumDerivatives[i].time,
-      k: meta[i - 1].k + (sumDerivatives[i].dk / numPeriods),
-      d: meta[i - 1].d + (sumDerivatives[i].dd / numPeriods),
-    }];
-  }
-
-  return { metasrsi: meta };
+  return { srsi };
 };
 
 const commodityChannelIndex = (data, period) => {
@@ -159,11 +105,37 @@ const commodityChannelIndex = (data, period) => {
           priceAverageDeviation += Math.abs(cci[i - j].price - priceMovingAverage);
         }
         priceAverageDeviation /= period;
-        cci[i].value = (cci[i].price - priceMovingAverage) / (0.015 * priceAverageDeviation);
+        cci[i].CCI = (cci[i].price - priceMovingAverage) / (0.015 * priceAverageDeviation);
       }
     }
   }
   return { cci };
+};
+
+const simpleMovingAverage = (data, period) => {
+  const sma = Indicators.SMA.calculate({
+    period,
+    values: data.map(d => (d.close)),
+  }).map(d => (
+    { SMA: d }
+  ));
+  for (let i = 0; i < sma.length; i += 1) {
+    sma[i].time = data[(i + period) - 1].time;
+  }
+  return { sma };
+};
+
+const relativeStrengthIndex = (data, period) => {
+  const rsi = Indicators.RSI.calculate({
+    period,
+    values: data.map(d => (d.close)),
+  }).map(d => (
+    { RSI: d }
+  ));
+  for (let i = 0; i < rsi.length; i += 1) {
+    rsi[i].time = data[i + period].time;
+  }
+  return { rsi };
 };
 
 const calculateIndicators = (inds, data) => {
@@ -173,7 +145,7 @@ const calculateIndicators = (inds, data) => {
   ));
   for (let i = 0; i < indicators.length; i += 1) {
     switch (indicators[i].id) {
-      case 'SRSI':
+      case 'srsi':
         indicatorData = {
           ...indicatorData,
           ...stochRSI(
@@ -185,29 +157,28 @@ const calculateIndicators = (inds, data) => {
           ),
         };
         break;
-      case 'Meta RSI':
+      case 'rsi':
         indicatorData = {
           ...indicatorData,
-          ...metasrsi(
-            data,
-            indicators[i].params.rsiPeriod,
-            indicators[i].params.stochPeriod,
-            indicators[i].params.kPeriod,
-            indicators[i].params.dPeriod,
-          ),
+          ...relativeStrengthIndex(data, indicators[i].params.period),
         };
         break;
-      case 'CCI':
+      case 'cci':
         indicatorData = {
           ...indicatorData,
           ...commodityChannelIndex(data, indicators[i].params.period),
+        };
+        break;
+      case 'sma':
+        indicatorData = {
+          ...indicatorData,
+          ...simpleMovingAverage(data, indicators[i].params.period),
         };
         break;
       default:
         break;
     }
   }
-  // console.log(indicatorData)
   return indicatorData;
 };
 

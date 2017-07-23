@@ -70,7 +70,8 @@ export const fetchProductData = (id, range, granularity) => (
     return getProductData(id, range, granularity).then((data) => {
       dispatch(setProductData(id, data));
       dispatch(setFetchingStatus('success'));
-    }).catch(() => {
+    }).catch((err) => {
+      console.warn(err);
       dispatch(setFetchingStatus('failure'));
     });
   }

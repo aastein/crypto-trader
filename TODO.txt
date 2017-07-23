@@ -13,7 +13,12 @@ Scripting:
   Backtest neural net?
   http://karpathy.github.io/neuralnets/
 
-  pre-caclculate with WS data
+Indicators:
+
+  add all indicators from technicalindicators
+
+  use nextValue from technicalindicators on every ws data and run script?
+
     on ws chat will receive props
       dispatch preCalculateInds({time: , o:, h:, l:, c: })
         preCalculateInds will get [...product.data, { ...newWSdata }]
@@ -21,18 +26,6 @@ Scripting:
           add Ind data to state
       Then
         dispatch action to run script
-
-Indicators:
-  Parameterize indicator params via modal
-  Import https://github.com/anandanand84/technicalindicators/
-
-    @dandv @aastein Just to clarify this package uses babel to transpile es6 code so if you are using it in browser you should use regeneratorRuntime or use custom transpiler. If you want to use it in node or use a custom bundler like webpack we have module flag in https://github.com/anandanand84/technicalindicators/blob/master/package.json#L7 I am not familiar with webpack I use rollup. I tried your example and it did fail. A quick google search shows webpack didn't honor the module field, if we add the following in your webpack.config.js you should be good. I tested and it works fine. Let me know if it didn't work.
-
-    module.exports = {
-      resolve: {
-        mainFields: ["module", "main"]
-      }
-    }
 
 General API:
   Queue promises and burst at 6 per second.

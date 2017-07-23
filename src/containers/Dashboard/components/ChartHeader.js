@@ -91,7 +91,7 @@ export default class Chart extends Component {
     ));
 
     const dropdownIndicatorOptions = this.props.chart.indicators.map(indicator => (
-      { value: indicator.id, label: indicator.id }
+      { value: indicator.id, label: indicator.name }
     ));
 
     const activeIndicator = this.props.chart.indicators.reduce((a, b) => (

@@ -4,37 +4,55 @@ import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
 
 const INITAL_CHART_STATE = {
   indicators: [{
-    id: 'SRSI',
+    name: 'Stoch RSI',
+    id: 'srsi',
     params: {
       rsiPeriod: 14,
       stochPeriod: 14,
       kPeriod: 3,
       dPeriod: 3,
     },
+    chartMin: 0,
+    chartMax: 1,
+    axisLines: [0.8, 0.2],
+    renderOnMain: false,
+    valueIds: ['K', 'D'],
     active: true,
   },
   {
-    id: 'Meta RSI',
-    params: {
-      rsiPeriod: 14,
-      stochPeriod: 14,
-      kPeriod: 3,
-      dPeriod: 3,
-    },
-    active: false,
-  },
-  {
-    id: 'RSI',
+    name: 'RSI',
+    id: 'rsi',
     params: {
       period: 14,
     },
-    active: false,
+    chartMin: 0,
+    chartMax: 100,
+    axisLines: [70, 30],
+    renderOnMain: false,
+    valueIds: ['RSI'],
+    active: true,
   },
   {
-    id: 'CCI',
+    name: 'CCI',
+    id: 'cci',
     params: {
       period: 20,
     },
+    chartMin: -400,
+    chartMax: 400,
+    axisLines: [100, -100],
+    renderOnMain: false,
+    valueIds: ['CCI'],
+    active: true,
+  },
+  {
+    name: 'SMA',
+    id: 'sma',
+    params: {
+      period: 8,
+    },
+    renderOnMain: true,
+    valueIds: ['SMA'],
     active: true,
   }],
   dateRanges: [
@@ -149,10 +167,7 @@ const chart = (state = INITAL_CHART_STATE, action) => {
             const inds = calculateIndicators(state.indicators, data);
             return { ...product,
               data,
-              srsi: inds.srsi,
-              rsi: inds.rsi,
-              cci: inds.cci,
-              metasrsi: inds.metasrsi,
+              ...inds,
             };
           }
           return product;
@@ -167,10 +182,7 @@ const chart = (state = INITAL_CHART_STATE, action) => {
             const inds = calculateIndicators(state.indicators, data);
             return { ...product,
               data,
-              srsi: inds.srsi,
-              rsi: inds.rsi,
-              cci: inds.cci,
-              metasrsi: inds.metasrsi,
+              ...inds,
             };
           }
           return product;
