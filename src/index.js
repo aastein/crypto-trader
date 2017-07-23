@@ -11,11 +11,13 @@ import App from './App';
 import reducer from './reducers';
 import './styles/styles.scss';
 
+const composeEnhancers = typeof window === 'object' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
+
 const getComposeEnhancers = () => {
   if (window.navigator.userAgent.includes('Chrome')) {
-    return compose(
+    return composeEnhancers(
       applyMiddleware(thunk),
-      // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     );
   }
   return compose(applyMiddleware(thunk));
