@@ -19,7 +19,7 @@ export const subscribe = (products) => {
   connection.send(JSON.stringify(
     {
       type: 'subscribe',
-      product_ids: products,
+      product_ids: [],
     },
   ));
 };

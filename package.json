@@ -2,7 +2,9 @@
   "babel": {
     "plugins": [
       "transform-eval",
-       ["transform-regenerator"]
+      [
+        "transform-regenerator"
+      ]
     ],
     "presets": [
       "react-app"
@@ -22,6 +24,7 @@
     "react-dom": "^15.6.1",
     "react-dropzone": "^3.13.3",
     "react-file-download": "^0.3.4",
+    "react-fontawesome": "^1.6.1",
     "react-highcharts": "^12.0.0",
     "react-inspector": "^2.1.1",
     "react-redux": "^5.0.5",

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Dropdown from '../../../components/Dropdown';
+import Select from '../../../components/Select';
 import Input from '../../../components/Input';
 import FetchButton from '../../../components/FetchButton';
 import { INIT_GRANULARITY, INIT_RANGE } from '../../../utils/constants';
@@ -40,10 +41,12 @@ export default class Chart extends Component {
     }
   }
 
-  onSelectIndicator = (event) => {
-    if (event) {
-      this.props.selectIndicator(event.value);
-    }
+  onSelectIndicator = (id) => {
+    this.props.selectIndicator(id);
+  }
+
+  onEditIndicator = (id) => {
+    console.log('editing', id);
   }
 
   onSelectDateRange = (event) => {
@@ -91,7 +94,7 @@ export default class Chart extends Component {
     ));
 
     const dropdownIndicatorOptions = this.props.chart.indicators.map(indicator => (
-      { value: indicator.id, label: indicator.name }
+      { value: indicator.id, label: indicator.name, active: indicator.active }
     ));
 
     const activeIndicator = this.props.chart.indicators.reduce((a, b) => (
@@ -108,11 +111,12 @@ export default class Chart extends Component {
               onChange={this.onProductChange}
               value={selectedProduct.id}
             />
-            <Dropdown
-              className="indicator-dropdown chart-header-item"
+            <Select
+              className=""
               options={dropdownIndicatorOptions}
-              onChange={this.onSelectIndicator}
-              value={activeIndicator.id}
+              value={activeIndicator.name}
+              onCheck={this.onSelectIndicator}
+              handleDrilldown={this.onEditIndicator}
             />
             <Dropdown
               className="date-picker chart-header-item"

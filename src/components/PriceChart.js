@@ -22,8 +22,11 @@ export default class PriceChart extends Component {
     }
   }
 
+  // update if config name changed, series length, or yAxis length changed
   shouldComponentUpdate = nextProps => (
-    this.props.config.series[0].name !== nextProps.config.series[0].name
+    this.props.config.series[0].name !== nextProps.config.series[0].name ||
+    this.props.config.yAxis.length !== nextProps.config.yAxis.length ||
+    this.props.config.series.length !== nextProps.config.series.length
   )
 
   dataChanged = nextProps => (

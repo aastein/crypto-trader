@@ -85,7 +85,7 @@ const chart = (state = INITAL_CHART_STATE, action) => {
     case actionType.SELECT_INDICATOR:
       return { ...state,
         indicators: state.indicators.map(i => (
-          { ...i, active: i.id === action.id }
+          { ...i, active: i.id === action.id ? !i.active : i.active }
         )),
       };
     case actionType.EDIT_INDICATOR:
