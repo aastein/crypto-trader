@@ -164,6 +164,7 @@
               min-width: 5px;
               position: relative;
               bottom: 90px;
+              display: none;
             };
 
             span {
@@ -267,6 +268,12 @@
           width: 100%;
         };
 
+        .highcharts-navigator {
+          @include breakpoint(small){
+            display: none;
+          };
+        }
+
         .spinner {
           position: absolute;
           left: $left-container-width / 1.5;
@@ -305,9 +312,12 @@
         }
 
         .spinner {
-          position: relative;
+          position: absolute;
           left: $left-container-width / 1.5;
           top: 200px;
+          @include breakpoint(small){
+            display: none;
+          };
         }
 
         .loading-message {
