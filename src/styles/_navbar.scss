@@ -77,7 +77,8 @@
   .accounts-nav {
     display: none;
     @include breakpoint(xlarge){
-        display: flex;
+      display: -webkit-flex;
+      display: flex;
     };
   }
 
@@ -86,14 +87,15 @@
       width: 100px;
     }
     @include breakpoint(xlarge){
-        display: none;
+      display: none;
     };
   }
 
   .orderbook-nav {
     display: none;
     @include breakpoint(large){
-        display: flex;
+      display: -webkit-flex;
+      display: flex;
     };
   }
 
@@ -102,7 +104,7 @@
       width: 75px;
     }
     @include breakpoint(large){
-        display: none;
+      display: none;
     };
   }
 }
