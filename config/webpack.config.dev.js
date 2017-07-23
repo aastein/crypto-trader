@@ -43,6 +43,8 @@ module.exports = {
     // the line below with these two lines if you prefer the stock client:
     // require.resolve('webpack-dev-server/client') + '?/',
     // require.resolve('webpack/hot/dev-server'),
+    require.resolve('babel-polyfill'),
+    // require.resolve('./app/js'),
     require.resolve('react-dev-utils/webpackHotDevClient'),
     // We ship a few polyfills by default:
     require.resolve('./polyfills'),
@@ -72,7 +74,6 @@ module.exports = {
       path.resolve(info.absoluteResourcePath),
   },
   resolve: {
-    mainFields: ["module", "main"],
     // This allows you to set a fallback for where Webpack should look for modules.
     // We placed these paths second because we want `node_modules` to "win"
     // if there are any conflicts. This matches Node resolution mechanism.
