@@ -201,15 +201,15 @@ button:hover {
   display: block;
   position: relative;
 
-  @include breakpoint(large){
+  @include breakpoint(large) {
     width: 50%;
   };
 
-  @include breakpoint(medium){
+  @include breakpoint(medium) {
     width: 60%;
   };
 
-  @include breakpoint(small){
+  @include breakpoint(small) {
     width: 80%;
   };
 
