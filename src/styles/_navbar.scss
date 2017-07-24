@@ -58,9 +58,7 @@
   }
 
   .links {
-    @include breakpoint(small){
-      display: none;
-    };
+
   }
 
   .nav-group-right {
