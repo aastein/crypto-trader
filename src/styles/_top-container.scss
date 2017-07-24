@@ -17,6 +17,7 @@
   };
 
   .left-container {
+
     width: 70%;
     box-sizing: border-box; margin: 1px;
     display: -webkit-flex;
@@ -265,7 +266,7 @@
         };
 
         @include breakpoint(medium){
-          width: 100%;
+          width: 99%;
         };
 
         .highcharts-navigator {
@@ -291,7 +292,7 @@
         position: relative;
 
         @include breakpoint(medium){
-          width: 100%;
+          width: 99%;
           height: 200px;
         };
 
@@ -307,6 +308,10 @@
             @include breakpoint(medium){
               width: 100%;
               max-height: 200px;
+            };
+            @include breakpoint(small){
+              width: 100%;
+              max-height: 170px;
             };
           }
         }

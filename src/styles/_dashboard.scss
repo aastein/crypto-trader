@@ -7,6 +7,10 @@
   -webkit-flex-direction: column;
   flex-direction: column;
 
+  @include breakpoint(small){
+    width: 99%;
+  };
+
   @import 'top-container';
   @import 'bottom-container';
 }
