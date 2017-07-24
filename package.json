@@ -2,9 +2,7 @@
   "babel": {
     "plugins": [
       "transform-eval",
-      [
-        "transform-regenerator"
-      ]
+      "transform-regenerator"
     ],
     "presets": [
       "react-app"
