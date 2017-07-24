@@ -201,6 +201,18 @@ button:hover {
   display: block;
   position: relative;
 
+  @include breakpoint(large){
+    width: 50%;
+  };
+
+  @include breakpoint(medium){
+    width: 60%;
+  };
+
+  @include breakpoint(small){
+    width: 80%;
+  };
+
   .title {
     margin-left: auto;
     margin-right: auto;
