@@ -144,6 +144,7 @@ button:hover {
       .item-checkbox {
         position: relative;
         bottom: 2px;
+        margin-right: 10px;
       }
 
       .item-drilldown {
@@ -174,7 +175,6 @@ button:hover {
 
 .ReactModalPortal {
   width: 100%;
-  height: 100%;
 }
 
 .react-modal-overlay {
@@ -243,6 +243,7 @@ button:hover {
    align-self: flex-start;
   }
   input {
+    width: 50%;
     margin-left: auto;
     color: black;
     border: 1px solid black;
