@@ -6,15 +6,14 @@ import { round } from '../../../utils/math';
 
 export default class Chart extends Component {
 
-  // only render if chart data, test data, or indicators changed
+  // only render if chart data, test data, indicator data or indicators changed
   shouldComponentUpdate(nextProps, nextState) {
-    const dataChanged = JSON.stringify(this.selectedProduct(this.props).data)
-      !== JSON.stringify(this.selectedProduct(nextProps).data);
+    const dataChanged = JSON.stringify(this.selectedProduct(this.props))
+      !== JSON.stringify(this.selectedProduct(nextProps));
     const testDataChanged = JSON.stringify(this.props.chart.testResult.data)
       !== JSON.stringify(nextProps.chart.testResult.data);
     const indicatorsChanged = JSON.stringify(this.props.chart.indicators)
       !== JSON.stringify(nextProps.chart.indicators);
-    console.log('inds changed', indicatorsChanged);
     return dataChanged || testDataChanged || indicatorsChanged;
   }
 
@@ -35,13 +34,13 @@ export default class Chart extends Component {
       lineWidth: 1,
       min: chartMin,
       max: chartMax,
-      plotLines: axisLines.map(v => (
+      plotLines: axisLines ? axisLines.map(v => (
         {
           value: v,
           color: 'red',
           width: 1,
         }
-      )),
+      )) : [],
     }
   )
 

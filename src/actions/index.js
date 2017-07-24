@@ -25,11 +25,12 @@ export const selectDateRange = (id, range) => ({ type: actionType.SELECT_DATE_RA
 export const setGranularity = (id, granularity) =>
   ({ type: actionType.SET_GRANULARITY, id, granularity });
 export const selectIndicator = id => ({ type: actionType.SELECT_INDICATOR, id });
-export const editIndicator = (id, params) => ({ type: actionType.EDIT_INDICATOR, id, params });
+export const editIndicator = indicator => ({ type: actionType.EDIT_INDICATOR, indicator });
 export const updateOrderBook = (id, orderBook) =>
   ({ type: actionType.UPDATE_ORDER_BOOK, id, orderBook });
 export const updateHeartbeat = status => ({ type: actionType.UPDATE_HEARTBEAT, status });
 export const setFetchingStatus = status => ({ type: actionType.SET_FETCHING_STATUS, status });
+export const calculateIndicators = id => ({ type: actionType.CALCULATE_INDICATORS, id });
 
 // dashpbard: scratchpad
 export const addScript = () => ({ type: actionType.ADD_SCRIPT, id: nextScriptId += 1 });

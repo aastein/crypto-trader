@@ -5,19 +5,21 @@ import PropTypes from 'prop-types';
 export default class PriceChart extends Component {
 
   componentWillReceiveProps = (nextProps) => {
-    const chart = this.chart.getChart();
-    if (this.dataChanged(nextProps)) {
-      for (let i = 0; i < chart.series.length; i += 1) {
-        if (nextProps.config.series[i]) {
-          chart.series[i].setData(nextProps.config.series[i].data);
+    if (this.chart) {
+      const chart = this.chart.getChart();
+      if (this.dataChanged(nextProps)) {
+        for (let i = 0; i < chart.series.length; i += 1) {
+          if (nextProps.config.series[i]) {
+            chart.series[i].setData(nextProps.config.series[i].data);
+          }
         }
       }
-    }
 
-    if (this.testDataChanged(nextProps)) {
-      chart.xAxis[0].removePlotLine('testResult');
-      for (let i = 0; i < nextProps.config.xAxis.plotLines.length; i += 1) {
-        chart.xAxis[0].addPlotLine(nextProps.config.xAxis.plotLines[i]);
+      if (this.testDataChanged(nextProps)) {
+        chart.xAxis[0].removePlotLine('testResult');
+        for (let i = 0; i < nextProps.config.xAxis.plotLines.length; i += 1) {
+          chart.xAxis[0].addPlotLine(nextProps.config.xAxis.plotLines[i]);
+        }
       }
     }
   }
@@ -29,10 +31,18 @@ export default class PriceChart extends Component {
     this.props.config.series.length !== nextProps.config.series.length
   )
 
-  dataChanged = nextProps => (
-    this.props.config.series[0].name !== nextProps.config.series[0].name
-      || this.props.config.series[0].data.length !== nextProps.config.series[0].data.length
-  )
+  dataChanged = (nextProps) => {
+    if (this.props.config.series.length !== nextProps.config.series.length) {
+      return true;
+    }
+    for (let i = 0; i < this.props.config.series.length; i += 1) {
+      if (this.props.config.series[i].name !== nextProps.config.series[i].name ||
+      JSON.stringify(this.props.config.series[i].data) !== JSON.stringify(nextProps.config.series[i].data)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   testDataChanged = nextProps => (
     JSON.stringify(this.props.config.xAxis.plotLines)

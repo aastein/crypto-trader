@@ -21,6 +21,7 @@ export default class Dashboard extends Component {
               chart={this.props.chart}
               selectedProductIds={this.props.profile.selectedProducts.map(p => (p.value))}
               websocket={this.props.websocket}
+              calculateIndicators={this.props.calculateIndicators}
               fetchProductData={this.props.fetchProductData}
               selectProduct={this.props.selectProduct}
               setGanularity={this.props.setGranularity}

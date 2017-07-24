@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import ReactModal from 'react-modal';
 
 import Dropdown from '../../../components/Dropdown';
 import Select from '../../../components/Select';
 import Input from '../../../components/Input';
 import FetchButton from '../../../components/FetchButton';
+import ObjectForm from '../../../components/ObjectForm';
 import { INIT_GRANULARITY, INIT_RANGE } from '../../../utils/constants';
 
 export default class Chart extends Component {
@@ -12,6 +14,7 @@ export default class Chart extends Component {
     this.state = {
       granularity: `${INIT_GRANULARITY}`,
       range: INIT_RANGE,
+      editing: false,
     };
   }
 
@@ -45,8 +48,24 @@ export default class Chart extends Component {
     this.props.selectIndicator(id);
   }
 
+  onClose = (id) => {
+    this.setState(() => (
+      { editing: false }
+    ));
+  }
+
+  onSave = (indicator) => {
+    this.setState(() => (
+      { editing: false }
+    ));
+    this.props.editIndicator(indicator);
+    this.props.calculateIndicators(this.selectedProduct(this.props).id);
+  }
+
   onEditIndicator = (id) => {
-    console.log('editing', id);
+    this.setState(() => (
+      { editing: this.props.chart.indicators.reduce((a, b) => (b.id === id ? b : a), {}) }
+    ));
   }
 
   onSelectDateRange = (event) => {
@@ -153,6 +172,21 @@ export default class Chart extends Component {
             </div>
           </div>
         </div>
+        <ReactModal
+          contentLabel={'indicator name'}
+          className={'react-modal'}
+          overlayClassName={'react-modal-overlay'}
+          isOpen={this.state.editing !== false}
+          shouldCloseOnOverlayClick
+        >
+          <h3 className="title">{this.state.editing ? this.state.editing.name : ''}</h3>
+          <ObjectForm
+            hidden={['id', 'name', 'active', 'valueIds']}
+            object={this.state.editing}
+            onSave={this.onSave}
+          />
+          <button className="close" onClick={this.onClose}>Close</button>
+        </ReactModal>
       </div>
     );
   }

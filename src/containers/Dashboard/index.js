@@ -24,6 +24,7 @@ import {
   fetchAccounts,
   fetchProductData,
   setLocation,
+  calculateIndicators,
 } from '../../actions';
 
 import Dashboard from './components/Dashboard';
@@ -67,8 +68,8 @@ const mapDispatchToProps = dispatch => (
     selectIndicator: (id) => {
       dispatch(selectIndicator(id));
     },
-    editIndicator: (id, params) => {
-      dispatch(editIndicator(id, params));
+    editIndicator: (indicator) => {
+      dispatch(editIndicator(indicator));
     },
     selectDateRange: (id, range) => {
       dispatch(selectDateRange(id, range));
@@ -108,6 +109,9 @@ const mapDispatchToProps = dispatch => (
     },
     setLocation: (location) => {
       dispatch(setLocation(location));
+    },
+    calculateIndicators: (id) => {
+      dispatch(calculateIndicators(id));
     },
   }
 );

@@ -91,7 +91,7 @@ const chart = (state = INITAL_CHART_STATE, action) => {
     case actionType.EDIT_INDICATOR:
       return { ...state,
         indicators: state.indicators.map(i => (
-          { ...i, params: i.id === action.id ? action.params : i.params }
+          i.id === action.indicator.id ? action.indicator : i
         )),
       };
     case actionType.UPDATE_ORDER_BOOK:
@@ -184,6 +184,17 @@ const chart = (state = INITAL_CHART_STATE, action) => {
               data,
               ...inds,
             };
+          }
+          return product;
+        }),
+      };
+    case actionType.CALCULATE_INDICATORS:
+      return { ...state,
+        products: state.products.map((p) => {
+          const product = { ...p };
+          if (product.id === action.id) {
+            const inds = calculateIndicators(state.indicators, [...product.data]);
+            return { ...product, ...inds };
           }
           return product;
         }),
