@@ -27,7 +27,7 @@ $trans-red: hsla(0, 100%, 50%, 0.7);
     @media (max-width: 65em) { @content ; }
  }
   @else if $point == medium {
-    @media (max-width: 39em)  { @content ; }
+    @media (max-width: 40em)  { @content ; }
  }
  @else if $point == small {
     @media (max-width: 30.5em)  { @content ; }

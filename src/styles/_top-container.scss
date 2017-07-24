@@ -62,6 +62,7 @@
             background-color: rgba(0, 126, 255, 0.4);
             color: #FFF;
             position: relative;
+            min-width: 60px;
 
             .fetching-loader {
               position: absolute;
@@ -156,16 +157,19 @@
             @include breakpoint(medium){
               width: 5px;
               min-width: 5px;
-              position: relative;
-              bottom: 50px;
+              position: absolute;
+              right: 0;
+              top: 30px;
+              // bottom: 50px;
             };
 
             @include breakpoint(small){
               width: 5px;
               min-width: 5px;
-              position: relative;
-              bottom: 90px;
-              display: none;
+              position: fixed;
+              bottom: 10px;
+              right: 10px;
+              z-index: 10;
             };
 
             span {
@@ -200,7 +204,7 @@
             .glyphicon-dot.connected:before{
                 content: "\25cf";
                 font-size: 1.5em;
-                color: green;
+                color: hsla(119, 100%, 50%, 0.7);
             }
           }
         }
