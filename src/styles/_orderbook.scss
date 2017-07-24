@@ -1,5 +1,23 @@
 .orderbook-page {
-  p {
-    color: #fff;
+  ul {
+    -webkit-display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: -webkit-wrap;
+    flex-wrap: wrap;
+
+    li {
+      flex: 0 1 150px;
+      border: 2px solid $active-color-b;
+      margin: 5px;
+      padding: 10px;
+      box-sizing: border-box;
+      p {
+        color: #fff;
+        margin: 0px;
+        padding: 0px;
+      }
+    }
   }
 }

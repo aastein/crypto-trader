@@ -14,17 +14,19 @@ class Accounts extends Component {
 
   render() {
     return (
-      <ul className="accounts-page">
-        {this.props.accounts.map(a => (
-          <li key={a.currency}>
-            <div>
-              <p>{a.currency}</p>
-              <p>{`Available: ${round(a.available, 6)}`}</p>
-              <p>{`Balance: ${round(a.balance, 6)}`}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className="accounts-page">
+        <ul>
+          {this.props.accounts.map(a => (
+            <li key={a.currency}>
+              <div>
+                <p>{a.currency}</p>
+                <p>{`Available: ${round(a.available, 6)}`}</p>
+                <p>{`Balance: ${round(a.balance, 6)}`}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 }

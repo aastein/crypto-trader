@@ -8,7 +8,7 @@
   flex-direction: column;
   form {
     display: block;
-    width: $profile-form-width;
+    width: 70%;
     margin: auto;
     margin-top: 50px;
   }
@@ -16,7 +16,10 @@
     display: block;
   }
   input {
-    width: $profile-form-width;
+    width: 98%;
+    @include breakpoint(small){
+      width: 96%;
+    };
   }
   label {
     font-size: 12px;
@@ -54,10 +57,13 @@
     height: 23px;
     width: 25px;
   }
+  .Select {
+    width: 100%;
+  }
   .Select-control {
     @include input-border();
     background-color: transparent;
-    width: $profile-form-width + 15px;
+    width: 100%;
     margin-bottom: 10px;
     height: auto;
     display: -webkit-inline-flex;
@@ -85,7 +91,7 @@
   }
   .Select-menu-outer {
     @include input-border();
-    width: $profile-form-width + 15px;
+    width: inherit;
   }
   .Select-option {
     background-color: $background-color;

@@ -14,18 +14,20 @@ class Orderbook extends Component {
 
   render() {
     return (
-      <ul className="orderbook-page">
-        {
-          this.props.orderbook.map(a => (
-            <li key={a.display_name}>
-              <div>
-                <p>{a.display_name}</p>
-                <p>{`Bid: ${a.bid}`}</p>
-                <p>{`Ask: ${a.ask}`}</p>
-              </div>
-            </li>
-        ))}
-      </ul>
+      <div className="orderbook-page">
+        <ul>
+          {
+            this.props.orderbook.map(a => (
+              <li key={a.display_name}>
+                <div>
+                  <p>{a.display_name}</p>
+                  <p>{`Bid: ${a.bid}`}</p>
+                  <p>{`Ask: ${a.ask}`}</p>
+                </div>
+              </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 }
