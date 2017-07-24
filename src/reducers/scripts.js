@@ -4,7 +4,7 @@ const INITAL_SCRIPTS_STATE = [
   {
     id: 0,
     name: 'Header',
-    script: "// This is the header script. Declare variables here that will be in the scope of all custom scripts.\n\nlet k = p.srsi[now].k\nlet d = p.srsi[now].d\nlet buyMin = 0.2\nlet buyMax = 0.3\nlet sellMin = 0.8\nlet kOverD = k > d\nlet kInBuy = k > buyMin && k < buyMax\nlet kInSell = k <= sellMin && !kOverD\n\n\n\n",
+    script: "// This is the header script. Declare variables here that will be in the scope of all custom scripts.\n\nlet k = p.srsi[now].K\nlet d = p.srsi[now].D\nlet buyMin = 0.2\nlet buyMax = 0.3\nlet sellMin = 0.8\nlet kOverD = k > d\nlet kInBuy = k > buyMin && k < buyMax\nlet kInSell = k <= sellMin && !kOverD\n\n\n\n",
     active: false,
     live: false,
   },
