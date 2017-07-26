@@ -8,6 +8,29 @@ Stand alone client side automated trading for GDAX
 WIP @ <a target="_blank" href="https://aaronste.in">aaronste.in</a>
 
 
+## Getting Started
+
+Login to GDAX
+Open the browser console and navigate to the settings page
+
+<img src="/public/step1.png" height="300">
+
+Find the GET request for /profiles
+
+<img src="/public/step2.png" width="450">
+
+Copy the cb-session in the request headers
+
+<img src="/public/step3.png" width="500">
+
+Go to the profile page on crypto-trader and paste in the cb-session to the session input and click save
+
+<img src="/public/step4.png" width="450">
+
+Because this is app isn't backed by any server, before ending a session you can export your current config. Before starting a new session you can upload the config to start where you left off.
+<img src="/public/importexport.png" width="500">
+
+
 ## Usage
 
 Write scripts to trigger trades on GDAX
@@ -98,7 +121,7 @@ Green lines represent buys.
 
 
 
-Reserved viable names
+### Reserved viable names
 ```
 product
 profile
@@ -114,28 +137,6 @@ lastOrder
 orders
 config
 ```
-
-## Getting Started
-
-Login to GDAX
-Open the browser console and navigate to the settings page
-
-<img src="/public/step1.png" height="300">
-
-Find the GET request for /profiles
-
-<img src="/public/step2.png" width="450">
-
-Copy the cb-session in the request headers
-
-<img src="/public/step3.png" width="500">
-
-Go to the profile page on crypto-trader and paste in the cb-session to the session input and click save
-
-<img src="/public/step4.png" width="450">
-
-Because this is app isn't backed by any server, before ending a session you can export your current config. Before starting a new session you can upload the config to start where you left off.
-<img src="/public/importexport.png" width="500">
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
