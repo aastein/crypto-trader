@@ -145,6 +145,7 @@ export default class Chart extends Component {
         },
         height: '50%',
         lineWidth: 1,
+        floor: 0,
       },
       series: {
         name: selectedProduct.display_name,

@@ -13,7 +13,7 @@ WIP @ <a target="_blank" href="https://aaronste.in">aaronste.in</a>
 Login to GDAX
 Open the browser console and navigate to the settings page
 
-<img src="/public/step1.png" height="300">
+<img src="/public/step1.png" height="200">
 
 Find the GET request for /profiles
 
@@ -28,8 +28,18 @@ Go to the profile page on crypto-trader and paste in the cb-session to the sessi
 <img src="/public/step4.png" width="450">
 
 Because this is app isn't backed by any server, before ending a session you can export your current config. Before starting a new session you can upload the config to start where you left off.
-<img src="/public/importexport.png" width="500">
+<img src="/public/importexport.png" width="400">
 
+## General features
+
+- Custom scripts
+- Order execution
+- Backtesting
+- Global live mode to prevent accidental trades
+- Script level live mode
+- Manual script execution
+- Automatic script execution when new data is added to the main chart
+- Subscribes to GDAX web socket feed for new data
 
 ## Usage
 
@@ -90,7 +100,7 @@ if(p.rsi[now].value === 70){
 }
 ```
 
-Good
+Better
 ```
 if(p.rsi[now].value < 70){
   sell()
