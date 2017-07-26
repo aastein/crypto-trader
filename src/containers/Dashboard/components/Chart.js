@@ -22,7 +22,7 @@ export default class Chart extends Component {
       props.chart.products.reduce((a, p) => (p.active ? p : a), {}) : {}
   )
 
-  inidcatorYAxis = (top, height, chartMin, chartMax, axisLines) => (
+  inidcatorYAxis = (top, height, chartMin, chartMax, axisLines, id) => (
     {
       labels: {
         align: 'left',
@@ -36,6 +36,7 @@ export default class Chart extends Component {
       max: chartMax,
       plotLines: axisLines ? axisLines.map(v => (
         {
+          id,
           value: v,
           color: 'red',
           width: 1,
@@ -87,7 +88,7 @@ export default class Chart extends Component {
     const top = `${100 - (((100 - reservedHeight) / numIndicators) * (index + 1))}%`;
     const height = `${((100 - reservedHeight) / numIndicators)}%`;
     return {
-      yAxis: this.inidcatorYAxis(top, height, indicator.chartMin, indicator.chartMax, indicator.axisLines),
+      yAxis: this.inidcatorYAxis(top, height, indicator.chartMin, indicator.chartMax, indicator.axisLines, indicator.id),
       series: this.indicatorSeries(product, indicator, index + 2),
     };
   }

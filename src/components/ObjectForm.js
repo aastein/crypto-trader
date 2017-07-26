@@ -4,10 +4,15 @@ export default class ObjectForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      object: this.props.object,
-      hidden: this.props.hidden,
+      // TODO: why the fuck does object spread not work here.
+      object: JSON.parse(JSON.stringify(props.object)),
+      hidden: props.hidden,
     };
   }
+
+  handlePeriod = str => (
+    str.slice(-1) === '.' ? str : Number(str)
+  )
 
   handleCheck = (key) => {
     this.setState((prevState) => {
@@ -19,7 +24,7 @@ export default class ObjectForm extends Component {
 
   handleChange = (event, key) => {
     event.preventDefault();
-    const value = Number(event.target.value);
+    const value = this.handlePeriod(event.target.value);
     this.setState((prevState) => {
       const object = { ...prevState.object };
       object[key] = value;
@@ -29,7 +34,7 @@ export default class ObjectForm extends Component {
 
   handleArrayChange = (event, key, index) => {
     event.preventDefault();
-    const value = Number(event.target.value);
+    const value = this.handlePeriod(event.target.value);
     this.setState((prevState) => {
       const object = { ...prevState.object };
       object[key][index] = value;
@@ -38,8 +43,10 @@ export default class ObjectForm extends Component {
   }
 
   handleObjectChange = (event, key, subkey) => {
+    // console.log('props', this.props.object.params);
+    // console.log('state', this.state.object.params);
     event.preventDefault();
-    const value = Number(event.target.value);
+    const value = this.handlePeriod(event.target.value);
     this.setState((prevState) => {
       const object = { ...prevState.object };
       object[key][subkey] = value;

@@ -7,6 +7,9 @@ export default class PriceChart extends Component {
   componentWillReceiveProps = (nextProps) => {
     if (this.chart) {
       const chart = this.chart.getChart();
+      const changedAxisLineIds = this.axisLinesChangedIds(nextProps);
+
+      // update series data
       if (this.dataChanged(nextProps)) {
         for (let i = 0; i < chart.series.length; i += 1) {
           if (nextProps.config.series[i]) {
@@ -15,6 +18,32 @@ export default class PriceChart extends Component {
         }
       }
 
+      // update series y-axis plot lines
+      if (changedAxisLineIds.length > 0) {
+        for (let i = 0; i < chart.yAxis.length; i += 1) {
+          const chartY = chart.yAxis[i];
+          console.log(chartY);
+          if (chartY.plotLinesAndBands && chartY.plotLinesAndBands[0] && changedAxisLineIds.includes(chartY.plotLinesAndBands[0].id)) {
+            console.log('remplotlin', chartY.plotLinesAndBands[0].id);
+            // find eqivalent axis in new props
+            let nextY;
+            for (let j = 0; j < nextProps.config.yAxis.length; j += 1) {
+              nextY = nextProps.config.yAxis[i];
+              if (nextY.plotLines && nextY.plotLines[0] && nextY.plotLines[0].id.includes(chartY.plotLinesAndBands[0].id)) {
+                break;
+              }
+            }
+            // remove plotlines from axis
+            chartY.removePlotLine(chartY.plotLinesAndBands[0].id);
+            // add plot lines from eqivalent axis to chart
+            for (let j = 0; j < nextY.plotLines.length; j += 1) {
+              chart.yAxis[i].addPlotLine(nextY.plotLines[j]);
+            }
+          }
+        }
+      }
+
+      // update x-axis plot lines
       if (this.testDataChanged(nextProps)) {
         chart.xAxis[0].removePlotLine('testResult');
         for (let i = 0; i < nextProps.config.xAxis.plotLines.length; i += 1) {
@@ -49,6 +78,18 @@ export default class PriceChart extends Component {
     !== JSON.stringify(nextProps.config.xAxis.plotLines)
       || this.props.config.xAxis.plotLines.length !== nextProps.config.xAxis.plotLines.length
   )
+
+  axisLinesChangedIds = (nextProps) => {
+    const changedIds = [];
+    for (let i = 0; i < nextProps.config.yAxis.length; i += 1) {
+      if (this.props.config.yAxis[i]) {
+        if (JSON.stringify(nextProps.config.yAxis[i].plotLines) !== JSON.stringify(this.props.config.yAxis[i].plotLines)) {
+          changedIds.push(this.props.config.yAxis[i].plotLines[0].id);
+        }
+      }
+    }
+    return changedIds;
+  }
 
   render() {
     return (

@@ -133,7 +133,7 @@ export default class Chart extends Component {
             <Select
               className=""
               options={dropdownIndicatorOptions}
-              value={activeIndicator.name}
+              value={'Indicators'}
               onCheck={this.onSelectIndicator}
               handleDrilldown={this.onEditIndicator}
             />
