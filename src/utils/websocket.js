@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 let connection;
 const url = 'wss://ws-feed.gdax.com';
 

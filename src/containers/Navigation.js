@@ -8,9 +8,7 @@ import {
   updateHeartbeat,
   fetchAccounts,
   fetchOrderBook,
-  fetchProductData,
   initProducts,
-  setLocation,
 } from '../actions';
 import { round } from '../utils/math';
 

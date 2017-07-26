@@ -116,10 +116,6 @@ export default class Chart extends Component {
       { value: indicator.id, label: indicator.name, active: indicator.active }
     ));
 
-    const activeIndicator = this.props.chart.indicators.reduce((a, b) => (
-      b.active ? b : a
-    ), {});
-
     return (
       <div className="chart-header">
         <div className="chart-header-item-container">

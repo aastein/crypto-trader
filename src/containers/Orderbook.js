@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 
 import { setLocation } from '../actions';
-import { round } from '../utils/math';
 
 class Orderbook extends Component {
 
