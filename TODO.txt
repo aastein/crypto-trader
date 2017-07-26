@@ -3,6 +3,7 @@ General:
   Use immutable for everything.
 
 Bugs:
+  CircleCI deploy breaks regenerator runtime / technicalindicators lib.
 
 Unit tests:
   look into different fetching lib that wont fail tests

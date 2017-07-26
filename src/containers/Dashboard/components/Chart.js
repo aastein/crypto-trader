@@ -79,27 +79,32 @@ export default class Chart extends Component {
     return [];
   }
 
-  indicatorConfig = (product, indicator, reservedHeight, numIndicators, index) => {
+  indicatorConfig = (product, indicator, reservedHeight, numIndicators, axisIndex) => {
     if (indicator.renderOnMain) {
       return {
         series: this.indicatorSeries(product, indicator, 0),
       };
     }
-    const top = `${100 - (((100 - reservedHeight) / numIndicators) * (index + 1))}%`;
-    const height = `${((100 - reservedHeight) / numIndicators)}%`;
+
+    const height = ((100 - reservedHeight) / numIndicators);
+    const top = 100 - (height * (axisIndex));
+
     return {
-      yAxis: this.inidcatorYAxis(top, height, indicator.chartMin, indicator.chartMax, indicator.axisLines, indicator.id),
-      series: this.indicatorSeries(product, indicator, index + 2),
+      yAxis: this.inidcatorYAxis(`${top}%`, `${height}%`, indicator.chartMin, indicator.chartMax, indicator.axisLines, indicator.id),
+      series: this.indicatorSeries(product, indicator, axisIndex + 1),
     };
   }
 
 
   indicatorConfigs = (product, indicators) => {
     const reservedHeight = 60;
+    const greatestReservedAxisIndex = 1;
+    let greatestAxisIndex = greatestReservedAxisIndex;
     let config = { yAxis: [], series: [] };
     const numIndicators = indicators.reduce((a, b) => (!b.renderOnMain ? a + 1 : a), 0);
     for (let i = 0; i < indicators.length; i += 1) {
-      const indConf = this.indicatorConfig(product, indicators[i], reservedHeight, numIndicators, i);
+      const indConf = this.indicatorConfig(product, indicators[i], reservedHeight, numIndicators, greatestAxisIndex);
+      if (indConf.yAxis) greatestAxisIndex += 1;
       config = {
         yAxis: indConf.yAxis ? [...config.yAxis, indConf.yAxis] : config.yAxis,
         series: [...config.series, ...indConf.series],

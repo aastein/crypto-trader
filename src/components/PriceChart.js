@@ -22,9 +22,7 @@ export default class PriceChart extends Component {
       if (changedAxisLineIds.length > 0) {
         for (let i = 0; i < chart.yAxis.length; i += 1) {
           const chartY = chart.yAxis[i];
-          console.log(chartY);
           if (chartY.plotLinesAndBands && chartY.plotLinesAndBands[0] && changedAxisLineIds.includes(chartY.plotLinesAndBands[0].id)) {
-            console.log('remplotlin', chartY.plotLinesAndBands[0].id);
             // find eqivalent axis in new props
             let nextY;
             for (let j = 0; j < nextProps.config.yAxis.length; j += 1) {
