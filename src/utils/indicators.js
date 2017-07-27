@@ -138,6 +138,20 @@ const relativeStrengthIndex = (data, period) => {
   return { rsi };
 };
 
+const exponentialMovingAverage = (data, period) => {
+  const ema = Indicators.EMA.calculate({
+    period,
+    values: data.map(d => (d.close)),
+  }).map(d => (
+    { EMA: d }
+  ));
+  for (let i = 0; i < ema.length; i += 1) {
+    ema[i].time = data[i + (period - 1)].time;
+  }
+  return { ema };
+};
+
+
 const calculateIndicators = (inds, data) => {
   let indicatorData = {};
   const indicators = inds.filter(i => (
@@ -173,6 +187,12 @@ const calculateIndicators = (inds, data) => {
         indicatorData = {
           ...indicatorData,
           ...simpleMovingAverage(data, indicators[i].params.period),
+        };
+        break;
+      case 'ema':
+        indicatorData = {
+          ...indicatorData,
+          ...exponentialMovingAverage(data, indicators[i].params.period),
         };
         break;
       default:

@@ -54,6 +54,16 @@ const INITAL_CHART_STATE = {
     renderOnMain: true,
     valueIds: ['SMA'],
     active: true,
+  },
+  {
+    name: 'EMA',
+    id: 'ema',
+    params: {
+      period: 8,
+    },
+    renderOnMain: true,
+    valueIds: ['EMA'],
+    active: true,
   }],
   dateRanges: [
     { label: '1 minute', value: 1 },
