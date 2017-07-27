@@ -30,7 +30,7 @@ const INITAL_CHART_STATE = {
     axisLines: [70, 30],
     renderOnMain: false,
     valueIds: ['RSI'],
-    active: true,
+    active: false,
   },
   {
     name: 'CCI',
@@ -43,7 +43,7 @@ const INITAL_CHART_STATE = {
     axisLines: [100, -100],
     renderOnMain: false,
     valueIds: ['CCI'],
-    active: true,
+    active: false,
   },
   {
     name: 'SMA',
@@ -53,7 +53,7 @@ const INITAL_CHART_STATE = {
     },
     renderOnMain: true,
     valueIds: ['SMA'],
-    active: true,
+    active: false,
   },
   {
     name: 'EMA',
@@ -63,7 +63,177 @@ const INITAL_CHART_STATE = {
     },
     renderOnMain: true,
     valueIds: ['EMA'],
+    active: false,
+  },
+  {
+    name: 'WMA',
+    id: 'wma',
+    params: {
+      period: 8,
+    },
+    renderOnMain: true,
+    valueIds: ['WMA'],
+    active: false,
+  },
+  {
+    name: 'MACD',
+    id: 'macd',
+    params: {
+      fastPeriod: 5,
+      slowPeriod: 8,
+      signalPeriod: 3,
+      SimpleMAOscillator: false,
+      SimpleMASignal: false,
+    },
+    renderOnMain: false,
+    valueIds: [
+      'MACD',
+      'histogram',
+      'signal',
+    ],
     active: true,
+  },
+  {
+    name: 'BB',
+    id: 'bb',
+    params: {
+      period: 14,
+      stdDev: 2,
+    },
+    renderOnMain: true,
+    valueIds: [
+      'lower',
+      'middle',
+      'upper',
+    ],
+    active: true,
+  },
+  {
+    name: 'ATR',
+    id: 'atr',
+    params: {
+      period: 14,
+    },
+    renderOnMain: false,
+    valueIds: [
+      'ATR',
+    ],
+    active: false,
+  },
+  {
+    name: 'WEMA',
+    id: 'wema',
+    params: {
+      period: 5,
+    },
+    renderOnMain: true,
+    valueIds: [
+      'WEMA',
+    ],
+    active: false,
+  },
+  {
+    name: 'ROC',
+    id: 'roc',
+    params: {
+      period: 12,
+    },
+    renderOnMain: false,
+    valueIds: [
+      'ROC',
+    ],
+    active: false,
+  },
+  {
+    name: 'KST',
+    id: 'kst',
+    params: {
+      ROCPer1: 10,
+      ROCPer2: 15,
+      ROCPer3: 20,
+      ROCPer4: 30,
+      SMAROCPer1: 10,
+      SMAROCPer2: 10,
+      SMAROCPer3: 10,
+      SMAROCPer4: 15,
+      signalPeriod: 3,
+    },
+    renderOnMain: false,
+    valueIds: [
+      'kst',
+      'signal',
+    ],
+    active: false,
+  },
+  {
+    name: 'Stochastic',
+    id: 'stoch',
+    params: {
+      period: 14,
+      signalPeriod: 3,
+    },
+    renderOnMain: false,
+    valueIds: [
+      'k',
+      'd',
+    ],
+    axisLines: [80, 20],
+    active: false,
+  },
+  {
+    name: 'Williams %R',
+    id: 'wr',
+    params: {
+      period: 14,
+    },
+    renderOnMain: false,
+    valueIds: [
+      'Wm%R',
+    ],
+    axisLines: [-20, -80],
+    active: false,
+  },
+  {
+    name: 'ADL',
+    id: 'adl',
+    renderOnMain: false,
+    valueIds: [
+      'ADL',
+    ],
+    active: false,
+  },
+  {
+    name: 'OBV',
+    id: 'obv',
+    renderOnMain: false,
+    valueIds: [
+      'OBV',
+    ],
+    active: false,
+  },
+  {
+    name: 'TRIX',
+    id: 'trix',
+    params: {
+      period: 18,
+    },
+    renderOnMain: false,
+    valueIds: [
+      'TRIX',
+    ],
+    active: false,
+  },
+  {
+    name: 'ADX',
+    id: 'adx',
+    params: {
+      period: 14,
+    },
+    renderOnMain: false,
+    valueIds: [
+      'ADX',
+    ],
+    active: false,
   }],
   dateRanges: [
     { label: '1 minute', value: 1 },

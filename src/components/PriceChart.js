@@ -82,7 +82,9 @@ export default class PriceChart extends Component {
     for (let i = 0; i < nextProps.config.yAxis.length; i += 1) {
       if (this.props.config.yAxis[i]) {
         if (JSON.stringify(nextProps.config.yAxis[i].plotLines) !== JSON.stringify(this.props.config.yAxis[i].plotLines)) {
-          changedIds.push(this.props.config.yAxis[i].plotLines[0].id);
+          if (this.props.config.yAxis[i].plotLines[0].id) {
+            changedIds.push(this.props.config.yAxis[i].plotLines[0].id);
+          }
         }
       }
     }

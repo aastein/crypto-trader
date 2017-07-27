@@ -143,7 +143,7 @@ export default class Chart extends Component {
           align: 'left',
           x: 5,
         },
-        height: '50%',
+        height: indicatorConfigs.yAxis.length > 0 ? '50%' : '90%',
         lineWidth: 1,
         floor: 0,
       },
@@ -165,7 +165,7 @@ export default class Chart extends Component {
         labels: {
           enabled: false,
         },
-        top: '50%',
+        top: indicatorConfigs.yAxis.length > 0 ? '50%' : '90%',
         height: '10%',
         offset: 0,
         lineWidth: 1,

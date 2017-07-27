@@ -77,9 +77,9 @@ const stochRSI = (data, rsiPeriod, stochPeriod, kPeriod, dPeriod) => {
   return { srsi };
 };
 
-const commodityChannelIndex = (data, period) => {
+const commodityChannelIndex = (data, params) => {
+  const period = params.period;
   let cci = [];
-
   if (data[0]) {
     cci = [...cci, { time: data[0].time }];
   }
@@ -110,53 +110,253 @@ const commodityChannelIndex = (data, period) => {
     }
   }
   return { cci };
+
+  // TODO: enable this when its up on NPM
+  // const cci = Indicators.CCI.calculate({
+  //   open: data.map(d => (d.open)),
+  //   high: data.map(d => (d.high)),
+  //   low: data.map(d => (d.low)),
+  //   close: data.map(d => (d.close)),
+  //   ...params,
+  // }).map(d => (
+  //   { CCI: d }
+  // ));
+  // const offset = data.length - cci.length;
+  // for (let i = 0; i < cci.length; i += 1) {
+  //   cci[i].time = data[i + offset].time;
+  // }
+  // return { cci };
 };
 
-const simpleMovingAverage = (data, period) => {
+const simpleMovingAverage = (data, params) => {
   const sma = Indicators.SMA.calculate({
-    period,
+    ...params,
     values: data.map(d => (d.close)),
   }).map(d => (
     { SMA: d }
   ));
   for (let i = 0; i < sma.length; i += 1) {
-    sma[i].time = data[(i + period) - 1].time;
+    sma[i].time = data[(i + params.period) - 1].time;
   }
   return { sma };
 };
 
-const relativeStrengthIndex = (data, period) => {
+const relativeStrengthIndex = (data, params) => {
   const rsi = Indicators.RSI.calculate({
-    period,
+    ...params,
     values: data.map(d => (d.close)),
   }).map(d => (
     { RSI: d }
   ));
   for (let i = 0; i < rsi.length; i += 1) {
-    rsi[i].time = data[i + period].time;
+    rsi[i].time = data[i + params.period].time;
   }
   return { rsi };
 };
 
-const exponentialMovingAverage = (data, period) => {
+const exponentialMovingAverage = (data, params) => {
   const ema = Indicators.EMA.calculate({
-    period,
+    ...params,
     values: data.map(d => (d.close)),
   }).map(d => (
     { EMA: d }
   ));
   for (let i = 0; i < ema.length; i += 1) {
-    ema[i].time = data[i + (period - 1)].time;
+    ema[i].time = data[i + (params.period - 1)].time;
   }
   return { ema };
 };
 
-
-const calculateIndicators = (inds, data) => {
-  let indicatorData = {};
-  const indicators = inds.filter(i => (
-    i.active
+const weightedMovingAverage = (data, params) => {
+  const wma = Indicators.WMA.calculate({
+    values: data.map(d => (d.close)),
+    ...params,
+  }).map(d => (
+    { WMA: d }
   ));
+  for (let i = 0; i < wma.length; i += 1) {
+    wma[i].time = data[i + (params.period - 1)].time;
+  }
+  return { wma };
+};
+
+const movingAverageConvergenceDivergence = (data, params) => {
+  const macd = Indicators.MACD.calculate({
+    values: data.map(d => (d.close)),
+    ...params,
+  }).map(d => (
+    { ...d }
+  ));
+  for (let i = 0; i < macd.length; i += 1) {
+    macd[i].time = data[i + (params.slowPeriod - 1)].time;
+  }
+  return { macd };
+};
+
+const bollingerBands = (data, params) => {
+  const bb = Indicators.BollingerBands.calculate({
+    values: data.map(d => (d.close)),
+    ...params,
+  }).map(d => (
+    { ...d }
+  ));
+  for (let i = 0; i < bb.length; i += 1) {
+    bb[i].time = data[i + (params.period - 1)].time;
+  }
+  return { bb };
+};
+
+const averageTrueRange = (data, params) => {
+  const atr = Indicators.ATR.calculate({
+    high: data.map(d => (d.high)),
+    low: data.map(d => (d.low)),
+    close: data.map(d => (d.close)),
+    ...params,
+  }).map(d => (
+    { ATR: d }
+  ));
+  for (let i = 0; i < atr.length; i += 1) {
+    atr[i].time = data[i + (params.period - 1)].time;
+  }
+  return { atr };
+};
+
+const wildersSmoothingAverage = (data, params) => {
+  const wema = Indicators.WEMA.calculate({
+    values: data.map(d => (d.close)),
+    ...params,
+  }).map(d => (
+    { WEMA: d }
+  ));
+  const offset = data.length - wema.length;
+  for (let i = 0; i < wema.length; i += 1) {
+    wema[i].time = data[i + offset].time;
+  }
+  return { wema };
+};
+
+const rateOfChange = (data, params) => {
+  const roc = Indicators.ROC.calculate({
+    values: data.map(d => (d.close)),
+    ...params,
+  }).map(d => (
+    { ROC: d }
+  ));
+  const offset = data.length - roc.length;
+  for (let i = 0; i < roc.length; i += 1) {
+    roc[i].time = data[i + offset].time;
+  }
+  return { roc };
+};
+
+const knowSureThing = (data, params) => {
+  const kst = Indicators.KST.calculate({
+    values: data.map(d => (d.close)),
+    ...params,
+  }).map(d => (
+    { ...d }
+  ));
+  const offset = data.length - kst.length;
+  for (let i = 0; i < kst.length; i += 1) {
+    kst[i].time = data[i + offset].time;
+  }
+  return { kst };
+};
+
+const stochastic = (data, params) => {
+  const stoch = Indicators.Stochastic.calculate({
+    high: data.map(d => (d.high)),
+    low: data.map(d => (d.low)),
+    close: data.map(d => (d.close)),
+    ...params,
+  }).map(d => (
+    { ...d }
+  ));
+  const offset = data.length - stoch.length;
+  for (let i = 0; i < stoch.length; i += 1) {
+    stoch[i].time = data[i + offset].time;
+  }
+  return { stoch };
+};
+
+const williamsR = (data, params) => {
+  const wr = Indicators.WilliamsR.calculate({
+    high: data.map(d => (d.high)),
+    low: data.map(d => (d.low)),
+    close: data.map(d => (d.close)),
+    ...params,
+  }).map(d => (
+    { 'Wm%R': d }
+  ));
+  const offset = data.length - wr.length;
+  for (let i = 0; i < wr.length; i += 1) {
+    wr[i].time = data[i + offset].time;
+  }
+  return { wr };
+};
+
+const accumulationDistributionLine = (data) => {
+  const adl = Indicators.ADL.calculate({
+    high: data.map(d => (d.high)),
+    low: data.map(d => (d.low)),
+    close: data.map(d => (d.close)),
+    volume: data.map(d => (d.volume)),
+  }).map(d => (
+    { ADL: d }
+  ));
+  const offset = data.length - adl.length;
+  for (let i = 0; i < adl.length; i += 1) {
+    adl[i].time = data[i + offset].time;
+  }
+  return { adl };
+};
+
+const onBalanceVolume = (data) => {
+  const obv = Indicators.OBV.calculate({
+    close: data.map(d => (d.close)),
+    volume: data.map(d => (d.volume)),
+  }).map(d => (
+    { OBV: d }
+  ));
+  const offset = data.length - obv.length;
+  for (let i = 0; i < obv.length; i += 1) {
+    obv[i].time = data[i + offset].time;
+  }
+  return { obv };
+};
+
+const tripleExponentiallySmoothedAverage = (data, params) => {
+  const trix = Indicators.TRIX.calculate({
+    values: data.map(d => (d.close)),
+    ...params,
+  }).map(d => (
+    { TRIX: d }
+  ));
+  const offset = data.length - trix.length;
+  for (let i = 0; i < trix.length; i += 1) {
+    trix[i].time = data[i + offset].time;
+  }
+  return { trix };
+};
+
+const averageDirectionalIndex = (data, params) => {
+  const adx = Indicators.ADX.calculate({
+    close: data.map(d => (d.close)),
+    high: data.map(d => (d.high)),
+    low: data.map(d => (d.low)),
+    ...params,
+  }).map(d => (
+    { ADX: d }
+  ));
+  const offset = data.length - adx.length;
+  for (let i = 0; i < adx.length; i += 1) {
+    adx[i].time = data[i + offset].time;
+  }
+  return { adx };
+};
+
+const calculateIndicators = (indicators, data) => {
+  let indicatorData = {};
   for (let i = 0; i < indicators.length; i += 1) {
     switch (indicators[i].id) {
       case 'srsi':
@@ -174,25 +374,103 @@ const calculateIndicators = (inds, data) => {
       case 'rsi':
         indicatorData = {
           ...indicatorData,
-          ...relativeStrengthIndex(data, indicators[i].params.period),
+          ...relativeStrengthIndex(data, indicators[i].params),
         };
         break;
       case 'cci':
         indicatorData = {
           ...indicatorData,
-          ...commodityChannelIndex(data, indicators[i].params.period),
+          ...commodityChannelIndex(data, indicators[i].params),
         };
         break;
       case 'sma':
         indicatorData = {
           ...indicatorData,
-          ...simpleMovingAverage(data, indicators[i].params.period),
+          ...simpleMovingAverage(data, indicators[i].params),
         };
         break;
       case 'ema':
         indicatorData = {
           ...indicatorData,
-          ...exponentialMovingAverage(data, indicators[i].params.period),
+          ...exponentialMovingAverage(data, indicators[i].params),
+        };
+        break;
+      case 'wma':
+        indicatorData = {
+          ...indicatorData,
+          ...weightedMovingAverage(data, indicators[i].params),
+        };
+        break;
+      case 'macd':
+        indicatorData = {
+          ...indicatorData,
+          ...movingAverageConvergenceDivergence(data, indicators[i].params),
+        };
+        break;
+      case 'bb':
+        indicatorData = {
+          ...indicatorData,
+          ...bollingerBands(data, indicators[i].params),
+        };
+        break;
+      case 'atr':
+        indicatorData = {
+          ...indicatorData,
+          ...averageTrueRange(data, indicators[i].params),
+        };
+        break;
+      case 'wema':
+        indicatorData = {
+          ...indicatorData,
+          ...wildersSmoothingAverage(data, indicators[i].params),
+        };
+        break;
+      case 'roc':
+        indicatorData = {
+          ...indicatorData,
+          ...rateOfChange(data, indicators[i].params),
+        };
+        break;
+      case 'kst':
+        indicatorData = {
+          ...indicatorData,
+          ...knowSureThing(data, indicators[i].params),
+        };
+        break;
+      case 'stoch':
+        indicatorData = {
+          ...indicatorData,
+          ...stochastic(data, indicators[i].params),
+        };
+        break;
+      case 'wr':
+        indicatorData = {
+          ...indicatorData,
+          ...williamsR(data, indicators[i].params),
+        };
+        break;
+      case 'adl':
+        indicatorData = {
+          ...indicatorData,
+          ...accumulationDistributionLine(data),
+        };
+        break;
+      case 'obv':
+        indicatorData = {
+          ...indicatorData,
+          ...onBalanceVolume(data),
+        };
+        break;
+      case 'trix':
+        indicatorData = {
+          ...indicatorData,
+          ...tripleExponentiallySmoothedAverage(data, indicators[i].params),
+        };
+        break;
+      case 'adx':
+        indicatorData = {
+          ...indicatorData,
+          ...averageDirectionalIndex(data, indicators[i].params),
         };
         break;
       default:

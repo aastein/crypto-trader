@@ -4,7 +4,7 @@ export default class ObjectForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // TODO: why the fuck does object spread not work here.
+      // TODO: use immutible
       object: JSON.parse(JSON.stringify(props.object)),
       hidden: props.hidden,
     };
@@ -43,8 +43,6 @@ export default class ObjectForm extends Component {
   }
 
   handleObjectChange = (event, key, subkey) => {
-    // console.log('props', this.props.object.params);
-    // console.log('state', this.state.object.params);
     event.preventDefault();
     const value = this.handlePeriod(event.target.value);
     this.setState((prevState) => {
