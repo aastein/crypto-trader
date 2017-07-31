@@ -51,6 +51,7 @@ export default class PriceChart extends Component {
     }
   }
 
+  // TODO: this should always be fale. Should instead use highcharts api to change data and redraw.
   // update if config name changed, series length, or yAxis length changed
   shouldComponentUpdate = nextProps => (
     this.props.config.series[0].name !== nextProps.config.series[0].name ||
@@ -82,7 +83,7 @@ export default class PriceChart extends Component {
     for (let i = 0; i < nextProps.config.yAxis.length; i += 1) {
       if (this.props.config.yAxis[i]) {
         if (JSON.stringify(nextProps.config.yAxis[i].plotLines) !== JSON.stringify(this.props.config.yAxis[i].plotLines)) {
-          if (this.props.config.yAxis[i].plotLines[0].id) {
+          if (this.props.config.yAxis[i].plotLines[0]) {
             changedIds.push(this.props.config.yAxis[i].plotLines[0].id);
           }
         }

@@ -17,19 +17,6 @@ const INITAL_CHART_STATE = {
     axisLines: [0.8, 0.2],
     renderOnMain: false,
     valueIds: ['K', 'D'],
-    active: true,
-  },
-  {
-    name: 'RSI',
-    id: 'rsi',
-    params: {
-      period: 14,
-    },
-    chartMin: 0,
-    chartMax: 100,
-    axisLines: [70, 30],
-    renderOnMain: false,
-    valueIds: ['RSI'],
     active: false,
   },
   {
@@ -46,8 +33,21 @@ const INITAL_CHART_STATE = {
     active: false,
   },
   {
+    name: 'RSI',
+    id: 'RSI',
+    params: {
+      period: 14,
+    },
+    chartMin: 0,
+    chartMax: 100,
+    axisLines: [70, 30],
+    renderOnMain: false,
+    valueIds: ['RSI'],
+    active: false,
+  },
+  {
     name: 'SMA',
-    id: 'sma',
+    id: 'SMA',
     params: {
       period: 8,
     },
@@ -57,7 +57,7 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'EMA',
-    id: 'ema',
+    id: 'EMA',
     params: {
       period: 8,
     },
@@ -67,7 +67,7 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'WMA',
-    id: 'wma',
+    id: 'WMA',
     params: {
       period: 8,
     },
@@ -77,7 +77,7 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'MACD',
-    id: 'macd',
+    id: 'MACD',
     params: {
       fastPeriod: 5,
       slowPeriod: 8,
@@ -91,11 +91,11 @@ const INITAL_CHART_STATE = {
       'histogram',
       'signal',
     ],
-    active: true,
+    active: false,
   },
   {
     name: 'BB',
-    id: 'bb',
+    id: 'BollingerBands',
     params: {
       period: 14,
       stdDev: 2,
@@ -106,11 +106,11 @@ const INITAL_CHART_STATE = {
       'middle',
       'upper',
     ],
-    active: true,
+    active: false,
   },
   {
     name: 'ATR',
-    id: 'atr',
+    id: 'ATR',
     params: {
       period: 14,
     },
@@ -122,7 +122,7 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'WEMA',
-    id: 'wema',
+    id: 'WEMA',
     params: {
       period: 5,
     },
@@ -134,7 +134,7 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'ROC',
-    id: 'roc',
+    id: 'ROC',
     params: {
       period: 12,
     },
@@ -146,7 +146,7 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'KST',
-    id: 'kst',
+    id: 'KST',
     params: {
       ROCPer1: 10,
       ROCPer2: 15,
@@ -167,7 +167,7 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'Stochastic',
-    id: 'stoch',
+    id: 'Stochastic',
     params: {
       period: 14,
       signalPeriod: 3,
@@ -182,20 +182,20 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'Williams %R',
-    id: 'wr',
+    id: 'WilliamsR',
     params: {
       period: 14,
     },
     renderOnMain: false,
     valueIds: [
-      'Wm%R',
+      'WilliamsR',
     ],
     axisLines: [-20, -80],
     active: false,
   },
   {
     name: 'ADL',
-    id: 'adl',
+    id: 'ADL',
     renderOnMain: false,
     valueIds: [
       'ADL',
@@ -204,7 +204,7 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'OBV',
-    id: 'obv',
+    id: 'OBV',
     renderOnMain: false,
     valueIds: [
       'OBV',
@@ -213,7 +213,7 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'TRIX',
-    id: 'trix',
+    id: 'TRIX',
     params: {
       period: 18,
     },
@@ -225,7 +225,7 @@ const INITAL_CHART_STATE = {
   },
   {
     name: 'ADX',
-    id: 'adx',
+    id: 'ADX',
     params: {
       period: 14,
     },
