@@ -10,6 +10,13 @@ WIP @ <a target="_blank" href="https://aaronste.in">aaronste.in</a>
 
 ## Getting Started
 
+### Chrome on OSX
+
+Go to the profile page and upload browser data.
+<img src="/public/osx-chrome-setup.png" width="1000">
+
+### Other OS and Browser
+
 Login to GDAX
 Open the browser console and navigate to the settings page
 
