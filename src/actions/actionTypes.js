@@ -1,6 +1,7 @@
 // profile
 export const IMPORT_PROFILE = 'IMPORT_PROFILE';
 export const SAVE_PROFILE = 'SAVE_PROFILE';
+export const SAVE_SESSION = 'SAVE_SESSION';
 export const UPDATE_ACCOUNTS = 'UPDATE_ACCOUNTS';
 export const ADD_ORDER = 'ADD_ORDER';
 export const FIND_SESSION = 'FIND_SESSION';

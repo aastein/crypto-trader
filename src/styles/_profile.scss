@@ -6,6 +6,12 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
+  p {
+    padding-left: 1em;
+    color: #fff;
+    font-size: 12px;
+    display: inline;
+  }
   form {
     display: block;
     width: 70%;
@@ -96,5 +102,26 @@
   .Select-option {
     background-color: $background-color;
     color: #FFF;
+  }
+  .profile-table {
+    color: #fff;
+    border-color: #fff;
+    margin: 10px;
+
+    th {
+      font-size: 12px;
+      font-weight: 700;
+    }
+    td {
+      font-size: 11px;
+    }
+    button {
+      height: 17px;
+      width: 50px;
+      padding: 0 5px;
+    }
+    th, td {
+      padding: 0 7px;
+    }
   }
 }

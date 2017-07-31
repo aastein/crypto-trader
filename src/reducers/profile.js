@@ -28,6 +28,8 @@ const profile = (state = INITAL_PROFILE_STATE, action) => {
       return { ...state, ...action.userData.profile };
     case actionType.SAVE_PROFILE:
       return { ...state, ...action.settings.profile };
+    case actionType.SAVE_SESSION:
+      return { ...state, session: action.session };
     case actionType.UPDATE_ACCOUNTS:
       if (action.accounts) {
         return { ...state, accounts: action.accounts };

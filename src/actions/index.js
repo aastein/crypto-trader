@@ -9,6 +9,7 @@ let nextScriptId = 2;
 // profile
 export const importProfile = userData => ({ type: actionType.IMPORT_PROFILE, userData });
 export const saveProfile = settings => ({ type: actionType.SAVE_PROFILE, settings });
+export const saveSession = session => ({ type: actionType.SAVE_SESSION, session });
 export const updateAccounts = accounts => ({ type: actionType.UPDATE_ACCOUNTS, accounts });
 export const addOrder = (id, productId, time, price) => ({ type: actionType.ADD_ORDER, id, productId, time, price });
 
@@ -142,6 +143,7 @@ export const findSession = acceptedFiles => (
       for (let i = 0; i < sessions.length; i += 1) {
         getAccounts(sessions[i]).then((accounts) => {
           if (accounts) {
+            dispatch(saveSession(sessions[i]));
             dispatch(updateAccounts(accounts));
           }
         });
