@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+
 import ToggleSwitch from 'react-toggle-switch';
 import fileDownload from 'react-file-download';
 import Dropzone from 'react-dropzone';
@@ -11,6 +12,7 @@ import {
   fetchOrderBook,
   setLocation,
   fetchSettings,
+  findSession,
 } from '../actions';
 import Input from '../components/Input';
 import Dropdown from '../components/Dropdown';
@@ -115,6 +117,10 @@ class Profile extends Component {
     });
   }
 
+  handleFindSession = (acceptedFiles) => {
+    this.props.findSession(acceptedFiles);
+  }
+
   handleExport = (event) => {
     event.preventDefault();
     fileDownload(this.state.textState, 'user_state.json');
@@ -151,6 +157,12 @@ class Profile extends Component {
             value={this.state.profile.session}
             onChange={this.handleInputChange}
           />
+          <Dropzone className="dropzone" onDrop={this.handleFindSession}>
+            <button type="submit" className="form-group btn-small" onClick={(e) => { e.preventDefault(); }}>
+              Find Session
+            </button>
+          </Dropzone>
+          <span style={{ color: 'white' }}>~/Library/Application Support/Google/Chrome/Default/Web Data</span>
           <label className="form-group" htmlFor="watched-products">Watched Products</label>
           <Dropdown
             className="form-group"
@@ -201,6 +213,9 @@ const mapDispatchToProps = dispatch => (
     },
     setLocation: (location) => {
       dispatch(setLocation(location));
+    },
+    findSession: (acceptedFiles) => {
+      dispatch(findSession(acceptedFiles));
     },
   }
 );

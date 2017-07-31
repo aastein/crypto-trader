@@ -112,3 +112,40 @@ export const fetchSettings = acceptedFiles => (
     })
   )
 );
+
+export const findSession = acceptedFiles => (
+  dispatch => (
+    axios.create({ baseURL: '' }).get(acceptedFiles[0].preview).then((res) => {
+      const content = res.data;
+      const key = 'session';
+      const idLength = 64;
+      const re = new RegExp('^[a-z0-9]+$');
+      const sessionLocations = [];
+      let index = 0;
+
+      // get indexs of key
+      while (index < content.length) {
+        index = content.indexOf(key, index);
+        sessionLocations.push(index);
+        if (index === -1) break;
+        index += 1;
+      }
+
+      // get string os idLength past the key positions then filter strings with non-alpha-num chars
+      const sessions = sessionLocations.map(s => (
+        content.substring(s + key.length, s + key.length + idLength)
+      )).filter(s => (
+        re.test(s)
+      ));
+
+      // call accounts api with remainng session ids
+      for (let i = 0; i < sessions.length; i += 1) {
+        getAccounts(sessions[i]).then((accounts) => {
+          if (accounts) {
+            dispatch(updateAccounts(accounts));
+          }
+        });
+      }
+    })
+  )
+);
