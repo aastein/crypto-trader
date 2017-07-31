@@ -128,6 +128,7 @@ button:hover {
     border-bottom-left-radius: 4px;
     max-height: 198px;
     overflow-y: auto;
+    overflow-x: hidden;
 
     .dropdown-item {
       width: inherit;
@@ -139,14 +140,14 @@ button:hover {
 
       .item-options {
         position: absolute;
-        right: 0;
+        right: 10px;
         padding-right: 5px;
       }
 
       .item-checkbox {
         position: relative;
         bottom: 2px;
-        margin-right: 10px;
+        margin-right: 5px;
       }
 
       .item-drilldown {
