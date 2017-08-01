@@ -19,9 +19,7 @@ export default class PriceChart extends Component {
     }
   }
 
-  shouldComponentUpdate = nextProps => (this.shouldRender(nextProps))
-
-  shouldRender = nextProps => (false);
+  shouldComponentUpdate = nextProps => (false)
 
   dataChanged = (nextProps) => {
     for (let i = 0; i < nextProps.config.series.length; i += 1) {

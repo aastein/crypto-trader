@@ -1,7 +1,6 @@
 
 General:
   Use immutable for everything.
-  Find when chart re-renders -> eliminate.
 
 Bugs:
   CircleCI deploy breaks regenerator runtime / technicalindicators lib.
