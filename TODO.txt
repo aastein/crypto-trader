@@ -1,6 +1,7 @@
 
 General:
   Use immutable for everything.
+  Find when chart re-renders -> eliminate.
 
 Bugs:
   CircleCI deploy breaks regenerator runtime / technicalindicators lib.
@@ -20,12 +21,8 @@ Scripting:
 
 Indicators:
 
-  add all indicators from technicalindicators
-
   valueIds -> object with chart type [line, column]
-
   use nextValue from technicalindicators on every ws data and run script?
-
     on ws chat will receive props
       dispatch preCalculateInds({time: , o:, h:, l:, c: })
         preCalculateInds will get [...product.data, { ...newWSdata }]

@@ -139,14 +139,14 @@ export default class WebsocketChart extends Component {
       series: [{
         data: selectedProductWSPriceData,
         type: 'line',
-        name: 'Price',
+        name: selectedProduct.id,
         tooltip: {
           valueDecimals: 2,
         },
       },
       {
         type: 'column',
-        name: 'Size',
+        name: 'Volume',
         data: selectedProductWSVolumeData,
         yAxis: 1,
       }],
