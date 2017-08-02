@@ -3,7 +3,6 @@ import moment from 'moment';
 
 import { floor } from './math';
 
-// axios.defaults.baseURL = 'https://api-public.sandbox.gdax.com'
 axios.defaults.baseURL = 'https://api.gdax.com';
 
 const handleError = (error, setFetchingStatus) => {
@@ -32,16 +31,6 @@ export const serverTime = () => {
   "asks":[ [ "2556.31","2.55276193",3 ] ] price, size, num-orders
 }
 */
-export const orderBook = (productId) => {
-  const url = `/products/${productId}/book`;
-  return axios.get(url).then(res => (
-    {
-      bid: res.data.bids[0][0],
-      ask: res.data.asks[0][0],
-    }
-  ));
-};
-
 export const getOrderBook = (productId) => {
   const url = `/products/${productId}/book`;
   return axios.get(url).then(res => (
@@ -53,7 +42,7 @@ export const getOrderBook = (productId) => {
 };
 
 export const setOrderBook = (productId, updateOrderBook) => {
-  orderBook(productId).then((ob) => {
+  getOrderBook(productId).then((ob) => {
     updateOrderBook(productId, ob);
   });
 };

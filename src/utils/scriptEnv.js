@@ -1,4 +1,4 @@
-import { orderBook, placeOrder, getOrder } from './api';
+import { getOrderBook, placeOrder, getOrder } from './api';
 import { round, floor } from './math';
 
 let products;
@@ -10,7 +10,7 @@ let addOrder;
 let config;
 
 const limitOrder = (side, productId) => {
-  orderBook(productId).then((ob) => {
+  getOrderBook(productId).then((ob) => {
     const product = products.reduce((a, b) => (
       b.id === productId ? b : a
     ), {});
