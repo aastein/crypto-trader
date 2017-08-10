@@ -135,7 +135,8 @@ export default class Chart extends Component {
           rotation: 0,
           y: (i % 4) * 10,
         },
-      })) : [];
+      }),
+    ) : [];
 
     const candleStickConfig = {
       yAxis: {
@@ -237,7 +238,7 @@ export default class Chart extends Component {
           : <div>
             <Loader />
           </div>
-      }
+        }
       </div>
     );
   }

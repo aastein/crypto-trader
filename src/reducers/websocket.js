@@ -20,6 +20,7 @@ const INIT_STATE = {
 
 const websocket = (state = INIT_STATE, action) => {
   switch (action.type) {
+    // This is to set the products array.
     // case actionType.SET_PRODUCTS:
     //   return { ...state, products: action.products.map(p => ({ id: p.id, data: [] })) };
     case actionType.SELECT_PRODUCT:

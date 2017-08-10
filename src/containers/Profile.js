@@ -66,14 +66,14 @@ class Profile extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      exportedState: {
-        profile: nextProps.profile,
-        scripts: nextProps.scripts,
-        indicators: nextProps.indicators,
-        products: nextProps.products,
-      },
-    });
+    // this.setState({
+    //   exportedState: {
+    //     profile: this.props.exportedState ? this.props.exportedStatethis.profile : this.props.profile,
+    //     scripts: nextProps.scripts,
+    //     indicators: nextProps.indicators,
+    //     products: nextProps.products,
+    //   },
+    // });
   }
   // only render if profile, product length, or internal state changed
   shouldComponentUpdate(nextProps, nextState) {
@@ -87,16 +87,28 @@ class Profile extends Component {
 
   onSelectProducts = (value) => {
     const selectedProducts = value;
-    this.setState(prevState => (
-       { profile: { ...prevState.profile, selectedProducts } }
-    ));
+    this.setState(prevState => ({
+      exportedState: {
+        ...prevState.exportedState,
+        profile: {
+          ...prevState.exportedState.profile,
+          selectedProducts,
+        },
+      },
+    }));
   }
 
   handleInputChange = (key, event) => {
     const session = event.target.value;
-    this.setState(prevState => (
-       { profile: { ...prevState.profile, session } }
-    ));
+    this.setState(prevState => ({
+      exportedState: {
+        ...prevState.exportedState,
+        profile: {
+          ...prevState.exportedState.profile,
+          session,
+        },
+      },
+    }));
   }
 
   handleTextAreaChange = (event) => {
@@ -107,17 +119,22 @@ class Profile extends Component {
   }
 
   handleToggle = () => {
-    this.setState(prevState => (
-      { profile: { ...prevState.profile, live: !prevState.profile.live } }
-    ));
+    this.setState(prevState => ({
+      exportedState: {
+        profile: {
+          ...prevState.exportedState.profile,
+          live: !prevState.exportedState.profile.live,
+        },
+      },
+    }));
   }
 
   handleSave = (event) => {
     event.preventDefault();
+    this.props.saveProfile({ profile: this.state.exportedState.profile });
     if (this.state.exportedState.profile.session.length > 0) {
       this.props.fetchAccounts(this.state.exportedState.profile.session);
     }
-    this.props.saveProfile({ profile: this.state.exportedState.profile });
     for (let i = 0; i < this.state.exportedState.profile.selectedProducts.length; i += 1) {
       this.props.fetchOrderBook(this.state.exportedState.profile.selectedProducts[i].value);
     }
@@ -126,20 +143,22 @@ class Profile extends Component {
     ));
   }
 
+  handleFindSession = (acceptedFiles) => {
+    this.props.findSession(acceptedFiles);
+  }
+
   handleImport = (acceptedFiles) => {
     this.props.fetchSettings(acceptedFiles).then((data) => {
       this.setState({
-        profile: data.profile,
-        scripts: data.scripts,
-        indicators: data.indicators,
-        products: data.products,
-        textState: JSON.stringify(data, null, 2),
+        exportedState: {
+          profile: data.profile,
+          scripts: data.scripts,
+          indicators: data.indicators,
+          products: data.products,
+          textState: JSON.stringify(data, null, 2),
+        },
       });
     });
-  }
-
-  handleFindSession = (acceptedFiles) => {
-    this.props.findSession(acceptedFiles);
   }
 
   handleExport = (event) => {
@@ -148,6 +167,7 @@ class Profile extends Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className="profile">
         <form onSubmit={this.props.onSaveClick}>
@@ -197,10 +217,7 @@ class Profile extends Component {
                       <td>{s.browser}</td>
                       <td>{s.path}</td>
                       <td>
-                        <CopyToClipboard
-                          onCopy={() => {}}
-                          text={s.path}
-                        >
+                        <CopyToClipboard onCopy={() => {}} text={s.path} >
                           <button className="form-group btn-small" onClick={(e) => { e.preventDefault(); }}>
                             Copy
                           </button>
