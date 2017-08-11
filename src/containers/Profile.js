@@ -65,16 +65,6 @@ class Profile extends Component {
     this.props.setLocation(this.props.location);
   }
 
-  componentWillReceiveProps(nextProps) {
-    // this.setState({
-    //   exportedState: {
-    //     profile: this.props.exportedState ? this.props.exportedStatethis.profile : this.props.profile,
-    //     scripts: nextProps.scripts,
-    //     indicators: nextProps.indicators,
-    //     products: nextProps.products,
-    //   },
-    // });
-  }
   // only render if profile, product length, or internal state changed
   shouldComponentUpdate(nextProps, nextState) {
     const profileChanged = JSON.stringify(this.props.profile)
@@ -167,7 +157,6 @@ class Profile extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="profile">
         <form onSubmit={this.props.onSaveClick}>
