@@ -15,7 +15,7 @@ React:
     - In Redux state should be treated as immutable, to change state a new state is created by dispatching an action which defines how the new state should look based on the old state. This is similar to how the .reduce method works. The methods which create a new state given an old state and an action are called reducers because of this.
     - Components which do not contain methods to change state are dumb components and are highly reusable. They only need props to render. Action dispatchers can be passed to them the but the dispatch method is implemented by a parent component which is connected to Redux.
     - Figuring out what component should be responsible for state is v v important.
-    - If some props are not required you can defile defaultProps for the component
+    - If some props are not required you can define defaultProps for the component
 
     Example for, not sure if best practice?:
       props -> Component -> Component has default props -> Component.state is initialized by props -> Component elements rendered from state? (why not render from props, why state?)
@@ -40,7 +40,7 @@ React:
     - React router is dope as fuck
     - Defines what component should load given a route
     - These components are commonly separated out from regular components and called containers, because they are the top level definition of an entire page, usually.
-    - Has some nice tools like applying a certain style to active nav links.
+    - Has some nice tools like applying a certain style to active nav links. Doesn't work on it's own with redux.
     - Wraps the entire app so after you set it up you wont have to mess with it much
 
 
@@ -97,7 +97,7 @@ Redux:
   - State tree is read-only
   - Every change to state must happen through an action
   - All actions must have type property, use string
-  - UI as a pure function of the application state!
+  - UI as a pure function of the application state
   - State mutations must be pure function e.g. reducers.
 
 

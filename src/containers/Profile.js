@@ -65,6 +65,21 @@ class Profile extends Component {
     this.props.setLocation(this.props.location);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const sessionIdChanged = this.props.profile.session !== nextProps.profile.session;
+    if (sessionIdChanged) {
+      this.setState(prevState => ({
+        exportedState: {
+          ...prevState.exportedState,
+          profile: {
+            ...prevState.exportedState.profile,
+            session: nextProps.profile.session,
+          },
+        },
+      }));
+    }
+  }
+
   // only render if profile, product length, or internal state changed
   shouldComponentUpdate(nextProps, nextState) {
     const profileChanged = JSON.stringify(this.props.profile)

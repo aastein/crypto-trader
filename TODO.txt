@@ -1,5 +1,6 @@
 
 General:
+  Remove any container styling
   Use immutable for everything.
 
 Bugs:
