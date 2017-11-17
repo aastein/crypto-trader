@@ -26,7 +26,8 @@ export default class Chart extends Component {
        !== JSON.stringify(nextState);
     const fetchingChanged = this.props.chart.fetchingStatus !== nextProps.chart.fetchingStatus;
     const productChanged = this.selectedProduct(this.props).id !== this.selectedProduct(nextProps).id;
-    return websocketStatusChanged || stateChanged || productChanged || fetchingChanged;
+    const indicatorChaanged = this.props.chart.indicators !== nextProps.chart.indicators;
+    return websocketStatusChanged || stateChanged || productChanged || fetchingChanged || indicatorChaanged;
   }
 
   onProductChange = (event) => {
