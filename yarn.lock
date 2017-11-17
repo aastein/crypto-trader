@@ -7459,9 +7459,9 @@ tar@^2.0.0, tar@^2.2.0, tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
-technicalindicators@^1.0.3:
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/technicalindicators/-/technicalindicators-1.0.21.tgz#e7f2d4a1d60b2c57722b066c754964eb89e89900"
+technicalindicators@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/technicalindicators/-/technicalindicators-1.0.3.tgz#66c1a43698a761ddb6c41e4835775a78bd3e58b8"
   dependencies:
     babel-polyfill "^6.23.0"
 
