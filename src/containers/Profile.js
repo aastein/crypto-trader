@@ -233,11 +233,13 @@ class Profile extends Component {
               }
             </tbody>
           </table>
-          <Dropzone className="dropzone" onDrop={this.handleFindSession}>
-            <button type="submit" className="form-group btn-small" onClick={(e) => { e.preventDefault(); }}>
+          <div>
+          <button type="submit" className="form-group btn-small" onClick={(e) => { e.preventDefault(); }}>
+            <Dropzone className="dropzone form-group btn-small" onDrop={this.handleFindSession}>
               Find Session
-            </button>
-          </Dropzone>
+            </Dropzone>
+          </button>
+          </div>
           <label className="form-group" htmlFor="watched-products">Watched Products</label>
           <Dropdown
             className="form-group"
