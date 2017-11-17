@@ -35,12 +35,21 @@ export const calculateIndicators = id => ({ type: actionType.CALCULATE_INDICATOR
 
 // dashpbard: scratchpad
 export const addScript = () => ({ type: actionType.ADD_SCRIPT, id: nextScriptId += 1 });
-export const saveScript = script => ({ type: actionType.SAVE_SCRIPT, script });
+export const writeScript = script => ({ type: actionType.SAVE_SCRIPT, script });
 export const deleteScript = id => ({ type: actionType.DELETE_SCRIPT, id });
 export const selectScript = id => ({ type: actionType.SELECT_SCRIPT, id });
 export const selectProductDoc = id => ({ type: actionType.SELECT_PRODUCT_DOC, id });
 export const toggleScriptLive = id => ({ type: actionType.TOGGLE_SCRIPT_LIVE, id });
 export const saveTestResult = result => ({ type: actionType.SAVE_TEST_RESULT, result });
+
+export const saveScript = script => (
+  dispatch => (
+    new Promise((resolve) => {
+      dispatch(writeScript(script));
+      resolve();
+    })
+  )
+);
 
 // logging
 export const appendLog = log => ({ type: actionType.APPEND_LOG, log });

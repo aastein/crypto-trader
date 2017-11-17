@@ -17,6 +17,21 @@ export default class CodeEditor extends Component {
     this.props.saveScript(script);
   }
 
+  handleTabKey = (event) => {
+    if (event.keyCode === 9) { // tab was pressed
+      event.preventDefault();
+      const val = this.props.script.script,
+        start = event.target.selectionStart,
+        end = event.target.selectionEnd,
+        spaces = '  ';
+      const script = { ...this.props.script, script: val.substring(0, start) + spaces + val.substring(end) };
+      this.props.saveScript(script).then(() => {
+        this.refs.textarea.selectionStart = start + spaces.length;
+        this.refs.textarea.selectionEnd = this.refs.textarea.selectionStart;
+      });
+    }
+  }
+
   handleInputChange = (event) => {
     const name = event.target.value;
     this.props.saveScript({ ...this.props.script, name });
@@ -58,8 +73,10 @@ export default class CodeEditor extends Component {
             <textarea
               rows={'3'}
               cols={'30'}
+              ref={'textarea'}
               value={this.props.script.script}
               onChange={this.handleTextAreaChange}
+              onKeyDown={this.handleTabKey}
             />
           </div>
           { this.props.script.id !== 0 &&

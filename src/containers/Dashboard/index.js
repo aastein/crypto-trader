@@ -50,9 +50,9 @@ const mapDispatchToProps = dispatch => (
     addScript: () => {
       dispatch(addScript());
     },
-    saveScript: (script) => {
-      dispatch(saveScript(script));
-    },
+    saveScript: (script) => (
+      dispatch(saveScript(script))
+    ),
     deleteScript: (id) => {
       dispatch(deleteScript(id));
     },
