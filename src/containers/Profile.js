@@ -152,25 +152,6 @@ class Profile extends Component {
     this.props.findSession(acceptedFiles);
   }
 
-  handleImport = (acceptedFiles) => {
-    this.props.fetchSettings(acceptedFiles).then((data) => {
-      this.setState({
-        exportedState: {
-          profile: data.profile,
-          scripts: data.scripts,
-          indicators: data.indicators,
-          products: data.products,
-          textState: JSON.stringify(data, null, 2),
-        },
-      });
-    });
-  }
-
-  handleExport = (event) => {
-    event.preventDefault();
-    fileDownload(this.state.textState, 'user_state.json');
-  }
-
   render() {
     return (
       <div className="profile">
@@ -178,14 +159,6 @@ class Profile extends Component {
           <div className="form-buttons">
             <button type="submit" className="form-group btn-small" onClick={this.handleSave}>
               Save
-            </button>
-            <Dropzone className="dropzone" onDrop={this.handleImport}>
-              <button type="submit" className="form-group btn-small" onClick={(e) => { e.preventDefault(); }}>
-                Import
-              </button>
-            </Dropzone>
-            <button type="submit" className="form-group btn-small btn-export" onClick={this.handleExport}>
-              Export
             </button>
           </div>
           <label className="form-group" htmlFor="live">Live</label>

@@ -23,10 +23,26 @@ const getComposeEnhancers = () => {
   return compose(applyMiddleware(thunk));
 };
 
+const initialState = () => {
+  const local = JSON.parse(localStorage.getItem('redux'))
+  return typeof local === 'object' ? local : {};
+}
+
 const store = createStore(
   reducer,
+  initialState(),
   getComposeEnhancers(),
 );
+
+store.subscribe(function () {
+  var state = store.getState();
+  try {
+    console.log('saving to localStorage', state);
+    localStorage.setItem('redux', JSON.stringify(state));
+  } catch (e) {
+    console.warn('Unable to persist state to localStorage:', e);
+  }
+});
 
 render(
   <Provider store={store}>
