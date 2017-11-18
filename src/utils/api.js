@@ -24,28 +24,39 @@ export const serverTime = () => {
   )).catch(handleError);
 };
 
-/*
-{
-  "sequence":3528829167,
-  "bids":[ [ "2556.3","0.02",2 ] ], price, size, num-orders
-  "asks":[ [ "2556.31","2.55276193",3 ] ] price, size, num-orders
-}
-*/
-export const getOrderBook = (productId) => {
-  const url = `/products/${productId}/book`;
-  return axios.get(url).then(res => (
-    {
-      bid: res.data.bids[0][0],
-      ask: res.data.asks[0][0],
-    }
-  ));
-};
+// this is not handled by websockets
+// fetch inital order book. only do this after websocker is connected
+// export const getOrderBook = (productId) => {
+//   const url = `/products/${productId}/book?level=3`;
+//   return axios.get(url).then(res => {
+//     let bids = [];
+//     for (let i = 0; i < res.data.bids.length; i +=1 ) {
+//       if (bids.length > 0 && bids[bids.length - 1][0] === res.data.bids[i][0]) {
+//         bids[bids.length - 1][1] = '' + (Number.parseFloat(bids[bids.length - 1][1]) + Number.parseFloat(res.data.bids[i][1]));
+//       } else {
+//         bids.push(res.data.bids[i]);
+//       }
+//     }
+//     let asks = [];
+//     for (let i = 0; i < res.data.asks.length; i +=1 ) {
+//       if (asks.length > 0 && asks[asks.length - 1][0] === res.data.asks[i][0]) {
+//         asks[asks.length - 1][1] = '' + (Number.parseFloat(asks[asks.length - 1][1]) + Number.parseFloat(res.data.asks[i][1]));
+//       } else {
+//         asks.push(res.data.asks[i]);
+//       }
+//     }
+//     return {
+//       bids: bids,
+//       asks: asks,
+//     }
+//   });
+// };
 
-export const setOrderBook = (productId, updateOrderBook) => {
-  getOrderBook(productId).then((ob) => {
-    updateOrderBook(productId, ob);
-  });
-};
+// export const setOrderBook = (productId, updateOrderBook) => {
+//   getOrderBook(productId).then((ob) => {
+//     updateOrderBook(productId, ob);
+//   });
+// };
 
 export const getOrder = (id, session) => {
   const uri = `/orders/${id}`;

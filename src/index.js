@@ -25,19 +25,29 @@ const getComposeEnhancers = () => {
 
 const initialState = () => {
   const local = JSON.parse(localStorage.getItem('redux'))
-  return typeof local === 'object' ? local : {};
+  return typeof local === 'object' ? localStorage.getItem('redux') : {};
 }
 
 const store = createStore(
   reducer,
-  initialState(),
+  // JSON.parse(initialState()),
   getComposeEnhancers(),
 );
+
+let lastState = initialState();
 
 store.subscribe(function () {
   var state = store.getState();
   try {
-    localStorage.setItem('redux', JSON.stringify(state));
+    const writenState = JSON.stringify({ ...state,
+      chart: null,
+      websocket: null,
+    });
+    if (writenState !== lastState) {
+       console.log('Writing new state to localStorage with length: ',writenState.length);
+       localStorage.setItem('redux', writenState);
+       lastState = writenState;
+    }
   } catch (e) {
     console.warn('Unable to persist state to localStorage:', e);
   }

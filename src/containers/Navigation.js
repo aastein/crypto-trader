@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import {
   updateHeartbeat,
   fetchAccounts,
-  fetchOrderBook,
   initProducts,
 } from '../actions';
 import { round } from '../utils/math';
@@ -33,13 +32,6 @@ class Navigation extends Component {
     }, 5000);
 
     setInterval(() => {
-      const ids = this.props.selectedProductIds;
-      for (let i = 0; i < ids.length; i += 1) {
-        this.props.fetchOrderBook(ids[i]);
-      }
-    }, 30000);
-
-    setInterval(() => {
       if (moment().unix() - moment(this.props.websocket.heartbeatTime).unix() > 30
           && this.props.websocket.connected === true) {
         this.props.updateHeartbeat(false);
@@ -51,32 +43,13 @@ class Navigation extends Component {
   shouldComponentUpdate(nextProps) {
     const accountsChanged = JSON.stringify(this.props.accounts)
       !== JSON.stringify(nextProps.accounts);
-    const thisOrderBook = this.props.products.filter(p => (
-      this.props.selectedProductIds.indexOf(p.id) > -1
-    )).map(a => (
-      {
-        id: a.id,
-        ask: a.ask,
-        bid: a.bid,
-      }
-    ));
-    const nextOrderBook = nextProps.products.filter(p => (
-      nextProps.selectedProductIds.indexOf(p.id) > -1
-    )).map(a => (
-      {
-        id: a.id,
-        ask: a.ask,
-        bid: a.bid,
-      }
-    ));
-    const orderbookChanged = JSON.stringify(thisOrderBook)
-      !== JSON.stringify(nextOrderBook);
     const locationChanged = JSON.stringify(this.props.location)
       !== JSON.stringify(nextProps.location);
-    return accountsChanged || orderbookChanged || locationChanged;
+    return accountsChanged || locationChanged;
   }
 
   render() {
+    console.log('rendering navigation container');
     return (
       <nav className={`navbar ${this.props.live ? 'live' : ''}`}>
         <a
@@ -136,8 +109,8 @@ class Navigation extends Component {
               <li key={a.display_name}>
                 <div>
                   <p>{a.display_name}</p>
-                  <p>{`Bid: ${a.bid}`}</p>
-                  <p>{`Ask: ${a.ask}`}</p>
+                  <p>{`Bid: ${a.bids.length > 0 ? a.bids[0][0] : ''}`}</p>
+                  <p>{`Ask: ${a.asks.length > 0 ? a.asks[0][0] : ''}`}</p>
                 </div>
               </li>
           ))}
@@ -177,9 +150,6 @@ const mapDispatchToProps = dispatch => (
     },
     fetchAccounts: (session) => {
       dispatch(fetchAccounts(session));
-    },
-    fetchOrderBook: (id) => {
-      dispatch(fetchOrderBook(id));
     },
     initProducts: () => {
       dispatch(initProducts());

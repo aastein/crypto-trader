@@ -1,13 +1,33 @@
 let connection;
 const url = 'wss://ws-feed.gdax.com';
 
+let asdf = 0;
 // set the action to be dispatched when data is received
-export const setAction = (action) => {
+export const setActions = (handleMatch, handleSnapshot, handleUpdate) => {
   connection.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    // only watch for completed trades / filter out order posts and cancels
-    if (data.type === 'match' || (data.type === 'done' && data.reason === 'filled')) {
-      action(data);
+    switch (data.type) {
+      case 'snapshot':
+        // initialize the orderbook
+        handleSnapshot(data);
+        break;
+      case 'l2update':
+        // update portion of the orderbook
+  //      if (asdf < 5) {
+          handleUpdate(data);
+        // }
+        // asdf += 1;
+        break;
+      case 'last_match':
+        // initalize realtime price
+        // this could be (probably is) duplicate of REST historical data
+        break;
+      case 'match':
+        // update realtime price
+        handleMatch(data);
+        break;
+      default:
+        console.log('no websocket handler for: ', data.type);
     }
   };
 };
@@ -17,7 +37,11 @@ export const subscribe = (products) => {
   connection.send(JSON.stringify(
     {
       type: 'subscribe',
-      product_ids: 'products',
+      product_ids: products,
+      channels: [
+        'level2',
+        'matches',
+      ],
     },
   ));
 };

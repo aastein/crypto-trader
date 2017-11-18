@@ -114,6 +114,7 @@ export default class Chart extends Component {
   }
 
   render() {
+    console.log('rendering chart container');
     const selectedProduct = this.selectedProduct(this.props);
     const activeIndicators = this.props.chart.indicators.filter(i => (i.active));
     const indicatorConfigs = this.indicatorConfigs(selectedProduct, activeIndicators);

@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import {
   saveProfile,
   fetchAccounts,
-  fetchOrderBook,
   setLocation,
   fetchSettings,
   findSession,
@@ -153,6 +152,7 @@ class Profile extends Component {
   }
 
   render() {
+    console.log('rendering profile container');
     return (
       <div className="profile">
         <form onSubmit={this.props.onSaveClick}>
@@ -257,9 +257,6 @@ const mapDispatchToProps = dispatch => (
     },
     fetchAccounts: (session) => {
       dispatch(fetchAccounts(session));
-    },
-    fetchOrderBook: (id) => {
-      dispatch(fetchOrderBook(id));
     },
     setLocation: (location) => {
       dispatch(setLocation(location));

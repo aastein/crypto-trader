@@ -13,6 +13,7 @@ export default class Dashboard extends Component {
   }
 
   render() {
+    // console.log('rendering dashboard container');
     return (
       <div className="dashboard">
         <div className="top-container">

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import * as actionType from './actionTypes';
-import { getAccounts, getOrderBook, getProductData, getProducts } from '../utils/api';
+import { getAccounts, getProductData, getProducts } from '../utils/api';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
-import connect, { setAction, subscribe } from '../utils/websocket';
+import connect, { setActions, subscribe } from '../utils/websocket';
 
 let nextScriptId = 2;
 
@@ -27,8 +27,10 @@ export const setGranularity = (id, granularity) =>
   ({ type: actionType.SET_GRANULARITY, id, granularity });
 export const selectIndicator = id => ({ type: actionType.SELECT_INDICATOR, id });
 export const editIndicator = indicator => ({ type: actionType.EDIT_INDICATOR, indicator });
-export const updateOrderBook = (id, orderBook) =>
-  ({ type: actionType.UPDATE_ORDER_BOOK, id, orderBook });
+export const setOrderBook = (id, orderBook) =>
+  ({ type: actionType.SET_ORDER_BOOK, id, orderBook });
+  export const updateOrderBook = (id, changes) =>
+  ({ type: actionType.UPDATE_ORDER_BOOK, id, changes });
 export const updateHeartbeat = status => ({ type: actionType.UPDATE_HEARTBEAT, status });
 export const setFetchingStatus = status => ({ type: actionType.SET_FETCHING_STATUS, status });
 export const calculateIndicators = id => ({ type: actionType.CALCULATE_INDICATORS, id });
@@ -67,13 +69,14 @@ export const fetchAccounts = session => (
   )
 );
 
-export const fetchOrderBook = id => (
-  dispatch => (
-    getOrderBook(id).then((ob) => {
-      dispatch(updateOrderBook(id, ob));
-    })
-  )
-);
+// this is now handled by websockers
+// export const fetchOrderBook = id => (
+//   dispatch => (
+//     getOrderBook(id).then((ob) => {
+//       dispatch(setOrderBook(id, ob));
+//     })
+//   )
+// );
 
 export const fetchProductData = (id, range, granularity) => (
   (dispatch) => {
@@ -88,12 +91,47 @@ export const fetchProductData = (id, range, granularity) => (
   }
 );
 
+const handleMatch = dispatch => {
+  return data => {
+    dispatch(addProductWSData(data));
+  }
+}
+
+const handleSnapshot = dispatch => {
+  return data => {
+    // console.log('actions/index.js handleSnapshot', data);
+    let bids = [];
+    for (let i = 0; i < data.bids.length; i +=1 ) {
+      if (bids.length > 0 && bids[bids.length - 1][0] === data.bids[i][0]) {
+        bids[bids.length - 1][1] = '' + (Number.parseFloat(bids[bids.length - 1][1]) + Number.parseFloat(data.bids[i][1]));
+      } else {
+        bids.push(data.bids[i]);
+      }
+    }
+    let asks = [];
+    for (let i = 0; i < data.asks.length; i +=1 ) {
+      if (asks.length > 0 && asks[asks.length - 1][0] === data.asks[i][0]) {
+        asks[asks.length - 1][1] = '' + (Number.parseFloat(asks[asks.length - 1][1]) + Number.parseFloat(data.asks[i][1]));
+      } else {
+        asks.push(data.asks[i]);
+      }
+    }
+    dispatch(setOrderBook(data.product_id, { bids: bids, asks: asks }))
+  }
+}
+
+const handleUpdate = dispatch => {
+  return data => {
+    // console.log('actions/index.js handleUpdate', data);
+    dispatch(updateOrderBook(data.product_id, data.changes))
+  }
+}
+
 export const initWebsocket = ids => (
   dispatch => (
     connect().then(() => {
-      setAction((data) => {
-        dispatch(addProductWSData(data));
-      });
+      // handleMatch, handleSnapshot, handleUpdate
+      setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch));
       subscribe(ids);
     })
   )
@@ -106,9 +144,10 @@ export const initProducts = () => (
       const selectedProductIds = getState().profile.selectedProducts.map(p => (p.value));
       dispatch(selectProduct(selectedProductIds[0]));
       dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
-      for (let i = 0; i < selectedProductIds.length; i += 1) {
-        dispatch(fetchOrderBook(selectedProductIds[i]));
-      }
+      // this is now handled by websockets
+      // for (let i = 0; i < selectedProductIds.length; i += 1) {
+      //   dispatch(fetchOrderBook(selectedProductIds[i]));
+      // }
       dispatch(initWebsocket(selectedProductIds));
     })
   )

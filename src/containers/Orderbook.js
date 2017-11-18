@@ -11,6 +11,7 @@ class Orderbook extends Component {
   }
 
   render() {
+    console.log('rendering orderbook container');
     return (
       <div className="orderbook-page">
         <ul>
@@ -19,8 +20,8 @@ class Orderbook extends Component {
               <li key={a.display_name}>
                 <div>
                   <p>{a.display_name}</p>
-                  <p>{`Bid: ${a.bid}`}</p>
-                  <p>{`Ask: ${a.ask}`}</p>
+                  <p>{`Bid: ${a.bids.length > 0 ? a.bids[0][0] : ''}`}</p>
+                  <p>{`Ask: ${a.asks.length > 0 ? a.asks[0][0] : ''}`}</p>
                 </div>
               </li>
           ))}

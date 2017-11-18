@@ -112,6 +112,7 @@ export default class Chart extends Component {
   }
 
   render() {
+    // console.log('rendering chart header container');
     const selectedProduct = this.selectedProduct(this.props);
     const dropdownProductOptions = this.props.chart.products.map(product => (
       { value: product.id, label: product.display_name }

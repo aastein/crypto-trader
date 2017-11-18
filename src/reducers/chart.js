@@ -274,12 +274,78 @@ const chart = (state = INITAL_CHART_STATE, action) => {
           i.id === action.indicator.id ? action.indicator : i
         )),
       };
-    case actionType.UPDATE_ORDER_BOOK:
+    case actionType.SET_ORDER_BOOK:
+      // console.log('reducer/chart.js handle set orderbook',action);
       return { ...state,
         products: state.products.map(p => (
           { ...p,
-            bid: p.id === action.id ? action.orderBook.bid : p.bid,
-            ask: p.id === action.id ? action.orderBook.ask : p.ask,
+            bids: p.id === action.id ? action.orderBook.bids : p.bids,
+            asks: p.id === action.id ? action.orderBook.asks : p.asks,
+          }
+        )),
+      };
+    case actionType.UPDATE_ORDER_BOOK:
+      // console.log('update order book reducer handler', action);
+      // update with buys
+      const bids = { ...state.products.find(p => {
+        return p.id === action.id;
+      }) }.bids.slice(0);
+      // update with sells
+      const asks = { ...state.products.find(p => {
+        return p.id === action.id;
+      }) }.asks.slice(0);
+
+      // assume high low
+      for (let i = 0; i < action.changes.length; i +=1 ) {
+        if (action.changes[i][0] === 'buy') {
+          // insert or update bids
+          let index = bids.findIndex((bid) => {
+              return parseFloat(bid[0]) === parseFloat(action.changes[i][1])
+          });
+          if (index > -1) {
+            // update bid
+            if (parseFloat(action.changes[i][2]) === 0) {
+              bids.splice(index, 1)
+            } else {
+              bids.splice(index, 1, [ action.changes[i][1], action.changes[i][2] ])
+            }
+          } else {
+            index = bids.findIndex((bid) => {
+                return parseFloat(bid[0]) < parseFloat(action.changes[i][1])
+            });
+            // insert bid
+            bids.splice(index, 0, [ action.changes[i][1], action.changes[i][2] ])
+          }
+        } else if (action.changes[i][0] === 'sell' ) {
+          // insert or update asks
+          let index = asks.findIndex((ask) => {
+              return parseFloat(ask[0]) === parseFloat(action.changes[i][1])
+          });
+          if (index > -1) {
+            // update ask
+            if (parseFloat(action.changes[i][2]) === 0) {
+              asks.splice(index, 1)
+            } else {
+              asks.splice(index, 1, [ action.changes[i][1], action.changes[i][2] ])
+            }
+          } else {
+            index = asks.findIndex((ask) => {
+                return parseFloat(ask[0]) < parseFloat(action.changes[i][1])
+            });
+            // insert ask
+            asks.splice(index, 0, [ action.changes[i][1], action.changes[i][2] ])
+          }
+        } else {
+          console.error('Unrecognized orderbook udpate from websocket: ', action.changes[i]);
+        }
+      }
+
+      // console.log('reducer/chart.jsolddata', bids, asks);
+      return { ...state,
+        products: state.products.map(p => (
+          { ...p,
+            bids: p.id === action.id ? bids.slice(0, 50) : p.bids,
+            asks: p.id === action.id ? asks.slice(0, 50) : p.asks,
           }
         )),
       };
@@ -310,7 +376,7 @@ const chart = (state = INITAL_CHART_STATE, action) => {
     case actionType.SET_PRODUCTS:
       return { ...state,
         products: action.products.map(product => (
-          { ...product, granularity: INIT_GRANULARITY, range: INIT_RANGE, data: [], docSelected: false, bid: '', ask: '' }
+          { ...product, granularity: INIT_GRANULARITY, range: INIT_RANGE, data: [], docSelected: false, bids: [], asks: [] }
         )),
       };
     case actionType.SELECT_PRODUCT:
