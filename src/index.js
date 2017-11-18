@@ -37,7 +37,6 @@ const store = createStore(
 store.subscribe(function () {
   var state = store.getState();
   try {
-    console.log('saving to localStorage', state);
     localStorage.setItem('redux', JSON.stringify(state));
   } catch (e) {
     console.warn('Unable to persist state to localStorage:', e);

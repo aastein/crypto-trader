@@ -4,6 +4,7 @@ import ReactModal from 'react-modal';
 import Dropdown from '../../../components/Dropdown';
 import Select from '../../../components/Select';
 import Input from '../../../components/Input';
+import SliderDropdown from '../../../components/SliderDropdown';
 import FetchButton from '../../../components/FetchButton';
 import ObjectForm from '../../../components/ObjectForm';
 import { INIT_GRANULARITY, INIT_RANGE } from '../../../utils/constants';
@@ -13,6 +14,7 @@ export default class Chart extends Component {
     super(props);
     this.state = {
       granularity: `${INIT_GRANULARITY}`,
+      showSlider: false,
       range: INIT_RANGE,
       editing: false,
     };
@@ -105,6 +107,10 @@ export default class Chart extends Component {
     ), {}) : {}
   )
 
+  handleGranularityChange = granularity => {
+    this.setState(() => ({ granularity:  Math.pow(granularity, 2) + '' }));
+  }
+
   render() {
     const selectedProduct = this.selectedProduct(this.props);
     const dropdownProductOptions = this.props.chart.products.map(product => (
@@ -153,6 +159,12 @@ export default class Chart extends Component {
               />
               <span className="granularity-label">s</span>
             </div>
+            <SliderDropdown
+              min={Math.ceil(Math.sqrt(this.state.range / 50))}
+              max={Math.ceil(Math.sqrt(this.state.range * 5))}
+              handleChange={this.handleGranularityChange}
+              defaultValue={Math.sqrt(parseInt(this.state.granularity, 10))}
+            />
             <FetchButton
               className="btn chart-header-item"
               onClick={this.onApply}
