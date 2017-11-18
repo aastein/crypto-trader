@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Select from 'react-select';
-import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -21,7 +19,7 @@ class SliderDropdown extends Component {
 
   render() {
     return (
-      <div className="slider-dropdown">
+      <div className={`slider-dropdown ${this.props.className}`}>
         <div className="dropdown-toggle Select-control" role="menu" onClick={this.handleExpand} tabIndex={0}>
           <span className="Select-value-label">{this.props.value}</span>
           <span className="Select-arrow-zone">

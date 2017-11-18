@@ -160,6 +160,7 @@ export default class Chart extends Component {
               <span className="granularity-label">s</span>
             </div>
             <SliderDropdown
+              className = "chart-header-item"
               min={Math.ceil(Math.sqrt(this.state.range / 50))}
               max={Math.ceil(Math.sqrt(this.state.range * 5))}
               handleChange={this.handleGranularityChange}

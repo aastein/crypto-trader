@@ -113,6 +113,11 @@
           }
 
           .slider-dropdown {
+            width: 30px;
+            padding-right: 5px;
+            .dropdown-toggle {
+              height: 34px;
+            }
             .dropdown-menu {
               position: absolute;
               .slider-container {
