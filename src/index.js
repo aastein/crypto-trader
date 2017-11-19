@@ -37,7 +37,8 @@ const store = createStore(
 let lastState = initialState();
 
 store.subscribe(function () {
-  var state = store.getState();
+  const state = store.getState();
+  // console.log('state length', JSON.stringify(state).length);
   try {
     const writenState = JSON.stringify({ ...state,
       chart: null,

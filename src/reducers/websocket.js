@@ -76,20 +76,20 @@ const websocket = (state = INIT_STATE, action) => {
       return { ...state,
         products: state.products.map(p => (
           { ...p,
-            bids: p.id === action.id
-              ? action.orderBook.bids.sort((a, b) => {
-                  if (parseFloat(a.price) < parseFloat(b.price)) return -1;
-                  if (parseFloat(a.price) > parseFloat(b.price)) return 1;
-                  return 0;
-                })
-              : p.bids,
             asks: p.id === action.id
               ? action.orderBook.asks.sort((a, b) => {
-                  if (parseFloat(a.price) < parseFloat(b.price)) return -1;
-                  if (parseFloat(a.price) > parseFloat(b.price)) return 1;
+                  if (a.price > b.price) return -1;
+                  if (a.price < b.price) return 1;
                   return 0;
-                })
+                }).slice(action.orderBook.asks.length - 100, action.orderBook.asks.length -1)
               : p.asks,
+            bids: p.id === action.id
+            ? action.orderBook.bids.sort((a, b) => {
+                if (a.price > b.price) return -1;
+                if (a.price < b.price) return 1;
+                return 0;
+              }).slice(0, 100)
+            : p.bids,
           }
         )),
       };
@@ -104,69 +104,71 @@ const websocket = (state = INIT_STATE, action) => {
         return p.id === action.id;
       }) }.asks.slice(0);
 
-      // assume high low
+      // sort all data highest price to lowest price
       for (let i = 0; i < action.changes.length; i +=1 ) {
+        const data = { price: parseFloat(action.changes[i][1]), size: parseFloat(action.changes[i][2]) }
+
         if (action.changes[i][0] === 'buy') {
           // insert or update bids
           let index = bids.findIndex((bid) => {
-              return parseFloat(bid.price) === parseFloat(action.changes[i][1])
+              // eslint-disable-next-line
+              return bid.price == action.changes[i][1];
           });
           if (index > -1) {
             // update bid
-            if (parseFloat(action.changes[i][2]) === 0) {
-              bids.splice(index, 1)
+            // eslint-disable-next-line
+            if (action.changes[i][2] == 0) {
+              bids.splice(index, 1);
             } else {
-              bids.splice(index, 1, { price: action.changes[i][1], size: action.changes[i][2] })
+              bids.splice(index, 1,  { ...data });
             }
-          } else {
+          // eslint-disable-next-line
+          } else if (action.changes[i][2] != 0) {
             index = bids.findIndex((bid) => {
-                return parseFloat(bid.price) < parseFloat(action.changes[i][1])
+                return bid.price < action.changes[i][1];
             });
             // insert bid
-            bids.splice(index, 0, { price: action.changes[i][1], size: action.changes[i][2] })
+            bids.splice(index, 0, { ...data });
           }
         } else if (action.changes[i][0] === 'sell' ) {
           // insert or update asks
           let index = asks.findIndex((ask) => {
-              return parseFloat(ask.price) === parseFloat(action.changes[i][1])
+              // eslint-disable-next-line
+              return ask.price == action.changes[i][1];
           });
           if (index > -1) {
             // update ask
-            if (parseFloat(action.changes[i][2]) === 0) {
-              asks.splice(index, 1)
+            // eslint-disable-next-line
+            if (action.changes[i][2] == 0) {
+              asks.splice(index, 1);
             } else {
-              asks.splice(index, 1, { price: action.changes[i][1], size: action.changes[i][2] })
+              asks.splice(index, 1, { ...data });
             }
-          } else {
+            // eslint-disable-next-line
+          } else if (action.changes[i][2] != 0) {
             index = asks.findIndex((ask) => {
-                return parseFloat(ask.price) < parseFloat(action.changes[i][1])
+                return ask.price < action.changes[i][1];
             });
             // insert ask
-            asks.splice(index, 0, { price: action.changes[i][1], size: action.changes[i][2] })
+            asks.splice(index, 0, { ...data });
           }
         } else {
           console.error('Unrecognized orderbook udpate from websocket: ', action.changes[i]);
         }
       }
 
-      // console.log('reducer/chart.jsolddata', bids, asks);
+      let deleteCount = asks.length - 100;
+      if (deleteCount > 0) asks.splice(0, deleteCount)
+
       return { ...state,
         products: state.products.map(p => (
           { ...p,
-            bids: p.id === action.id
-              ? bids.sort((a, b) => {
-                  if (parseFloat(a.price) > parseFloat(b.price)) return -1;
-                  if (parseFloat(a.price) < parseFloat(b.price)) return 1;
-                  return 0;
-                }).slice(0, 100).reverse()
-              : p.bids,
             asks: p.id === action.id
-              ? asks.sort((a, b) => {
-                  if (parseFloat(a.price) < parseFloat(b.price)) return -1;
-                  if (parseFloat(a.price) > parseFloat(b.price)) return 1;
-                  return 0;
-                }).slice(0, 100).reverse()
+              ? asks
               : p.asks,
+            bids: p.id === action.id
+              ? bids.slice(0, 100)
+              : p.bids,
           }
         )),
       };

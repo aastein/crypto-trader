@@ -21,6 +21,7 @@ const INITAL_VIEW_STATE = {
 
 // action.card action.content
 const view = (state = INITAL_VIEW_STATE, action) => {
+  // console.log('reducer', action.type, JSON.stringify(action).length);
   switch (action.type) {
     case actionType.SHOW_CARD: // switch between showing content in cards
       const newState = { ...state };

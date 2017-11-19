@@ -38,15 +38,25 @@
     }
     .ask {
       color: #EE7248;
+      .bar {
+        background-color: #EE7248;
+      }
     }
     .bid {
       color: #9FF379;
+      .bar {
+        background-color: #9FF379;
+      }
     }
     .size {
       float: right;
     }
-    .price {
-
+    .bar-container {
+      height: 14px;
+      width: 20px;
+    }
+    .spread {
+      border: 1px solid black;
     }
   }
 }

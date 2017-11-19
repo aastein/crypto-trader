@@ -1,12 +1,38 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import ReactDOM from 'react-dom';
 import CardHeader from '../CardHeader';
 
 class Orderbook extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      scrolled: false,
+    };
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     return JSON.stringify(this.props) !== JSON.stringify(nextProps);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.focus && !this.state.scrolled) {
+      const node = ReactDOM.findDOMNode(this.focus);
+      if (node) {
+        node.scrollIntoView(false);
+        this.setState(() => (
+          { scrolled: true }
+        ));
+      }
+    }
+  }
+
+  barWidth(size) {
+    return {
+      backgroundColor: 'red',
+      height: '14px',
+      // width: `${size * 2}px`,
+    }
   }
 
   render() {
@@ -17,20 +43,21 @@ class Orderbook extends Component {
           { this.props.asks &&
           <div className="orderbook-row asks">
           { this.props.asks.map((ask, i) => (
-            <p className="" key={i}>
+            <p className="" key={i} >
+              <span className="ask bar-container"><span style={this.barWidth(ask.size)} className="bar"/></span>
               <span className="ask size">{`${ask.size}`}</span>
-              <span className="ask price">{`${ask.price}`}</span>
+              <span className="ask price">{`$${ask.price}`}</span>
             </p>
           ))}
           </div>
           }
           { this.props.asks && this.props.asks.length > 0 &&
-            <div className="orderbook-row">
+            <div className="orderbook-row spread">
               <p>
                 <span>SPREAD</span>
                 <span className="float-right">
-                  ${parseFloat(this.props.asks[this.props.asks.length - 1].price)
-                      - parseFloat(this.props.bids[this.props.bids.length - 1].price)}
+                  ${this.props.asks[this.props.asks.length - 1].price
+                      - this.props.bids[0].price}
                 </span>
               </p>
             </div>
@@ -38,11 +65,12 @@ class Orderbook extends Component {
           { this.props.bids &&
           <div className="orderbook-row bids">
           { this.props.bids.map((bid, i) => (
-            <p className="" key={i}>
+            <p className="" key={i} ref={(c) => { if (i === 7) this.focus = c; }}>
+              <span className="bid bar-container"><span className="bar"/></span>
               <span className="bid size">{`${bid.size}`}</span>
-              <span className="bid price">{`${bid.price}`}</span>
+              <span className="bid price">{`$${bid.price}`}</span>
             </p>
-          )).reverse()}
+          ))}
           </div> }
         </div>
       </div>
@@ -60,7 +88,7 @@ const mapStateToProps = state => {
   });
 
   const asks = selectedWebsocket && selectedWebsocket.asks ? selectedWebsocket.asks.slice(selectedWebsocket.asks.length - 51, selectedWebsocket.asks.length - 1) : [];
-  const bids = selectedWebsocket && selectedWebsocket.bids ? selectedWebsocket.bids.slice(selectedWebsocket.bids.length - 51, selectedWebsocket.bids.length - 1) : [];
+  const bids = selectedWebsocket && selectedWebsocket.bids ? selectedWebsocket.bids.slice(0, 50) : [];
 
   return ({
     contentOptions,

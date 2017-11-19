@@ -93,8 +93,8 @@ const handleMatch = dispatch => {
 
 const transformOrderData = order => {
   return {
-    price: order[0],
-    size: order[1],
+    price: parseFloat(order[0]),
+    size: parseFloat(order[1]),
   }
 }
 
@@ -104,16 +104,16 @@ const handleSnapshot = dispatch => {
     let bids = [];
     for (let i = 0; i < data.bids.length; i +=1 ) {
       if (bids.length > 0 && bids[bids.length - 1][0] === data.bids[i][0]) {
-        bids[bids.length - 1].size = '' + (Number.parseFloat(bids[bids.length - 1].size) + Number.parseFloat(data.bids[i][1]));
-      } else {
+        bids[bids.length - 1].size += parseFloat(data.bids[i][1]);
+      } else if (parseFloat(data.bids[i][1]) > 0) {
         bids.push(transformOrderData(data.bids[i]));
       }
     }
     let asks = [];
     for (let i = 0; i < data.asks.length; i +=1 ) {
       if (asks.length > 0 && asks[asks.length - 1][0] === data.asks[i][0]) {
-        asks[asks.length - 1].size = '' + (Number.parseFloat(asks[asks.length - 1].size) + Number.parseFloat(data.asks[i][1]));
-      } else {
+        asks[asks.length - 1].size += Number.parseFloat(data.asks[i][1]);
+      } else if (parseFloat(data.asks[i][1]) > 0) {
         asks.push(transformOrderData(data.asks[i]));
       }
     }

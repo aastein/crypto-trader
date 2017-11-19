@@ -73,6 +73,7 @@ class WebsocketChart extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    // console.log('websocker chart should update', JSON.stringify(this.props) !== JSON.stringify(nextProps));
     return JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
 
