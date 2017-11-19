@@ -11,6 +11,7 @@ export default class ScriptList extends Component {
   }
 
   render() {
+    console.log('rendering ScriptList');
     return (
       <div className="script-list">
         <h2>

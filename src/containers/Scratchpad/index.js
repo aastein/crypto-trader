@@ -14,13 +14,12 @@ import ProductDataList from '../ProductDataList';
 import ScriptList from '../ScriptList';
 
 class Scratchpad extends Component {
-
   render() {
+    console.log('rendering scratchpad container');
     const activeScript = this.props.scripts.reduce((a, b) => (
       b.active ? b : a
     ), {});
     const scriptHeader = this.props.scripts[0].script;
-    console.log('rendering scratchpad container');
     return (
       <div className="bottom-container">
         <div className="script-container">

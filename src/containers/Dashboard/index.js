@@ -7,6 +7,7 @@ import LogContainer from '../Log';
 import ScratchpadContainer from '../Scratchpad';
 
 export const Dashboard = () => {
+    console.log('rendering dashboard');
     return (
       <div className="dashboard">
         <div className="top-container">

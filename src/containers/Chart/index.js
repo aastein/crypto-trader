@@ -7,6 +7,10 @@ import { round } from '../../utils/math';
 
 class Chart extends Component {
 
+  shouldComponentUpdate(nextProps) {
+    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
+  }
+
   inidcatorYAxis = (top, height, chartMin, chartMax, axisLines, id) => (
     {
       labels: {
@@ -127,7 +131,7 @@ class Chart extends Component {
       },
       series: {
         name: this.props.productDisplayName,
-        data: this.props.priceData,
+        data: this.props.selectedProductPriceData,
         type: 'candlestick',
         tooltip: {
           valueDecimals: 2,
@@ -154,7 +158,7 @@ class Chart extends Component {
         dataGrouping: {
           enabled: false,
         },
-        data: this.props.volumeData,
+        data: this.props.selectedProductVolumeData,
         yAxis: 1,
       },
     };
@@ -206,7 +210,7 @@ class Chart extends Component {
 
     return (
       <div className="price-chart-container">
-        { this.props.priceData && this.props.priceData.length > 0 ?
+        { this.props.selectedProductPriceData.length > 0 ?
           <div>
             <PriceChart
               config={config}

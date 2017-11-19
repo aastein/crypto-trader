@@ -11,6 +11,7 @@ class Log extends Component {
     return logsChanged;
   }
   render() {
+    console.log('rendering log');
     return (
       <div className="log">
         <h2>

@@ -6,11 +6,11 @@ import test from '../../utils/scriptTestEnv';
 export default class CodeEditor extends Component {
 
   // only render if script data changed
-  shouldComponentUpdate(nextProps, nextState) {
-    const scriptChanged = JSON.stringify(this.props.script)
-      !== JSON.stringify(nextProps.script);
-    return scriptChanged;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   const scriptChanged = JSON.stringify(this.props.script)
+  //     !== JSON.stringify(nextProps.script);
+  //   return scriptChanged;
+  // }
 
   handleTextAreaChange = (event) => {
     const script = { ...this.props.script, script: event.target.value };
@@ -55,6 +55,7 @@ export default class CodeEditor extends Component {
   }
 
   render() {
+    console.log('rendering CodeEditor');
     return (
       <div className="code-editor">
         <form onSubmit={this.handleSave}>

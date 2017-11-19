@@ -33,6 +33,10 @@ class ChartHeader extends Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return JSON.stringify(this.props) !== JSON.stringify(nextProps) || JSON.stringify(this.state) !== JSON.stringify(nextState);;
+  }
+
   onProductChange = (event) => {
     if (event) {
       const id = event.value;
@@ -106,7 +110,7 @@ class ChartHeader extends Component {
   }
 
   render() {
-    // console.log('rendering chart header container');
+    console.log('rendering chart header container');
     return (
       <div className="chart-header">
         <div className="chart-header-item-container">

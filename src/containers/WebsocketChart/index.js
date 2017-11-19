@@ -12,7 +12,6 @@ import Loader from '../../components/Loader';
 import run from '../../utils/scriptEnv';
 
 class WebsocketChart extends Component {
-
   // bundle websocket data into OHLC and append to historical data given time conditions
   componentWillReceiveProps = (nextProps) => {
     // console.log('will receive props');
@@ -73,6 +72,10 @@ class WebsocketChart extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
+  }
+
   // shouldComponentUpdate = (nextProps) => {
   //   const a = this.websocketDataChanged(this.props.websocket.products, nextProps.websocket.products);
   //   return a;
@@ -86,6 +89,7 @@ class WebsocketChart extends Component {
   }
 
   render() {
+    console.log('rendering WebsocketChart');
     const wsConfig = {
       rangeSelector: {
         enabled: false,
@@ -120,7 +124,7 @@ class WebsocketChart extends Component {
         lineWidth: 1,
       }],
       series: [{
-        data: this.props.priceData,
+        data: this.props.websocketPriceData,
         type: 'line',
         name: this.props.productId,
         tooltip: {
@@ -130,7 +134,7 @@ class WebsocketChart extends Component {
       {
         type: 'column',
         name: 'Volume',
-        data: this.props.volumeData,
+        data: this.props.websocketVolumeData,
         yAxis: 1,
       }],
       navigator: {
@@ -145,7 +149,6 @@ class WebsocketChart extends Component {
         },
       },
     };
-
     return (
       <div className="websocket-chart">
         { this.props.websocketPriceData.length > 0 ?
@@ -176,10 +179,12 @@ const mapStateToProps = state => {
 
   const productId = selectedProduct ? selectedProduct.id : '';
   const productDisplayName = selectedProduct ? selectedProduct.display_name : '';
+
   const websocketPriceData =  selectedWebsocket && selectedWebsocket.data ?
       selectedWebsocket.data.map(d => ([d.time, d.price])) : [];
   const websocketVolumeData = selectedWebsocket && selectedWebsocket.data ?
       selectedWebsocket.data.map(d => ([d.time, d.size])) : [];
+
   const latestWebsocketDataTime = websocketPriceData.length > 0 && websocketPriceData[websocketPriceData.length - 1].time
     ? websocketPriceData[websocketPriceData.length - 1].time
     : null;

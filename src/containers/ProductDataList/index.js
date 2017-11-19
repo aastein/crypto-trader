@@ -24,6 +24,7 @@ export default class ProductDataList extends Component {
   }
 
   render() {
+    console.log('rendering ProductDataList');
     return (
       <div className="doc-list">
         <h2>
