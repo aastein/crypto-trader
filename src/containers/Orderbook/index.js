@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
+
+import { round } from '../../utils/math';
 import CardHeader from '../CardHeader';
 
 class Orderbook extends Component {
@@ -16,6 +18,11 @@ class Orderbook extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (!this.props.visible && this.state.scrolled) {
+      this.setState(() => (
+        { scrolled: false }
+      ));
+    }
     if (this.focus && !this.state.scrolled) {
       const node = ReactDOM.findDOMNode(this.focus);
       if (node) {
@@ -46,7 +53,7 @@ class Orderbook extends Component {
             <p className="" key={i} >
               <span className="ask bar-container"><span style={this.barWidth(ask.size)} className="bar"/></span>
               <span className="ask size">{`${ask.size}`}</span>
-              <span className="ask price">{`$${ask.price}`}</span>
+              <span className="ask price">{`$ ${ask.price}`}</span>
             </p>
           ))}
           </div>
@@ -56,8 +63,8 @@ class Orderbook extends Component {
               <p>
                 <span>SPREAD</span>
                 <span className="float-right">
-                  ${this.props.asks[this.props.asks.length - 1].price
-                      - this.props.bids[0].price}
+                  ${round(this.props.asks[this.props.asks.length - 1].price
+                      - this.props.bids[0].price, 10)}
                 </span>
               </p>
             </div>
@@ -68,7 +75,7 @@ class Orderbook extends Component {
             <p className="" key={i} ref={(c) => { if (i === 7) this.focus = c; }}>
               <span className="bid bar-container"><span className="bar"/></span>
               <span className="bid size">{`${bid.size}`}</span>
-              <span className="bid price">{`$${bid.price}`}</span>
+              <span className="bid price">{`$ ${bid.price}`}</span>
             </p>
           ))}
           </div> }

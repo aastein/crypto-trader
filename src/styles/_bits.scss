@@ -9,7 +9,7 @@ $font-small: 12px;
 $font-med: 15px;
 $font-large: 20px;
 
-$active-color: #007eff;
+$active-color: hsla(210, 100%, 50%, 1);
 $active-color-a: hsla(210, 100%, 50%, 0.5);
 $active-color-b: hsla(210, 100%, 50%, 0.75);
 $white-a: hsla(0, 0%, 100%, 0.75);
@@ -18,6 +18,8 @@ $background-color: #15232C;
 $danger-color: #ff6939;
 $success-color: #69C158;
 $trans-red: hsla(0, 100%, 50%, 0.7);
+$red: hsl(15, 83%, 61%);
+$green: hsl(101, 84%, 71%);
 
 @mixin breakpoint($point) {
  @if $point == xlarge {
