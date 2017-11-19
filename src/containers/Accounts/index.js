@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
-import { setLocation } from '../actions';
-import { round } from '../utils/math';
+import { setLocation } from '../../actions';
+import { round } from '../../utils/math';
 
 class Accounts extends Component {
 

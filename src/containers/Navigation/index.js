@@ -8,8 +8,8 @@ import {
   updateHeartbeat,
   fetchAccounts,
   initProducts,
-} from '../actions';
-import { round } from '../utils/math';
+} from '../../actions';
+import { round } from '../../utils/math';
 
 class Navigation extends Component {
   static propTypes = {

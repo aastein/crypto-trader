@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import run from '../../../utils/scriptEnv';
-import test from '../../../utils/scriptTestEnv';
+import run from '../../utils/scriptEnv';
+import test from '../../utils/scriptTestEnv';
 
 export default class CodeEditor extends Component {
 

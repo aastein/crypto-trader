@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import ToggleSwitch from 'react-toggle-switch';
-import fileDownload from 'react-file-download';
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 
@@ -13,9 +12,9 @@ import {
   setLocation,
   fetchSettings,
   findSession,
-} from '../actions';
-import Input from '../components/Input';
-import Dropdown from '../components/Dropdown';
+} from '../../actions';
+import Input from '../../components/Input';
+import Dropdown from '../../components/Dropdown';
 
 class Profile extends Component {
   static propTypes = {

@@ -148,7 +148,7 @@ export const initProducts = () => (
       // for (let i = 0; i < selectedProductIds.length; i += 1) {
       //   dispatch(fetchOrderBook(selectedProductIds[i]));
       // }
-      dispatch(initWebsocket(selectedProductIds));
+      dispatch(initWebsocket([selectedProductIds[0]]));
     })
   )
 );

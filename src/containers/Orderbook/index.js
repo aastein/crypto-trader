@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
-import { setLocation } from '../actions';
+import { setLocation } from '../../actions';
 
 class Orderbook extends Component {
 

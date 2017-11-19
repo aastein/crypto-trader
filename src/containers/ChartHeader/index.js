@@ -1,15 +1,28 @@
 import React, { Component } from 'react';
 import ReactModal from 'react-modal';
+import { connect } from 'react-redux';
 
-import Dropdown from '../../../components/Dropdown';
-import Select from '../../../components/Select';
-import Input from '../../../components/Input';
-import SliderDropdown from '../../../components/SliderDropdown';
-import FetchButton from '../../../components/FetchButton';
-import ObjectForm from '../../../components/ObjectForm';
-import { INIT_GRANULARITY, INIT_RANGE } from '../../../utils/constants';
+import {
+  selectProduct,
+  selectDateRange,
+  setGranularity,
+  selectIndicator,
+  editIndicator,
+  setProductWSData,
+  setFetchingStatus,
+  fetchProductData,
+  calculateIndicators,
+} from '../../actions';
 
-export default class Chart extends Component {
+import Dropdown from '../../components/Dropdown';
+import Select from '../../components/Select';
+import Input from '../../components/Input';
+import SliderDropdown from '../../components/SliderDropdown';
+import FetchButton from '../../components/FetchButton';
+import ObjectForm from '../../components/ObjectForm';
+import { INIT_GRANULARITY, INIT_RANGE } from '../../utils/constants';
+
+class ChartHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,18 +31,6 @@ export default class Chart extends Component {
       range: INIT_RANGE,
       editing: false,
     };
-  }
-
-  // only render if websocket status, internal state, product, or isFetching changed
-  shouldComponentUpdate(nextProps, nextState) {
-    const websocketStatusChanged = JSON.stringify(this.props.websocket.connected)
-      !== JSON.stringify(nextProps.websocket.connected);
-    const stateChanged = JSON.stringify(this.state)
-       !== JSON.stringify(nextState);
-    const fetchingChanged = this.props.chart.fetchingStatus !== nextProps.chart.fetchingStatus;
-    const productChanged = this.selectedProduct(this.props).id !== this.selectedProduct(nextProps).id;
-    const indicatorChaanged = this.props.chart.indicators !== nextProps.chart.indicators;
-    return websocketStatusChanged || stateChanged || productChanged || fetchingChanged || indicatorChaanged;
   }
 
   onProductChange = (event) => {
@@ -62,9 +63,10 @@ export default class Chart extends Component {
       { editing: false }
     ));
     this.props.editIndicator(indicator);
-    this.props.calculateIndicators(this.selectedProduct(this.props).id);
+    this.props.calculateIndicators(this.props.productId);
   }
 
+  // set editing to indicator object
   onEditIndicator = (id) => {
     this.setState(() => (
       { editing: this.props.chart.indicators.reduce((a, b) => (b.id === id ? b : a), {}) }
@@ -86,21 +88,13 @@ export default class Chart extends Component {
   }
 
   onApply = () => {
-    const product = this.props.chart.products.reduce((a, p) => (
-      p.active ? p : a
-    ), {});
-    this.props.setGanularity(product.id, this.state.granularity);
-    this.props.selectDateRange(product.id, this.state.range);
-    this.props.fetchProductData(product.id, this.state.range, this.state.granularity);
+    this.props.setGanularity(this.props.productId, this.state.granularity);
+    this.props.selectDateRange(this.props.productId, this.state.range);
+    this.props.fetchProductData(this.props.productId, this.state.range, this.state.granularity);
     this.props.saveTestResult({});
   }
 
-  selectedProduct = props => (
-    props.chart.products.length > 0 ? props.chart.products.reduce((a, p) => (
-      p.active ? p : a
-    ), {}) : {}
-  )
-
+  // get product by id
   product = id => (
     this.props.chart.products.length > 0 ? this.props.chart.products.reduce((a, p) => (
       p.id === id ? p : a
@@ -113,44 +107,33 @@ export default class Chart extends Component {
 
   render() {
     // console.log('rendering chart header container');
-    const selectedProduct = this.selectedProduct(this.props);
-    const dropdownProductOptions = this.props.chart.products.map(product => (
-      { value: product.id, label: product.display_name }
-    )).filter(p => (
-      this.props.selectedProductIds.indexOf(p.value) > -1
-    ));
-
-    const dropdownIndicatorOptions = this.props.chart.indicators.map(indicator => (
-      { value: indicator.id, label: indicator.name, active: indicator.active }
-    ));
-
     return (
       <div className="chart-header">
         <div className="chart-header-item-container">
           <div className="chart-header-items">
             <Dropdown
               className="product-dropdown chart-header-item"
-              options={dropdownProductOptions}
+              options={this.props.dropdownProductOptions}
               onChange={this.onProductChange}
-              value={selectedProduct.id}
+              value={this.props.productId}
             />
             <Select
               className=""
-              options={dropdownIndicatorOptions}
+              options={this.props.dropdownIndicatorOptions}
               value={'Indicators'}
               onCheck={this.onSelectIndicator}
               handleDrilldown={this.onEditIndicator}
             />
             <Dropdown
               className="date-picker chart-header-item"
-              options={this.props.chart.dateRanges}
+              options={this.props.dateRanges}
               onChange={this.onSelectDateRange}
               value={this.state.range}
             />
             <div className="granularity chart-header-item">
               <Input
                 className="granularity"
-                invalid={this.props.chart.fetchingStatus === 'failure'}
+                invalid={this.props.fetchingStatus === 'failure'}
                 maxLength={9}
                 name="granularity"
                 onChange={this.onSetGanularity}
@@ -170,14 +153,14 @@ export default class Chart extends Component {
             <FetchButton
               className="btn chart-header-item"
               onClick={this.onApply}
-              isFetching={this.props.chart.fetchingStatus === 'fetching'}
+              isFetching={this.props.fetchingStatus === 'fetching'}
               text="Apply"
             />
             <div className="websocket-status chart-header-item">
               <span className="realtime-data">Realtime data</span>
               <span
                 className={`glyphicon glyphicon-dot chart-header-item
-                  ${this.props.websocket.connected ? 'connected' : ''}`
+                  ${this.props.connected ? 'connected' : ''}`
                 }
               />
             </div>
@@ -202,3 +185,81 @@ export default class Chart extends Component {
     );
   }
 }
+
+
+const mapStateToProps = state => {
+
+  const selectedProduct = state.chart.products.find(p => {
+    return p.active;
+  });
+
+  const productId = selectedProduct ? selectedProduct.id : '';
+
+
+  const selectedProductIds = state.profile.selectedProducts.map(p => (p.value))
+
+  // create data to populate product dropdown items
+  const dropdownProductOptions = state.chart.products.map(product => (
+    { value: product.id, label: product.display_name }
+  )).filter(p => ( // filter out products not in the scope dictated by profile selections
+    selectedProductIds.indexOf(p.value) > -1
+  ));
+
+  const dropdownIndicatorOptions = state.chart.indicators.map(indicator => (
+    { value: indicator.id, label: indicator.name, active: indicator.active }
+  ));
+
+  const connected = state.websocket.connected;
+
+  const fetchingStatus = state.chart.fetchingStatus;
+
+  const dateRanges = state.chart.dateRanges;
+
+  return ({
+    productId,
+    dropdownProductOptions,
+    dropdownIndicatorOptions,
+    connected,
+    fetchingStatus,
+    dateRanges,
+  })
+};
+
+const mapDispatchToProps = dispatch => (
+  {
+    selectProduct: (id) => {
+      dispatch(selectProduct(id));
+    },
+    setGranularity: (id, granularity) => {
+      dispatch(setGranularity(id, granularity));
+    },
+    selectIndicator: (id) => {
+      dispatch(selectIndicator(id));
+    },
+    editIndicator: (indicator) => {
+      dispatch(editIndicator(indicator));
+    },
+    selectDateRange: (id, range) => {
+      dispatch(selectDateRange(id, range));
+    },
+    setProductWSData: (id, data) => {
+      dispatch(setProductWSData(id, data));
+    },
+    setFetchingStatus: (status) => {
+      dispatch(setFetchingStatus(status));
+    },
+    fetchProductData: (id, range, granularity) => {
+      dispatch(fetchProductData(id, range, granularity));
+    },
+    calculateIndicators: (id) => {
+      dispatch(calculateIndicators(id));
+    },
+  }
+);
+
+const ChartHeaderContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ChartHeader);
+
+export default ChartHeaderContainer;

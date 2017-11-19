@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
 
-export default class Log extends Component {
+class Log extends Component {
 
   // only render if log data changed
   shouldComponentUpdate(nextProps, nextState) {
@@ -26,3 +27,17 @@ export default class Log extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  const log = state.log;
+  return ({
+    log,
+  })
+};
+
+const LogContainer = connect(
+  mapStateToProps,
+  null,
+)(Log);
+
+export default LogContainer;
