@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 
 import 'react-select/dist/react-select.css';
 import 'react-toggle-switch/dist/css/switch.min.css';
+import 'font-awesome/scss/font-awesome.scss';
 import App from './App';
 import reducer from './reducers';
 import './styles/styles.scss';

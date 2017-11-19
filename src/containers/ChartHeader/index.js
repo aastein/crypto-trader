@@ -74,7 +74,7 @@ class ChartHeader extends Component {
   // set editing to indicator object
   onEditIndicator = (id) => {
     this.setState(() => (
-      { editing: this.props.chart.indicators.reduce((a, b) => (b.id === id ? b : a), {}) }
+      { editing: this.props.indicators.reduce((a, b) => (b.id === id ? b : a), {}) }
     ));
   }
 
@@ -200,7 +200,6 @@ const mapStateToProps = state => {
 
   const productId = selectedProduct ? selectedProduct.id : '';
 
-
   const selectedProductIds = state.profile.selectedProducts.map(p => (p.value))
 
   // create data to populate product dropdown items
@@ -220,6 +219,8 @@ const mapStateToProps = state => {
 
   const dateRanges = state.chart.dateRanges;
 
+  const indicators = state.chart.indicators;
+
   return ({
     productId,
     dropdownProductOptions,
@@ -227,6 +228,7 @@ const mapStateToProps = state => {
     connected,
     fetchingStatus,
     dateRanges,
+    indicators,
   })
 };
 

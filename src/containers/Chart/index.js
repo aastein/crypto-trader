@@ -117,20 +117,18 @@ class Chart extends Component {
     }
   )
 
-  indicatorSeries = (selectedIndicatorsData, indicator, yAxisNumber) => {
-    // console.log(selectedIndicatorsData, indicator);
+  // for srsi, map series for k and d
+  indicatorSeries = (indicatorData, indicator, yAxisNumber) => {
     const seriesData = indicator.valueIds.map(id => {
-      console.log('id', id);
-      console.log('ind', indicator);
-      console.log('data', selectedIndicatorsData);
-      return {
-        data: selectedIndicatorsData.map(d => (
-          [d.time, d[id]]
-        )),
+      const series = {
+        data: indicatorData.data.map(d => {
+          return [d.time, d[id]];
+        }),
         name: id,
       };
+      // console.log(series);
+      return series;
     });
-
     return seriesData.map(d => (
       {
         data: d.data,
@@ -153,10 +151,10 @@ class Chart extends Component {
     ));
   }
 
-  indicatorConfig = (selectedIndicatorsData, indicator, reservedHeight, numIndicators, axisIndex) => {
+  indicatorConfig = (indicatorData, indicator, reservedHeight, numIndicators, axisIndex) => {
     if (indicator.renderOnMain) {
       return {
-        series: this.indicatorSeries(selectedIndicatorsData, indicator, 0),
+        series: this.indicatorSeries(indicatorData, indicator, 0),
       };
     }
 
@@ -165,7 +163,7 @@ class Chart extends Component {
 
     return {
       yAxis: this.inidcatorYAxis(`${top}%`, `${height}%`, indicator.chartMin, indicator.chartMax, indicator.axisLines, indicator.id),
-      series: this.indicatorSeries(selectedIndicatorsData, indicator, axisIndex + 1),
+      series: this.indicatorSeries(indicatorData, indicator, axisIndex + 1),
     };
   }
 
@@ -177,7 +175,7 @@ class Chart extends Component {
     let config = { yAxis: [], series: [] };
     const numIndicators = indicators.reduce((a, b) => (!b.renderOnMain ? a + 1 : a), 0);
     for (let i = 0; i < indicators.length; i += 1) {
-      const indConf = this.indicatorConfig(selectedIndicatorsData, indicators[i], reservedHeight, numIndicators, greatestAxisIndex);
+      const indConf = this.indicatorConfig(selectedIndicatorsData[indicators[i].id], indicators[i], reservedHeight, numIndicators, greatestAxisIndex);
       if (indConf.yAxis) greatestAxisIndex += 1;
       config = {
         yAxis: indConf.yAxis ? [...config.yAxis, indConf.yAxis] : config.yAxis,
@@ -339,9 +337,10 @@ const mapStateToProps = state => {
   const selectedIndicatorsData = selectedIndicators.reduce((ids, i) => {
     ids = [ ...ids, i.id ];
     return ids;
-  }, []).map(id => {
-    return selectedProduct[id];
-  });
+  }, []).reduce((data, id) => {
+    data[id] = { data: selectedProduct[id] };
+    return data;
+  }, {});
 
   const selectedProductPriceData = selectedProduct && selectedProduct.data ?
       selectedProduct.data.map(d => ([d.time, d.open, d.high, d.low, d.close])) : [];
