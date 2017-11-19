@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 
-import { round } from '../../utils/math';
 import CardHeader from '../CardHeader';
 
 class Orderbook extends Component {
@@ -52,8 +51,8 @@ class Orderbook extends Component {
           { this.props.asks.map((ask, i) => (
             <p className="" key={i} >
               <span className="ask bar-container"><span style={this.barWidth(ask.size)} className="bar"/></span>
-              <span className="ask size">{`${(ask.size.toFixed(8))}`}</span>
-              <span className="ask price">{`$ ${ask.price.toFixed(2)}`}</span>
+              <span className="ask size">{`${(ask.size)}`}</span>
+              <span className="ask price">{`$ ${ask.price}`}</span>
             </p>
           ))}
           </div>
@@ -63,8 +62,8 @@ class Orderbook extends Component {
               <p>
                 <span>SPREAD</span>
                 <span className="float-right">
-                  ${round(this.props.asks[this.props.asks.length - 1].price
-                      - this.props.bids[0].price, 10)}
+                  ${(this.props.asks[this.props.asks.length - 1].price
+                      - this.props.bids[0].price).toFixed(2) }
                 </span>
               </p>
             </div>
@@ -74,8 +73,8 @@ class Orderbook extends Component {
           { this.props.bids.map((bid, i) => (
             <p className="" key={i} ref={(c) => { if (i === 7) this.focus = c; }}>
               <span className="bid bar-container"><span className="bar"/></span>
-              <span className="bid size">{`${bid.size.toFixed(8)}`}</span>
-              <span className="bid price">{`$ ${bid.price.toFixed(2)}`}</span>
+              <span className="bid size">{`${bid.size}`}</span>
+              <span className="bid price">{`$ ${bid.price}`}</span>
             </p>
           ))}
           </div> }

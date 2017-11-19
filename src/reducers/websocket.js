@@ -78,15 +78,19 @@ const websocket = (state = INIT_STATE, action) => {
           { ...p,
             asks: p.id === action.id
               ? action.orderBook.asks.sort((a, b) => {
-                  if (a.price > b.price) return -1;
-                  if (a.price < b.price) return 1;
+                  const aPrice = parseFloat(a.price);
+                  const bPrice = parseFloat(b.price);
+                  if (aPrice > bPrice) return -1;
+                  if (aPrice < bPrice) return 1;
                   return 0;
                 }).slice(action.orderBook.asks.length - 100, action.orderBook.asks.length -1)
               : p.asks,
             bids: p.id === action.id
             ? action.orderBook.bids.sort((a, b) => {
-                if (a.price > b.price) return -1;
-                if (a.price < b.price) return 1;
+                const aPrice = parseFloat(a.price);
+                const bPrice = parseFloat(b.price);
+                if (aPrice > bPrice) return -1;
+                if (aPrice < bPrice) return 1;
                 return 0;
               }).slice(0, 100)
             : p.bids,
@@ -108,27 +112,28 @@ const websocket = (state = INIT_STATE, action) => {
       // todo: if new bid, and bid > lowst ask, remove lowest ask.
       //       if new ask, and ask < highest bid, remove hiest bid.
       for (let i = 0; i < action.changes.length; i +=1 ) {
-        const data = { price: parseFloat(action.changes[i][1]), size: parseFloat(action.changes[i][2]) }
+        const data = { price: parseFloat(action.changes[i][1]).toFixed(2), size: parseFloat(action.changes[i][2]).toFixed(8) }
 
         if (action.changes[i][0] === 'buy') {
           // insert or update bids
           let index = bids.findIndex((bid) => {
               // eslint-disable-next-line
-              return bid.price == action.changes[i][1];
+              return parseFloat(bid.price) == parseFloat(action.changes[i][1]);
           });
           if (index > -1) {
             // update bid
             // eslint-disable-next-line
-            if (action.changes[i][2] == 0) {
+            if (parseFloat(action.changes[i][2]) == 0) {
               bids.splice(index, 1);
             } else {
               bids.splice(index, 1,  { ...data });
             }
           // eslint-disable-next-line
-          } else if (action.changes[i][2] != 0) {
+          } else if (parseFloat(action.changes[i][2]) != 0) {
             index = bids.findIndex((bid) => {
-                return bid.price < action.changes[i][1];
+                return parseFloat(bid.price) < parseFloat(action.changes[i][1]);
             });
+            if (index === -1) index = bids.length;
             // insert bid
             bids.splice(index, 0, { ...data });
           }
@@ -136,22 +141,25 @@ const websocket = (state = INIT_STATE, action) => {
           // insert or update asks
           let index = asks.findIndex((ask) => {
               // eslint-disable-next-line
-              return ask.price == action.changes[i][1];
+              return parseFloat(ask.price) == parseFloat(action.changes[i][1]);
           });
           if (index > -1) {
             // update ask
+            // console.log('update at index', index);
             // eslint-disable-next-line
-            if (action.changes[i][2] == 0) {
+            if (parseFloat(action.changes[i][2]) == 0) {
               asks.splice(index, 1);
             } else {
               asks.splice(index, 1, { ...data });
             }
             // eslint-disable-next-line
-          } else if (action.changes[i][2] != 0) {
+          } else if (parseFloat(action.changes[i][2]) != parseFloat(0)) {
             index = asks.findIndex((ask) => {
-                return ask.price < action.changes[i][1];
+                return parseFloat(ask.price) < parseFloat(action.changes[i][1]);
             });
+            if (index === -1) index = asks.length;
             // insert ask
+            // console.log('insert at index', index);
             asks.splice(index, 0, { ...data });
           }
         } else {
@@ -161,6 +169,22 @@ const websocket = (state = INIT_STATE, action) => {
 
       let deleteCount = asks.length - 100;
       if (deleteCount > 0) asks.splice(0, deleteCount)
+
+      if (asks[asks.length - 1].price > asks[asks.length - 2].price) {
+        console.error('asks book broken', asks[asks.length - 1].price, asks[asks.length - 2].price);
+        console.log('action', action);
+        console.log('asks', { ...state.products.find(p => {
+          return p.id === action.id;
+        }) }.asks);
+      }
+
+      if (bids[1].price > bids[0].price) {
+        console.error('bids book broken', bids[1].price, bids[1].price);
+        console.log('action', action);
+        console.log('bids', { ...state.products.find(p => {
+          return p.id === action.id;
+        }) }.bids);
+      }
 
       return { ...state,
         products: state.products.map(p => (
