@@ -52,8 +52,8 @@ class Orderbook extends Component {
           { this.props.asks.map((ask, i) => (
             <p className="" key={i} >
               <span className="ask bar-container"><span style={this.barWidth(ask.size)} className="bar"/></span>
-              <span className="ask size">{`${ask.size}`}</span>
-              <span className="ask price">{`$ ${ask.price}`}</span>
+              <span className="ask size">{`${(ask.size.toFixed(8))}`}</span>
+              <span className="ask price">{`$ ${ask.price.toFixed(2)}`}</span>
             </p>
           ))}
           </div>
@@ -74,8 +74,8 @@ class Orderbook extends Component {
           { this.props.bids.map((bid, i) => (
             <p className="" key={i} ref={(c) => { if (i === 7) this.focus = c; }}>
               <span className="bid bar-container"><span className="bar"/></span>
-              <span className="bid size">{`${bid.size}`}</span>
-              <span className="bid price">{`$ ${bid.price}`}</span>
+              <span className="bid size">{`${bid.size.toFixed(8)}`}</span>
+              <span className="bid price">{`$ ${bid.price.toFixed(2)}`}</span>
             </p>
           ))}
           </div> }

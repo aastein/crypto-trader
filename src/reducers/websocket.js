@@ -1,7 +1,6 @@
 import moment from 'moment';
 
 import * as actionType from '../actions/actionTypes';
-import { round } from '../utils/math';
 
 const INIT_STATE = {
   connected: false,
@@ -109,7 +108,7 @@ const websocket = (state = INIT_STATE, action) => {
       // todo: if new bid, and bid > lowst ask, remove lowest ask.
       //       if new ask, and ask < highest bid, remove hiest bid.
       for (let i = 0; i < action.changes.length; i +=1 ) {
-        const data = { price: parseFloat(action.changes[i][1]), size: round(parseFloat(action.changes[i][2]), 10) }
+        const data = { price: parseFloat(action.changes[i][1]), size: parseFloat(action.changes[i][2]) }
 
         if (action.changes[i][0] === 'buy') {
           // insert or update bids

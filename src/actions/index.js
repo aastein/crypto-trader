@@ -2,7 +2,6 @@ import axios from 'axios';
 import * as actionType from './actionTypes';
 import { getAccounts, getProductData, getProducts } from '../utils/api';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
-import { round } from '../utils/math';
 import connect, { setActions, subscribe } from '../utils/websocket';
 
 let nextScriptId = 2;
@@ -94,8 +93,8 @@ const handleMatch = dispatch => {
 
 const transformOrderData = order => {
   return {
-    price: round(parseFloat(order[0]), 2),
-    size: round(parseFloat(order[1]), 10),
+    price: parseFloat(order[0]),
+    size: parseFloat(order[1]),
   }
 }
 
@@ -105,7 +104,7 @@ const handleSnapshot = dispatch => {
     let bids = [];
     for (let i = 0; i < data.bids.length; i +=1 ) {
       if (bids.length > 0 && bids[bids.length - 1][0] === data.bids[i][0]) {
-        bids[bids.length - 1].size += round(parseFloat(data.bids[i][1]));
+        bids[bids.length - 1].size += parseFloat(data.bids[i][1]);
       } else if (parseFloat(data.bids[i][1]) > 0) {
         bids.push(transformOrderData(data.bids[i]));
       }
@@ -113,7 +112,7 @@ const handleSnapshot = dispatch => {
     let asks = [];
     for (let i = 0; i < data.asks.length; i +=1 ) {
       if (asks.length > 0 && asks[asks.length - 1][0] === data.asks[i][0]) {
-        asks[asks.length - 1].size += round(parseFloat(data.asks[i][1]));
+        asks[asks.length - 1].size += parseFloat(data.asks[i][1]);
       } else if (parseFloat(data.asks[i][1]) > 0) {
         asks.push(transformOrderData(data.asks[i]));
       }
