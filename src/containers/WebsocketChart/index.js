@@ -72,14 +72,47 @@ class WebsocketChart extends Component {
     }
   }
 
+  // return false, do update with child chart API via ref
   shouldComponentUpdate(nextProps) {
-    // console.log('websocker chart should update', JSON.stringify(this.props) !== JSON.stringify(nextProps));
-    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
+    if(this.lineChart && this.lineChart.wschart) {
+      const chart = this.lineChart.wschart.getChart();
+      const nextConfig = this.wsConfig(nextProps);
+      if (this.dataChanged(nextConfig)) {
+        for (let i = 0; i < chart.series.length; i += 1) {
+          if (nextConfig.series[i]) {
+            chart.series[i].update({
+              name: nextConfig.series[i].name,
+              data: nextConfig.series[i].data,
+            });
+          }
+        }
+      }
+    }
+    return this.props.websocketPriceData.length === 0 && nextProps.websocketPriceData.length > 0;
   }
 
-  render() {
-    console.log('rendering WebsocketChart');
-    const wsConfig = {
+  dataChanged = (nextConfig) => {
+    const lastConfig = this.wsConfig(this.props);
+    for (let i = 0; i < nextConfig.series.length; i += 1) {
+      if (lastConfig.series[i]) {
+        // if start data, last data, or name is not equal to previous
+        const lastIndex = nextConfig.series[i].data.length - 1;
+        const earliestDataChanged = JSON.stringify(lastConfig.series[i].data[0])
+          !== JSON.stringify(nextConfig.series[i].data[0]);
+        const latestDataChanged = JSON.stringify(lastConfig.series[i].data[lastIndex])
+          !== JSON.stringify(nextConfig.series[i].data[lastIndex]);
+        const nameChanged = JSON.stringify(lastConfig.series[i].name)
+          !== JSON.stringify(nextConfig.series[i].name);
+        if (earliestDataChanged || latestDataChanged || nameChanged) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  wsConfig = (props) => {
+    return {
       rangeSelector: {
         enabled: false,
       },
@@ -113,9 +146,9 @@ class WebsocketChart extends Component {
         lineWidth: 1,
       }],
       series: [{
-        data: this.props.websocketPriceData,
+        data: props.websocketPriceData,
         type: 'line',
-        name: this.props.productId,
+        name: props.productId,
         tooltip: {
           valueDecimals: 2,
         },
@@ -123,7 +156,7 @@ class WebsocketChart extends Component {
       {
         type: 'column',
         name: 'Volume',
-        data: this.props.websocketVolumeData,
+        data: props.websocketVolumeData,
         yAxis: 1,
       }],
       navigator: {
@@ -138,11 +171,15 @@ class WebsocketChart extends Component {
         },
       },
     };
+  }
+
+  render() {
+    console.log('rendering WebsocketChart');
     return (
       <div className="websocket-chart">
         { this.props.websocketPriceData.length > 0 ?
           <div>
-            <LineChart config={wsConfig} />
+            <LineChart ref={(c) => { this.lineChart = c; }} config={this.wsConfig(this.props)} />
           </div>
           : <div>
             <Loader />

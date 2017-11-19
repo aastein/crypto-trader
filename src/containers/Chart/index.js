@@ -7,8 +7,91 @@ import { round } from '../../utils/math';
 
 class Chart extends Component {
 
+  // todo: return false, use child cart ref for update
   shouldComponentUpdate(nextProps) {
+    if (this.priceChart && this.priceChart.chart) {
+
+      // console.log('chartContainer shouldComponentUpdate');
+      const nextConfig = this.config(nextProps);
+      const thisConfig = this.config(this.props);
+      const chart = this.priceChart.chart.getChart();
+      const changedAxisLineIds = this.axisLinesChangedIds(thisConfig, nextConfig);
+
+
+      // update series data
+      if (this.dataChanged(thisConfig, nextConfig)) {
+        for (let i = 0; i < chart.series.length; i += 1) {
+          if (nextConfig.series[i]) {
+            chart.series[i].setData(nextConfig.series[i].data);
+          }
+        }
+      }
+
+      // update series y-axis plot lines
+      if (changedAxisLineIds.length > 0) {
+        for (let i = 0; i < chart.yAxis.length; i += 1) {
+          const chartY = chart.yAxis[i];
+          if (chartY.plotLinesAndBands && chartY.plotLinesAndBands[0] && changedAxisLineIds.includes(chartY.plotLinesAndBands[0].id)) {
+            // find eqivalent axis in new props
+            let nextY;
+            for (let j = 0; j < nextConfig.yAxis.length; j += 1) {
+              nextY = nextConfig.yAxis[i];
+              if (nextY.plotLines && nextY.plotLines[0] && nextY.plotLines[0].id.includes(chartY.plotLinesAndBands[0].id)) {
+                break;
+              }
+            }
+            // remove plotlines from axis
+            chartY.removePlotLine(chartY.plotLinesAndBands[0].id);
+            // add plot lines from eqivalent axis to chart
+            for (let j = 0; j < nextY.plotLines.length; j += 1) {
+              chart.yAxis[i].addPlotLine(nextY.plotLines[j]);
+            }
+          }
+        }
+      }
+
+      // update x-axis plot lines
+      if (this.testDataChanged(thisConfig, nextConfig)) {
+        chart.xAxis[0].removePlotLine('testResult');
+        for (let i = 0; i < nextConfig.xAxis.plotLines.length; i += 1) {
+          chart.xAxis[0].addPlotLine(nextConfig.xAxis.plotLines[i]);
+        }
+      }
+    }
     return JSON.stringify(this.props) !== JSON.stringify(nextProps);
+  }
+
+  dataChanged = (thisConfig, nextConfig) => {
+    if (thisConfig.series.length !== nextConfig.series.length) {
+      return true;
+    }
+    for (let i = 0; i < thisConfig.series.length; i += 1) {
+      if (thisConfig.series[i].name !== nextConfig.series[i].name ||
+      JSON.stringify(thisConfig.series[i].data) !== JSON.stringify(nextConfig.series[i].data)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  testDataChanged = (thisConfig, nextConfig) => (
+    JSON.stringify(thisConfig.xAxis.plotLines)
+    !== JSON.stringify(nextConfig.xAxis.plotLines)
+      || thisConfig.xAxis.plotLines.length !== nextConfig.xAxis.plotLines.length
+  )
+
+  axisLinesChangedIds = (thisConfig, nextConfig) => {
+    const changedIds = [];
+    for (let i = 0; i < nextConfig.yAxis.length; i += 1) {
+      if (thisConfig.yAxis[i]) {
+        if (JSON.stringify(nextConfig.yAxis[i].plotLines) !== JSON.stringify(thisConfig.yAxis[i].plotLines)) {
+          if (thisConfig.yAxis[i].plotLines[0]) {
+            changedIds.push(thisConfig.yAxis[i].plotLines[0].id);
+          }
+        }
+      }
+    }
+    return changedIds;
   }
 
   inidcatorYAxis = (top, height, chartMin, chartMax, axisLines, id) => (
@@ -35,14 +118,19 @@ class Chart extends Component {
   )
 
   indicatorSeries = (selectedIndicatorsData, indicator, yAxisNumber) => {
-    const seriesData = indicator.valueIds.map(id => (
-      {
-        data: selectedIndicatorsData[indicator.id].map(d => (
+    // console.log(selectedIndicatorsData, indicator);
+    const seriesData = indicator.valueIds.map(id => {
+      console.log('id', id);
+      console.log('ind', indicator);
+      console.log('data', selectedIndicatorsData);
+      return {
+        data: selectedIndicatorsData.map(d => (
           [d.time, d[id]]
         )),
         name: id,
-      }
-    ));
+      };
+    });
+
     return seriesData.map(d => (
       {
         data: d.data,
@@ -99,11 +187,8 @@ class Chart extends Component {
     return config;
   }
 
-  render() {
-    console.log('rendering chart container');
-    const indicatorConfigs = this.indicatorConfigs(this.props.selectedIndicatorsData, this.props.selectedIndicators);
-
-    const testPlotLines = this.props.testResultData ? this.props.testResultData.map((d, i) => (
+  testPlotLines = props => {
+    return props.testResultData ? props.testResultData.map((d, i) => (
       { id: 'testResult',
         value: d.time,
         width: 2,
@@ -118,20 +203,22 @@ class Chart extends Component {
         },
       }),
     ) : [];
+  }
 
-    const candleStickConfig = {
+  candleStickConfig = (props, volumeOffset) => {
+    return {
       yAxis: {
         labels: {
           align: 'left',
           x: 5,
         },
-        height: indicatorConfigs.yAxis.length > 0 ? '50%' : '90%',
+        height: volumeOffset,
         lineWidth: 1,
         floor: 0,
       },
       series: {
-        name: this.props.productDisplayName,
-        data: this.props.selectedProductPriceData,
+        name: props.productDisplayName,
+        data: props.selectedProductPriceData,
         type: 'candlestick',
         tooltip: {
           valueDecimals: 2,
@@ -141,13 +228,15 @@ class Chart extends Component {
         },
       },
     };
+  }
 
-    const volumeConfig = {
+  volumeConfig = (props, volumeOffset) => {
+    return {
       yAxis: {
         labels: {
           enabled: false,
         },
-        top: indicatorConfigs.yAxis.length > 0 ? '50%' : '90%',
+        top: volumeOffset,
         height: '10%',
         offset: 0,
         lineWidth: 1,
@@ -158,12 +247,21 @@ class Chart extends Component {
         dataGrouping: {
           enabled: false,
         },
-        data: this.props.selectedProductVolumeData,
+        data: props.selectedProductVolumeData,
         yAxis: 1,
       },
     };
+  }
 
-    const config = {
+  config = (props) => {
+    // console.log('chartConfig', props.selectedIndicatorsData, props.selectedIndicators)
+    const indicatorConfigs = this.indicatorConfigs(props.selectedIndicatorsData, props.selectedIndicators);
+    const volumeOffset = indicatorConfigs.yAxis.length > 0 ? '50%' : '90%';
+    const candleStickConfig = this.candleStickConfig(props, volumeOffset);
+    const volumeConfig = this.volumeConfig(props, volumeOffset);
+    const testPlotLines = this.testPlotLines(props);
+
+    return {
       chart: {
         marginBottom: 15,
       },
@@ -207,13 +305,16 @@ class Chart extends Component {
         },
       },
     };
+  }
+
+  render() {
+    console.log('rendering chart container');
 
     return (
       <div className="price-chart-container">
         { this.props.selectedProductPriceData.length > 0 ?
           <div>
-            <PriceChart
-              config={config}
+            <PriceChart ref={(c) => { this.priceChart = c; }} config={this.config(this.props)}
             />
           </div>
           : <div>

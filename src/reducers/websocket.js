@@ -104,7 +104,9 @@ const websocket = (state = INIT_STATE, action) => {
         return p.id === action.id;
       }) }.asks.slice(0);
 
-      // sort all data highest price to lowest price
+      // note: sort all data highest price to lowest price
+      // todo: if new bid, and bid > lowst ask, remove lowest ask.
+      //       if new ask, and ask < highest bid, remove hiest bid.
       for (let i = 0; i < action.changes.length; i +=1 ) {
         const data = { price: parseFloat(action.changes[i][1]), size: parseFloat(action.changes[i][2]) }
 
