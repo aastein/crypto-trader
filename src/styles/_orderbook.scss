@@ -21,3 +21,40 @@
     }
   }
 }
+
+.order-book {
+  margin: 1px;
+  margin-top: 2px;
+  height: 400px;
+  overflow-y: hidden;
+  background-color: #29353D;
+  @include breakpoint(large) {
+    height: 200px;
+  };
+  .orderbook-row {
+    p {
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .ask {
+      color: #EE7248;
+    }
+    .bid {
+      color: #9FF379;
+    }
+    .size {
+      float: right;
+    }
+    .price {
+
+    }
+  }
+}
+.order-book:hover {
+  overflow-y: overlay;
+}
+
+.float-right {
+  float: right;
+}
+

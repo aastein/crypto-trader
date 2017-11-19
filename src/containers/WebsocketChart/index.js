@@ -15,15 +15,15 @@ class WebsocketChart extends Component {
   // bundle websocket data into OHLC and append to historical data given time conditions
   componentWillReceiveProps = (nextProps) => {
     // console.log('will receive props');
-    if (this.dataChanged(this.props, nextProps)) {
+    if (JSON.stringify(this.props) !== JSON.stringify(nextProps)) {
       this.runLiveScripts(nextProps);
-      if (nextProps.priceData.length > 0 && nextProps.volumeData.length > 0) {
+      if (nextProps.websocketPriceData.length > 0 && nextProps.websocketVolumeData.length > 0) {
         // add compiled ws data to historical data
         // this works because latestWSDtime becomes latestHistDtime
         if (nextProps.latestWebsocketDataTime - nextProps.latestHistoricalDataTime >= nextProps.granularity * 1000) {
           // filter out data older than granularity time
-          const websocketData = nextProps.priceData.map((d, i) => {
-            return { ...d, ...nextProps.volumeData[i] }
+          const websocketData = nextProps.websocketPriceData.map((d, i) => {
+            return { time: d[0], price: d[1], size: nextProps.websocketVolumeData[i][1] }
           }).filter((d, i)=> {
             //return nextProps.latestWebsocketDataTime - d.time < nextProps.granularity * 1000;
             return d.time > nextProps.latestHistoricalDataTime;
@@ -74,18 +74,6 @@ class WebsocketChart extends Component {
 
   shouldComponentUpdate(nextProps) {
     return JSON.stringify(this.props) !== JSON.stringify(nextProps);
-  }
-
-  // shouldComponentUpdate = (nextProps) => {
-  //   const a = this.websocketDataChanged(this.props.websocket.products, nextProps.websocket.products);
-  //   return a;
-  // }
-
-  dataChanged = (now, next) => {
-    const productChanged = next.id !== now.id;
-    const priceDataChanged = JSON.stringify(next.priceData) !== JSON.stringify(next.priceData);
-    const volumeDataChanged = JSON.stringify(next.volumeData) !== JSON.stringify(next.volumeData);
-    return productChanged || priceDataChanged || volumeDataChanged;
   }
 
   render() {
@@ -168,37 +156,44 @@ class WebsocketChart extends Component {
 
 
 const mapStateToProps = state => {
-
   const selectedProduct = state.chart.products.find(p => {
     return p.active;
   });
-
   const selectedWebsocket = state.websocket.products.find(p => {
     return p.active;
   });
-
   const productId = selectedProduct ? selectedProduct.id : '';
+
   const productDisplayName = selectedProduct ? selectedProduct.display_name : '';
 
   const websocketPriceData =  selectedWebsocket && selectedWebsocket.data ?
       selectedWebsocket.data.map(d => ([d.time, d.price])) : [];
+
   const websocketVolumeData = selectedWebsocket && selectedWebsocket.data ?
       selectedWebsocket.data.map(d => ([d.time, d.size])) : [];
 
-  const latestWebsocketDataTime = websocketPriceData.length > 0 && websocketPriceData[websocketPriceData.length - 1].time
-    ? websocketPriceData[websocketPriceData.length - 1].time
+  const latestWebsocketDataTime = websocketPriceData.length > 0 && websocketPriceData[websocketPriceData.length - 1][0]
+    ? websocketPriceData[websocketPriceData.length - 1][0]
     : null;
+
   const historicalData = selectedProduct ? selectedProduct.data : [];
+
   const latestHistoricalDataTime = historicalData[historicalData.length - 1] && historicalData[historicalData.length - 1].time
     ? historicalData[historicalData.length - 1].time
     : null;
+
   const live = state.profile.live;
+
   const liveScripts = state.scripts.filter(s => {
     return s.live;
   });
+
   const granularity = selectedProduct ? selectedProduct.granularity : null ;
+
   const connected = state.websocket.connected;
+
   const scripts = state.scripts;
+
   const profile = state.profile;
 
   return ({

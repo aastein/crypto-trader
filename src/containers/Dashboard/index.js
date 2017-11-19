@@ -4,6 +4,7 @@ import ChartHeaderContainer from '../ChartHeader';
 import ChartContainer from '../Chart';
 import WebsocketChartContainer from '../WebsocketChart';
 import LogContainer from '../Log';
+import OrderBookContainer from '../Orderbook';
 import ScratchpadContainer from '../Scratchpad';
 
 export const Dashboard = () => {
@@ -19,7 +20,8 @@ export const Dashboard = () => {
             </div>
           </div>
           <div className="right-container">
-            <LogContainer />
+            <LogContainer position={'topRight'} />
+            <OrderBookContainer position={'topRight'} />
           </div>
         </div>
         <ScratchpadContainer />

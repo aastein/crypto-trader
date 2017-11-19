@@ -76,18 +76,30 @@ const websocket = (state = INIT_STATE, action) => {
       return { ...state,
         products: state.products.map(p => (
           { ...p,
-            bids: p.id === action.id ? action.orderBook.bids : p.bids,
-            asks: p.id === action.id ? action.orderBook.asks : p.asks,
+            bids: p.id === action.id
+              ? action.orderBook.bids.sort((a, b) => {
+                  if (parseFloat(a.price) < parseFloat(b.price)) return -1;
+                  if (parseFloat(a.price) > parseFloat(b.price)) return 1;
+                  return 0;
+                })
+              : p.bids,
+            asks: p.id === action.id
+              ? action.orderBook.asks.sort((a, b) => {
+                  if (parseFloat(a.price) < parseFloat(b.price)) return -1;
+                  if (parseFloat(a.price) > parseFloat(b.price)) return 1;
+                  return 0;
+                })
+              : p.asks,
           }
         )),
       };
     case actionType.UPDATE_ORDER_BOOK:
       // console.log('update order book reducer handler', action);
-      // update with buys
+      // clone bids, then update bids with buys
       const bids = { ...state.products.find(p => {
         return p.id === action.id;
       }) }.bids.slice(0);
-      // update with sells
+      // clone asks, then update asks with sells
       const asks = { ...state.products.find(p => {
         return p.id === action.id;
       }) }.asks.slice(0);
@@ -97,40 +109,40 @@ const websocket = (state = INIT_STATE, action) => {
         if (action.changes[i][0] === 'buy') {
           // insert or update bids
           let index = bids.findIndex((bid) => {
-              return parseFloat(bid[0]) === parseFloat(action.changes[i][1])
+              return parseFloat(bid.price) === parseFloat(action.changes[i][1])
           });
           if (index > -1) {
             // update bid
             if (parseFloat(action.changes[i][2]) === 0) {
               bids.splice(index, 1)
             } else {
-              bids.splice(index, 1, [ action.changes[i][1], action.changes[i][2] ])
+              bids.splice(index, 1, { price: action.changes[i][1], size: action.changes[i][2] })
             }
           } else {
             index = bids.findIndex((bid) => {
-                return parseFloat(bid[0]) < parseFloat(action.changes[i][1])
+                return parseFloat(bid.price) < parseFloat(action.changes[i][1])
             });
             // insert bid
-            bids.splice(index, 0, [ action.changes[i][1], action.changes[i][2] ])
+            bids.splice(index, 0, { price: action.changes[i][1], size: action.changes[i][2] })
           }
         } else if (action.changes[i][0] === 'sell' ) {
           // insert or update asks
           let index = asks.findIndex((ask) => {
-              return parseFloat(ask[0]) === parseFloat(action.changes[i][1])
+              return parseFloat(ask.price) === parseFloat(action.changes[i][1])
           });
           if (index > -1) {
             // update ask
             if (parseFloat(action.changes[i][2]) === 0) {
               asks.splice(index, 1)
             } else {
-              asks.splice(index, 1, [ action.changes[i][1], action.changes[i][2] ])
+              asks.splice(index, 1, { price: action.changes[i][1], size: action.changes[i][2] })
             }
           } else {
             index = asks.findIndex((ask) => {
-                return parseFloat(ask[0]) < parseFloat(action.changes[i][1])
+                return parseFloat(ask.price) < parseFloat(action.changes[i][1])
             });
             // insert ask
-            asks.splice(index, 0, [ action.changes[i][1], action.changes[i][2] ])
+            asks.splice(index, 0, { price: action.changes[i][1], size: action.changes[i][2] })
           }
         } else {
           console.error('Unrecognized orderbook udpate from websocket: ', action.changes[i]);
@@ -141,8 +153,20 @@ const websocket = (state = INIT_STATE, action) => {
       return { ...state,
         products: state.products.map(p => (
           { ...p,
-            bids: p.id === action.id ? bids.slice(0, 50) : p.bids,
-            asks: p.id === action.id ? asks.slice(0, 50) : p.asks,
+            bids: p.id === action.id
+              ? bids.sort((a, b) => {
+                  if (parseFloat(a.price) > parseFloat(b.price)) return -1;
+                  if (parseFloat(a.price) < parseFloat(b.price)) return 1;
+                  return 0;
+                }).slice(0, 100).reverse()
+              : p.bids,
+            asks: p.id === action.id
+              ? asks.sort((a, b) => {
+                  if (parseFloat(a.price) < parseFloat(b.price)) return -1;
+                  if (parseFloat(a.price) > parseFloat(b.price)) return 1;
+                  return 0;
+                }).slice(0, 100).reverse()
+              : p.asks,
           }
         )),
       };

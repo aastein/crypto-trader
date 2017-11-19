@@ -12,6 +12,7 @@ import {
   setFetchingStatus,
   fetchProductData,
   calculateIndicators,
+  saveTestResult
 } from '../../actions';
 
 import Dropdown from '../../components/Dropdown';
@@ -34,7 +35,7 @@ class ChartHeader extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return JSON.stringify(this.props) !== JSON.stringify(nextProps) || JSON.stringify(this.state) !== JSON.stringify(nextState);;
+    return JSON.stringify(this.props) !== JSON.stringify(nextProps) || JSON.stringify(this.state) !== JSON.stringify(nextState);
   }
 
   onProductChange = (event) => {
@@ -92,7 +93,7 @@ class ChartHeader extends Component {
   }
 
   onApply = () => {
-    this.props.setGanularity(this.props.productId, this.state.granularity);
+    this.props.setGranularity(this.props.productId, this.state.granularity);
     this.props.selectDateRange(this.props.productId, this.state.range);
     this.props.fetchProductData(this.props.productId, this.state.range, this.state.granularity);
     this.props.saveTestResult({});
@@ -257,6 +258,9 @@ const mapDispatchToProps = dispatch => (
     },
     calculateIndicators: (id) => {
       dispatch(calculateIndicators(id));
+    },
+    saveTestResult: result => {
+      dispatch(saveTestResult(result));
     },
   }
 );

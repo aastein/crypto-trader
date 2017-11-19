@@ -60,6 +60,9 @@ export const clearLog = () => ({ type: actionType.CLEAR_LOG });
 // location
 export const setLocation = location => ({ type: actionType.SET_LOCATION, location });
 
+// cards
+export const showCard = (card, content) => ({ type: actionType.SHOW_CARD, card, content });
+
 // api
 export const fetchAccounts = session => (
   dispatch => (
@@ -68,15 +71,6 @@ export const fetchAccounts = session => (
     })
   )
 );
-
-// this is now handled by websockers
-// export const fetchOrderBook = id => (
-//   dispatch => (
-//     getOrderBook(id).then((ob) => {
-//       dispatch(setOrderBook(id, ob));
-//     })
-//   )
-// );
 
 export const fetchProductData = (id, range, granularity) => (
   (dispatch) => {
@@ -97,23 +91,30 @@ const handleMatch = dispatch => {
   }
 }
 
+const transformOrderData = order => {
+  return {
+    price: order[0],
+    size: order[1],
+  }
+}
+
 const handleSnapshot = dispatch => {
   return data => {
     // console.log('actions/index.js handleSnapshot', data);
     let bids = [];
     for (let i = 0; i < data.bids.length; i +=1 ) {
       if (bids.length > 0 && bids[bids.length - 1][0] === data.bids[i][0]) {
-        bids[bids.length - 1][1] = '' + (Number.parseFloat(bids[bids.length - 1][1]) + Number.parseFloat(data.bids[i][1]));
+        bids[bids.length - 1].size = '' + (Number.parseFloat(bids[bids.length - 1].size) + Number.parseFloat(data.bids[i][1]));
       } else {
-        bids.push(data.bids[i]);
+        bids.push(transformOrderData(data.bids[i]));
       }
     }
     let asks = [];
     for (let i = 0; i < data.asks.length; i +=1 ) {
       if (asks.length > 0 && asks[asks.length - 1][0] === data.asks[i][0]) {
-        asks[asks.length - 1][1] = '' + (Number.parseFloat(asks[asks.length - 1][1]) + Number.parseFloat(data.asks[i][1]));
+        asks[asks.length - 1].size = '' + (Number.parseFloat(asks[asks.length - 1].size) + Number.parseFloat(data.asks[i][1]));
       } else {
-        asks.push(data.asks[i]);
+        asks.push(transformOrderData(data.asks[i]));
       }
     }
     dispatch(setOrderBook(data.product_id, { bids: bids, asks: asks }))
@@ -144,10 +145,6 @@ export const initProducts = () => (
       const selectedProductIds = getState().profile.selectedProducts.map(p => (p.value));
       dispatch(selectProduct(selectedProductIds[0]));
       dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
-      // this is now handled by websockets
-      // for (let i = 0; i < selectedProductIds.length; i += 1) {
-      //   dispatch(fetchOrderBook(selectedProductIds[i]));
-      // }
       dispatch(initWebsocket([selectedProductIds[0]]));
     })
   )

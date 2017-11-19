@@ -97,7 +97,7 @@ const INITAL_CHART_STATE = {
     name: 'BB',
     id: 'BollingerBands',
     params: {
-      period: 14,
+      period: 8,
       stdDev: 2,
     },
     renderOnMain: true,

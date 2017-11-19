@@ -1,7 +1,6 @@
 let connection;
 const url = 'wss://ws-feed.gdax.com';
 
-let asdf = 0;
 // set the action to be dispatched when data is received
 export const setActions = (handleMatch, handleSnapshot, handleUpdate) => {
   connection.onmessage = (event) => {
@@ -13,10 +12,7 @@ export const setActions = (handleMatch, handleSnapshot, handleUpdate) => {
         break;
       case 'l2update':
         // update portion of the orderbook
-  //      if (asdf < 5) {
-          handleUpdate(data);
-        // }
-        // asdf += 1;
+        handleUpdate(data);
         break;
       case 'last_match':
         // initalize realtime price

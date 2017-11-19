@@ -40,3 +40,6 @@ export const CLEAR_LOG = 'CLEAR_LOG';
 
 // location
 export const SET_LOCATION = 'SET_LOCATION';
+
+// cards
+export const SHOW_CARD = 'SHOW_CARD';

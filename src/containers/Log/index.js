@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import CardHeader from '../CardHeader';
 
 class Log extends Component {
 
-  // only render if log data changed
   shouldComponentUpdate(nextProps, nextState) {
-    const logsChanged = JSON.stringify(this.props.log)
-      !== JSON.stringify(nextProps.log);
-    return logsChanged;
+    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
+
   render() {
     console.log('rendering log');
-    return (
-      <div className="log">
-        <h2>
-          History
-        </h2>
-        <div className="log-messages">
+    return ( this.props.visible &&
+      <div className="card log">
+        <CardHeader position={this.props.position} contentOptions={this.props.contentOptions}/>
+        <div className="card-body log-messages">
           { this.props.log.map((l, i) => ((
             <p className="" key={`${l.time}${i}`}>
-              {`${moment(l.time).format('h:mm:ss a')}: ${l.message}`}
+              {`${moment(l.time).format(this.props.timeFormat)}: ${l.message}`}
             </p>
           )))}
         </div>
@@ -31,8 +28,16 @@ class Log extends Component {
 
 const mapStateToProps = state => {
   const log = state.log;
+  const content = 'Log';
+  const contentOptions = state.view.topRight.map(c => (c.id));
+  const visible = state.view.topRight.find(c => (c.id === content)).selected;
+  const timeFormat = 'h:mm:ss a';
   return ({
     log,
+    contentOptions,
+    content,
+    visible,
+    timeFormat,
   })
 };
 

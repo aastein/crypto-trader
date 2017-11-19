@@ -2,7 +2,6 @@ import * as Indicators from 'technicalindicators';
 
 // supply additional params by indicator type
 const indParams = (type, data) => {
-  const c = [];
   const hlc = ['ATR', 'Stochastic', 'WilliamsR', 'ADX'];
   const cv = ['OBV'];
   const hlcv = ['ADL'];
