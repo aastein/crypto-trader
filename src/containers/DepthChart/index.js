@@ -50,6 +50,7 @@ class DepthChart extends Component {
         enabled: false,
       },
       chart: {
+        type: 'area',
         marginBottom: 51,
       },
       xAxis: [{
@@ -76,18 +77,18 @@ class DepthChart extends Component {
       series: [{
         data: props.bids,
         animation: false,
-        type: 'line',
         tooltip: {
           valueDecimals: 2,
         },
+        color: 'hsla(101, 84%, 71%, 0.6)',
       },
       {
         data: props.asks,
-        type: 'line',
         animation: false,
         tooltip: {
           valueDecimals: 2,
         },
+        color: 'hsla(15, 83%, 61%, 0.6)',
       },
       ],
       navigator: {
