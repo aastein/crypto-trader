@@ -16,10 +16,12 @@ export const Dashboard = () => {
         <div className="top-container">
           <div className="left-container">
             <ChartHeaderContainer />
-            <div className="chart-container">
-              <ChartContainer />
-              <DepthChartContainer />
-            </div>
+            <ChartContainer />
+          </div>
+          <div className="center-container">
+            <CardHeader position={'topCenter'} contentOptions={['Price', 'Depth']}/>
+            <DepthChartContainer position={'topCenter'} />
+            <WebsocketChartContainer position={'topCenter'} />
           </div>
           <div className="right-container">
             <CardHeader position={'topRight'} contentOptions={['Order Book', 'Log']}/>

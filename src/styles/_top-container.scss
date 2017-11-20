@@ -167,66 +167,6 @@
               transform: translateY(-50%);
             }
           }
-
-          .websocket-status {
-            display: inline-block;
-            margin-left: auto;
-            position: relative;
-            min-width: 130px;
-
-            @include breakpoint(medium){
-              width: 5px;
-              min-width: 5px;
-              position: absolute;
-              right: 0;
-              top: 30px;
-              // bottom: 50px;
-            };
-
-            @include breakpoint(small){
-              width: 5px;
-              min-width: 5px;
-              position: fixed;
-              bottom: 10px;
-              right: 10px;
-              z-index: 10;
-            };
-
-            span {
-              position: absolute;
-              bottom: 0;
-              right: 30px;
-              margin: 3px;
-              font-size: 14px;
-              font-weight: bold;
-              color: hsla(0,0%,100%,.9);
-            }
-
-            .realtime-data {
-              @include breakpoint(medium){
-                display: none;
-              };
-            }
-
-            .glyphicon {
-              position: absolute;
-              bottom: 0;
-              right: 5px;
-              width: 20px;
-              height: 20px;
-            }
-
-            .glyphicon-dot:before{
-                content: "\25cf";
-                font-size: 1.5em;
-                color: $trans-red;
-            }
-            .glyphicon-dot.connected:before{
-                content: "\25cf";
-                font-size: 1.5em;
-                color: hsla(119, 100%, 50%, 0.7);
-            }
-          }
         }
       }
     }

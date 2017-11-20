@@ -9,6 +9,7 @@ import {
 
 import LineChart from '../../components/LineChart';
 import Loader from '../../components/Loader';
+import ConnectedGlyph from '../../components/ConnectedGlyph';
 
 class WebsocketChart extends Component {
   // bundle websocket data into OHLC and append to historical data given time conditions
@@ -69,7 +70,7 @@ class WebsocketChart extends Component {
         }
       }
     }
-    return this.props.websocketPriceData.length === 0 && nextProps.websocketPriceData.length > 0;
+    return (this.props.websocketPriceData.length === 0 && nextProps.websocketPriceData.length > 0) || this.props.visible !== nextProps.visible;
   }
 
   dataChanged = (nextConfig) => {
@@ -94,16 +95,29 @@ class WebsocketChart extends Component {
 
   wsConfig = (props) => {
     return {
+      plotOptions: {
+        line: {
+          marker: { enabled: false },
+        }
+      },
       rangeSelector: {
         enabled: false,
       },
       credits: {
         enabled: false,
       },
+      title:{
+        text: null
+      },
+      legend: {
+        enabled: false,
+      },
       chart: {
         marginBottom: 51,
       },
       xAxis: [{
+        type: 'datetime',
+        title: { text: null },
         labels: {
           y: 13,
           staggerLines: 2,
@@ -111,13 +125,16 @@ class WebsocketChart extends Component {
         tickLength: 3,
       }],
       yAxis: [{
+        title: { text: null },
         labels: {
-          align: 'left',
-          x: 5,
+          align: 'right',
+          x: -5,
         },
+        opposite: true,
         lineWidth: 1,
       },
       {
+        title: { text: null },
         labels: {
           enabled: false,
         },
@@ -127,6 +144,7 @@ class WebsocketChart extends Component {
         lineWidth: 1,
       }],
       series: [{
+        animation: false,
         data: props.websocketPriceData,
         type: 'line',
         name: props.productId,
@@ -135,6 +153,7 @@ class WebsocketChart extends Component {
         },
       },
       {
+        animation: false,
         type: 'column',
         name: 'Volume',
         data: props.websocketVolumeData,
@@ -156,8 +175,9 @@ class WebsocketChart extends Component {
 
   render() {
     console.log('rendering WebsocketChart');
-    return (
+    return ( this.props.visible &&
       <div className="websocket-chart">
+        <ConnectedGlyph connected={this.props.connected}/>
         { this.props.websocketPriceData.length > 0 ?
           <div>
             <LineChart ref={(c) => { this.lineChart = c; }} refName="wschart" config={this.wsConfig(this.props)} />
@@ -205,6 +225,9 @@ const mapStateToProps = state => {
 
   const connected = state.websocket.connected;
 
+  const content = 'Price';
+  const visible = state.view.topCenter.find(c => (c.id === content)).selected;
+
   return ({
     productId,
     productDisplayName,
@@ -215,6 +238,7 @@ const mapStateToProps = state => {
     latestWebsocketDataTime,
     granularity,
     connected,
+    visible,
   })
 };
 

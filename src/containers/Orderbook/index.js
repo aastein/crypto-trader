@@ -83,7 +83,6 @@ class Orderbook extends Component {
 
 const mapStateToProps = state => {
   const content = 'Order Book';
-  const contentOptions = state.view.topRight.map(c => (c.id));
   const visible = state.view.topRight.find(c => (c.id === content)).selected;
 
   const selectedWebsocket = state.websocket.products.find(p => {
@@ -94,7 +93,6 @@ const mapStateToProps = state => {
   const bids = selectedWebsocket && selectedWebsocket.bids ? selectedWebsocket.bids.slice(0, 25) : [];
 
   return ({
-    contentOptions,
     content,
     visible,
     asks,

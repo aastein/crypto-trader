@@ -161,14 +161,6 @@ class ChartHeader extends Component {
               isFetching={this.props.fetchingStatus === 'fetching'}
               text="Apply"
             />
-            <div className="websocket-status chart-header-item">
-              <span className="realtime-data">Realtime data</span>
-              <span
-                className={`glyphicon glyphicon-dot chart-header-item
-                  ${this.props.connected ? 'connected' : ''}`
-                }
-              />
-            </div>
           </div>
         </div>
         <ReactModal
@@ -213,8 +205,6 @@ const mapStateToProps = state => {
     { value: indicator.id, label: indicator.name, active: indicator.active }
   ));
 
-  const connected = state.websocket.connected;
-
   const fetchingStatus = state.chart.fetchingStatus;
 
   const dateRanges = state.chart.dateRanges;
@@ -225,7 +215,6 @@ const mapStateToProps = state => {
     productId,
     dropdownProductOptions,
     dropdownIndicatorOptions,
-    connected,
     fetchingStatus,
     dateRanges,
     indicators,

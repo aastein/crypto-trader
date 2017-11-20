@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import LineChart from '../../components/LineChart';
 import Loader from '../../components/Loader';
+import ConnectedGlyph from '../../components/ConnectedGlyph';
 
 class DepthChart extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class DepthChart extends Component {
         }
       }
     }
-    return this.props.asks.length === 0 && nextProps.asks.length > 0;
+    return (this.props.asks.length === 0 && nextProps.asks.length > 0) || this.props.visible !== nextProps.visible ;
   }
 
   dataChanged = (nextConfig) => {
@@ -153,8 +154,9 @@ class DepthChart extends Component {
 
   render() {
     console.log('rendering WebsocketChart');
-    return (
+    return ( this.props.visible &&
       <div className="websocket-chart">
+        <ConnectedGlyph connected={this.props.connected}/>
         { this.props.asks.length > 0 ?
           <div>
             <LineChart ref={(c) => { this.lineChart = c; }} refName="depthchart" config={this.config(this.props)} />
@@ -173,8 +175,7 @@ class DepthChart extends Component {
 let asd = 0;
 
 const mapStateToProps = state => {
-  const content = 'Depth Chart';
-  const contentOptions = state.view.topRight.map(c => (c.id));
+  const content = 'Depth';
   const visible = state.view.topCenter.find(c => (c.id === content)).selected;
 
   const selectedWebsocket = state.websocket.products.find(p => {
@@ -206,7 +207,6 @@ const mapStateToProps = state => {
   // bids = [];
 
   return ({
-    contentOptions,
     content,
     visible,
     asks,

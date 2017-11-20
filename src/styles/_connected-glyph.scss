@@ -1,0 +1,55 @@
+.anchor {
+  position: absolute;
+}
+.connected-glyph {
+  margin-left: auto;
+  position: relative;
+  width: 130px;
+  height: 15px;
+
+  @include breakpoint(medium) {
+    width: 5px;
+  };
+
+  @include breakpoint(small) {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10;
+  };
+
+  span {
+    position: absolute;
+    z-index: 1;
+    font-size: 14px;
+    font-weight: bold;
+    color: hsla(0,0%,0%,.8);
+  }
+
+  .label {
+    @include breakpoint(medium) {
+      display: none;
+    };
+  }
+
+  .glyphicon {
+    top: -5px;
+    right: 20px;
+  }
+
+  .glyphicon-dot:before{
+      content: "\25cf";
+      font-size: 1.5em;
+      color: $trans-red;
+  }
+  .glyphicon-dot.connected:before{
+      content: "\25cf";
+      font-size: 1.5em;
+      color: hsla(119, 100%, 50%, 0.7);
+  }
+}
+
+.center-container .anchor {
+  //margin-left: auto;
+  //margin-right: auto;
+}
