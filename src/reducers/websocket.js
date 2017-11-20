@@ -18,6 +18,8 @@ const INIT_STATE = {
   ],
 };
 
+const maxOrderbookLength = 300;
+
 const websocket = (state = INIT_STATE, action) => {
   switch (action.type) {
     // This is to set the products array.
@@ -83,7 +85,7 @@ const websocket = (state = INIT_STATE, action) => {
                   if (aPrice > bPrice) return -1;
                   if (aPrice < bPrice) return 1;
                   return 0;
-                }).slice(action.orderBook.asks.length - 100, action.orderBook.asks.length -1)
+                }).slice(action.orderBook.asks.length - maxOrderbookLength, action.orderBook.asks.length - 1)
               : p.asks,
             bids: p.id === action.id
             ? action.orderBook.bids.sort((a, b) => {
@@ -92,7 +94,7 @@ const websocket = (state = INIT_STATE, action) => {
                 if (aPrice > bPrice) return -1;
                 if (aPrice < bPrice) return 1;
                 return 0;
-              }).slice(0, 100)
+              }).slice(0, maxOrderbookLength)
             : p.bids,
           }
         )),
@@ -167,7 +169,7 @@ const websocket = (state = INIT_STATE, action) => {
         }
       }
 
-      let deleteCount = asks.length - 100;
+      let deleteCount = asks.length - maxOrderbookLength;
       if (deleteCount > 0) asks.splice(0, deleteCount)
 
       if (asks[asks.length - 1].price > asks[asks.length - 2].price) {
@@ -193,7 +195,7 @@ const websocket = (state = INIT_STATE, action) => {
               ? asks
               : p.asks,
             bids: p.id === action.id
-              ? bids.slice(0, 100)
+              ? bids.slice(0, maxOrderbookLength)
               : p.bids,
           }
         )),

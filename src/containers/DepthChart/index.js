@@ -5,14 +5,16 @@ import LineChart from '../../components/LineChart';
 import Loader from '../../components/Loader';
 
 class DepthChart extends Component {
-  // bundle websocket data into OHLC and append to historical data given time conditions
-  componentWillReceiveProps = (nextProps) => {
-    // console.log('will receive props');
+  constructor(props) {
+    super(props);
+    this.state = {
+      lastUpdateTime: Date.now(),
+    };
   }
 
   // return false, do update with child chart API via ref
   shouldComponentUpdate(nextProps) {
-    if(this.lineChart && this.lineChart.depthchart) {
+    if(this.lineChart && this.lineChart.depthchart && Date.now() - this.state.lastUpdateTime > 1000) {
       const chart = this.lineChart.depthchart.getChart();
       const nextConfig = this.config(nextProps);
       window.chartRef = chart;
@@ -23,6 +25,11 @@ class DepthChart extends Component {
               name: nextConfig.series[i].name,
               data: nextConfig.series[i].data,
             });
+            // console.log('updating spread eagle chart');
+            console.log('');
+            this.setState(() => ({
+              lastUpdateTime: Date.now(),
+            }));
           }
         }
       }
@@ -36,7 +43,20 @@ class DepthChart extends Component {
   }
 
   config = (props) => {
+    //console.log('length calc', Math.abs(props.bids[props.bids.length][0] - props.bids[0][0]),
+    //  Math.abs(props.asks[props.asks.length][0] - props.asks[0][0]));
+    const orderbookHalfLength = Math.max(
+      Math.abs(props.bids[props.bids.length - 1][0] - props.bids[0][0]),
+      Math.abs(props.asks[props.asks.length - 1][0] - props.asks[0][0]),
+    );
+    const orderbookCenter = props.asks[0][0] + ((props.asks[0][0] - props.asks[0][0]) / 2);
+    const yAxisHeight = Math.ceil(100*props.asks[props.asks.length - 1][1])/100;
     return {
+      plotOptions: {
+        column: {
+          borderWidth: 0,
+        }
+      },
       title:{
         text: null
       },
@@ -54,25 +74,38 @@ class DepthChart extends Component {
         marginBottom: 51,
       },
       xAxis: [{
-        min: Math.floor(100*props.bids[0][0])/100,
-        max: Math.ceil(100*props.asks[props.asks.length - 1][0])/100,
+        min: Math.floor(100*(orderbookCenter - orderbookHalfLength))/100,
+        max: Math.ceil(100*(orderbookCenter + orderbookHalfLength))/100,
         allowDecimals: false,
         labels: {
           y: 13,
         },
+        title: { text: null },
         reversed: false,
         tickLength: 3,
         type: 'linear',
       }],
       yAxis: [{
+        title: { text: null },
         min: 0,
-        max: 500,
+        max: yAxisHeight,
         allowDecimals: false,
         labels: {
-          align: 'left',
-          x: 5,
+          align: 'right',
+          x: -5,
         },
+        opposite: true,
         lineWidth: 1,
+      },
+      {
+        title: { text: null },
+        min: 0,
+        max: 1,
+        allowDecimals: false,
+        labels: {
+          enabled: false
+        },
+        lineWidth: 0,
       }],
       series: [{
         data: props.bids,
@@ -80,7 +113,9 @@ class DepthChart extends Component {
         tooltip: {
           valueDecimals: 2,
         },
-        color: 'hsla(101, 84%, 71%, 0.6)',
+        color: '#4db51c',
+        fillOpacity: 0.3,
+        yAxis: 0
       },
       {
         data: props.asks,
@@ -88,8 +123,19 @@ class DepthChart extends Component {
         tooltip: {
           valueDecimals: 2,
         },
-        color: 'hsla(15, 83%, 61%, 0.6)',
+        color: '#9b3a1a',
+        fillOpacity: 0.3,
+        yAxis: 0,
       },
+      {
+        animation: false,
+        type: 'column',
+        color: 'rgba(255,255,255,0.2)',
+        data: [
+          [orderbookCenter, 3.5],
+        ],
+        yAxis: 1,
+      }
       ],
       navigator: {
         enabled: false,
