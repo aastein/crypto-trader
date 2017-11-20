@@ -6,6 +6,8 @@ import WebsocketChartContainer from '../WebsocketChart';
 import LogContainer from '../Log';
 import OrderBookContainer from '../Orderbook';
 import ScratchpadContainer from '../Scratchpad';
+import CardHeader from '../CardHeader';
+import DepthChartContainer from '../DepthChart';
 
 export const Dashboard = () => {
     console.log('rendering dashboard');
@@ -16,10 +18,11 @@ export const Dashboard = () => {
             <ChartHeaderContainer />
             <div className="chart-container">
               <ChartContainer />
-              <WebsocketChartContainer />
+              <DepthChartContainer />
             </div>
           </div>
           <div className="right-container">
+            <CardHeader position={'topRight'} contentOptions={['Order Book', 'Log']}/>
             <LogContainer position={'topRight'} />
             <OrderBookContainer position={'topRight'} />
           </div>

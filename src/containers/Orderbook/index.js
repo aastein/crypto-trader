@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 
-import CardHeader from '../CardHeader';
-
 class Orderbook extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +42,6 @@ class Orderbook extends Component {
   render() {
     return ( this.props.visible &&
       <div className="card log">
-        <CardHeader position={this.props.position} contentOptions={this.props.contentOptions}/>
         <div className="card-body order-book">
           { this.props.asks &&
           <div className="orderbook-row asks">

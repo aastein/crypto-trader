@@ -9,14 +9,13 @@ import {
 
 import LineChart from '../../components/LineChart';
 import Loader from '../../components/Loader';
-import run from '../../utils/scriptEnv';
 
 class WebsocketChart extends Component {
   // bundle websocket data into OHLC and append to historical data given time conditions
+  // todo: move all of this logic to reduce or actions
   componentWillReceiveProps = (nextProps) => {
     // console.log('will receive props');
     if (JSON.stringify(this.props) !== JSON.stringify(nextProps)) {
-      this.runLiveScripts(nextProps);
       if (nextProps.websocketPriceData.length > 0 && nextProps.websocketVolumeData.length > 0) {
         // add compiled ws data to historical data
         // this works because latestWSDtime becomes latestHistDtime
@@ -50,24 +49,6 @@ class WebsocketChart extends Component {
           // add new slice of historical data
           this.props.addProductData(nextProps.productId, wsOHLC);
         }
-      }
-    }
-  }
-
-  runLiveScripts = nextProps => {
-    if (nextProps.live)  {
-      for (let i = 0; i < nextProps.liveScripts; i += 1) {
-        run(
-          nextProps.scripts[0].script, // include header script
-          nextProps.scripts[i].script, // run script at index
-           // include nessesary data
-          nextProps.products,
-          nextProps.profile,
-          // include nessesary actions
-          nextProps.appendLog,
-          nextProps.updateAccounts,
-          nextProps.addOrder,
-        );
       }
     }
   }
@@ -179,7 +160,7 @@ class WebsocketChart extends Component {
       <div className="websocket-chart">
         { this.props.websocketPriceData.length > 0 ?
           <div>
-            <LineChart ref={(c) => { this.lineChart = c; }} config={this.wsConfig(this.props)} />
+            <LineChart ref={(c) => { this.lineChart = c; }} refName="wschart" config={this.wsConfig(this.props)} />
           </div>
           : <div>
             <Loader />
@@ -220,31 +201,17 @@ const mapStateToProps = state => {
     ? historicalData[historicalData.length - 1].time
     : null;
 
-  const live = state.profile.live;
-
-  const liveScripts = state.scripts.filter(s => {
-    return s.live;
-  });
-
   const granularity = selectedProduct ? selectedProduct.granularity : null ;
 
   const connected = state.websocket.connected;
 
-  const scripts = state.scripts;
-
-  const profile = state.profile;
-
   return ({
-    scripts,
-    profile,
     productId,
     productDisplayName,
     websocketPriceData,
     websocketVolumeData,
     historicalData,
     latestHistoricalDataTime,
-    live,
-    liveScripts,
     latestWebsocketDataTime,
     granularity,
     connected,

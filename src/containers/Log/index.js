@@ -13,7 +13,6 @@ class Log extends Component {
     console.log('rendering log');
     return ( this.props.visible &&
       <div className="card log">
-        <CardHeader position={this.props.position} contentOptions={this.props.contentOptions}/>
         <div className="card-body log-messages">
           { this.props.log.map((l, i) => ((
             <p className="" key={`${l.time}${i}`}>

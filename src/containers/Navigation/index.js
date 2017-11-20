@@ -91,15 +91,6 @@ class Navigation extends Component {
               Accounts
             </NavLink>
           </li>
-          <li className="orderbook-nav">
-            <NavLink
-              exact
-              activeClassName="active"
-              to="/orderbook"
-            >
-              Orderbook
-            </NavLink>
-          </li>
         </ul>
         <ul className="nav-group orderbook">
           {
