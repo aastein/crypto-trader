@@ -19,26 +19,26 @@ class Select extends Component {
   render() {
     return (
       <div className={`dropdown ${this.props.className}`}>
-        <div className="dropdown-toggle Select-control" role="menu" onClick={this.handleExpand} tabIndex={0}>
-          <span className="Select-value-label">{this.props.value}</span>
+        <div className="Select-control" role="menu" onClick={this.handleExpand} tabIndex={0}>
+          <span className="">{this.props.value}</span>
           <span className="Select-arrow-zone">
             <span className="Select-arrow" />
           </span>
         </div>
         { this.state.expanded &&
-          <div className="dropdown-menu" aria-hidden>
+          <div className="" aria-hidden>
             {
               this.props.options.map((o, i) => (
-                <div key={`${o.value}${i}`}className="dropdown-item Select-option">
-                  <span className="item-label">{o.label}</span>
-                  <div className="item-options">
+                <div key={`${o.value}${i}`}className="Select-option">
+                  <span className="">{o.label}</span>
+                  <div className="">
                     <input
                       defaultChecked={o.active}
-                      className="item-checkbox"
+                      className=""
                       type="checkbox"
                       onChange={(e) => { this.props.onCheck(o.value); }}
                     />
-                    <div className="item-drilldown" role="button" onClick={(e) => { this.props.handleDrilldown(o.value); }} tabIndex={0}>
+                    <div className="" role="button" onClick={(e) => { this.props.handleDrilldown(o.value); }} tabIndex={0}>
                       <FontAwesome name="chevron-right" />
                     </div>
                   </div>

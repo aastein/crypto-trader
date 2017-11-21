@@ -113,50 +113,50 @@ class ChartHeader extends Component {
   render() {
     console.log('rendering chart header container');
     return (
-      <div className="chart-header">
-        <div className="chart-header-item-container">
-          <div className="chart-header-items">
+      <div className="">
+        <div className="container">
+          <div className="columns">
             <Dropdown
-              className="product-dropdown chart-header-item"
+              className="col-2"
               options={this.props.dropdownProductOptions}
               onChange={this.onProductChange}
               value={this.props.productId}
             />
             <Select
-              className=""
+              className="col-3"
               options={this.props.dropdownIndicatorOptions}
               value={'Indicators'}
               onCheck={this.onSelectIndicator}
               handleDrilldown={this.onEditIndicator}
             />
             <Dropdown
-              className="date-picker chart-header-item"
+              className="col-2"
               options={this.props.dateRanges}
               onChange={this.onSelectDateRange}
               value={this.state.range}
             />
-            <div className="granularity chart-header-item">
+            <div className="granularity container columns col-3">
               <Input
-                className="granularity"
+                className="col-9"
                 invalid={this.props.fetchingStatus === 'failure'}
                 maxLength={9}
                 name="granularity"
                 onChange={this.onSetGanularity}
                 placeholder=""
-                type="number"
+                type="text"
                 value={this.state.granularity}
               />
-              <span className="granularity-label">s</span>
+              <span className="col-1">s</span>
+              <SliderDropdown
+                className = "col-2"
+                min={Math.ceil(Math.sqrt(this.state.range / 50))}
+                max={Math.ceil(Math.sqrt(this.state.range * 5))}
+                handleChange={this.handleGranularityChange}
+                defaultValue={Math.sqrt(parseInt(this.state.granularity, 10))}
+              />
             </div>
-            <SliderDropdown
-              className = "chart-header-item"
-              min={Math.ceil(Math.sqrt(this.state.range / 50))}
-              max={Math.ceil(Math.sqrt(this.state.range * 5))}
-              handleChange={this.handleGranularityChange}
-              defaultValue={Math.sqrt(parseInt(this.state.granularity, 10))}
-            />
             <FetchButton
-              className="btn chart-header-item"
+              className="col-2"
               onClick={this.onApply}
               isFetching={this.props.fetchingStatus === 'fetching'}
               text="Apply"

@@ -3,14 +3,15 @@ import Select from 'react-select';
 import PropTypes from 'prop-types';
 
 const Dropdown = ({ className, multi, onChange, options, value }) => (
-  <div>
+  <div className={className}>
     <Select
-      className={className}
+      searchable={false}
       multi={multi}
       name="form-field-name"
       onChange={onChange}
       options={options}
       value={value}
+      clearable={false}
     />
   </div>
 );

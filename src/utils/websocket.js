@@ -2,7 +2,7 @@ let connection;
 const url = 'wss://ws-feed.gdax.com';
 
 // set the action to be dispatched when data is received
-export const setActions = (handleMatch, handleSnapshot, handleUpdate) => {
+export const setActions = (handleMatch, handleSnapshot, handleUpdate, handleTicker) => {
   connection.onmessage = (event) => {
     const data = JSON.parse(event.data);
     switch (data.type) {
@@ -22,6 +22,11 @@ export const setActions = (handleMatch, handleSnapshot, handleUpdate) => {
         // update realtime price
         handleMatch(data);
         break;
+      case 'ticker':
+        handleTicker(data);
+        break
+      case 'error':
+        console.error(data);
       default:
         console.log('no websocket handler for: ', data.type);
     }
@@ -29,17 +34,45 @@ export const setActions = (handleMatch, handleSnapshot, handleUpdate) => {
 };
 
 // subscribe with an array of product ids
-export const subscribe = (products) => {
-  connection.send(JSON.stringify(
-    {
-      type: 'subscribe',
-      product_ids: products,
-      channels: [
-        'level2',
-        'matches',
-      ],
-    },
-  ));
+export const subscribeToTicker = (products) => {
+  connection.send(JSON.stringify({
+      "type": "subscribe",
+      "product_ids": products,
+    "channels": ["ticker"]
+  }));
+};
+
+// subscribe with an array of product ids
+export const unsubscribeFromTicker = (products) => {
+  connection.send(JSON.stringify({
+    "type": "unsubscribe",
+    "product_ids": products,
+    "channels": ["ticker"]
+  }));
+};
+
+// subscribe with an array of product ids
+export const subscribeToOrderBook = (product) => {
+  connection.send(JSON.stringify({
+    type: 'subscribe',
+    product_ids: [ product ],
+    channels: [
+      'level2',
+      'matches',
+    ],
+  }));
+};
+
+// subscribe with an array of product ids
+export const unSubscribeFromOrderBook = (product) => {
+  connection.send(JSON.stringify({
+    type: 'unsubscribe',
+    product_ids: [ product ],
+    channels: [
+      'level2',
+      'matches',
+    ],
+  }));
 };
 
 // connect to GDAX websocket

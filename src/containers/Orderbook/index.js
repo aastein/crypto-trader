@@ -31,11 +31,14 @@ class Orderbook extends Component {
     }
   }
 
+  getSize(size) {
+    return `${size * 2}px` + ''
+  }
+
   barWidth(size) {
     return {
-      backgroundColor: 'red',
       height: '14px',
-      // width: `${size * 2}px`,
+      width: `${size*2}px`,
     }
   }
 
@@ -69,7 +72,7 @@ class Orderbook extends Component {
           <div className="orderbook-row bids">
           { this.props.bids.map((bid, i) => (
             <p className="" key={i} ref={(c) => { if (i === 7) this.focus = c; }}>
-              <span className="bid bar-container"><span className="bar"/></span>
+              <span className="bid bar-container"><span style={this.barWidth(bid.size)} className="bar"/></span>
               <span className="bid size">{`${bid.size}`}</span>
               <span className="bid price">{`$ ${bid.price}`}</span>
             </p>

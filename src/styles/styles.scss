@@ -1,9 +1,22 @@
-@import 'bits';
-@import 'components';
+// @import 'bits';
+// @import 'components';
+// @import 'navbar';
+// @import 'profile';
+// @import 'dashboard';
+// @import 'orderbook';
+// @import 'accounts';
+// @import 'cards';
+// @import 'connected-glyph';
+
+// import custom components
+@import 'ticker';
 @import 'navbar';
-@import 'profile';
-@import 'dashboard';
-@import 'orderbook';
-@import 'accounts';
-@import 'cards';
-@import 'connected-glyph';
+@import 'position';
+@import 'logo';
+@import 'vars';
+@import 'select';
+@import 'granularity';
+
+// import spectre css
+@import '../../node_modules/spectre.css/src/spectre';
+@import '../../node_modules/spectre.css/src/spectre-icons';

@@ -309,7 +309,7 @@ class Chart extends Component {
     console.log('rendering chart container');
 
     return (
-      <div className="price-chart-container">
+      <div className="">
         { this.props.selectedProductPriceData.length > 0 ?
           <div>
             <PriceChart ref={(c) => { this.priceChart = c; }} config={this.config(this.props)}

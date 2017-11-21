@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 const Input = props => (
   (
-    <div>
+    <div className={props.className}>
       <input
-        className={`${props.className} ${props.invalid ? 'invalid' : ''}`}
+        className={`col-12 form-input ${props.invalid ? 'invalid' : ''}`}
         maxLength={props.maxLength}
         name={props.name}
         onChange={e => props.onChange(props.name, e)}

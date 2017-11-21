@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as actionType from './actionTypes';
 import { getAccounts, getProductData, getProducts } from '../utils/api';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
-import connect, { setActions, subscribe } from '../utils/websocket';
+import connect, { setActions, subscribeToTicker, subscribeToOrderBook } from '../utils/websocket';
 
 let nextScriptId = 2;
 
@@ -16,6 +16,7 @@ export const addOrder = (id, productId, time, price) => ({ type: actionType.ADD_
 // websocket
 export const setProductWSData = (id, data) => ({ type: actionType.SET_PRODUCT_WS_DATA, id, data });
 export const addProductWSData = data => ({ type: actionType.ADD_PRODUCT_WS_DATA, data });
+export const setTickerWSData = data => ({type: actionType.SET_TICKER_WS_DATA, data});
 
 // dashboard: charts
 export const setProducts = products => ({ type: actionType.SET_PRODUCTS, products });
@@ -128,12 +129,20 @@ const handleUpdate = dispatch => {
   }
 }
 
+const handleTicker = dispatch => {
+  return data => {
+    dispatch(setTickerWSData(data))
+  }
+}
+
+
 export const initWebsocket = ids => (
   dispatch => (
     connect().then(() => {
       // handleMatch, handleSnapshot, handleUpdate
-      setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch));
-      subscribe(ids);
+      setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch), handleTicker(dispatch));
+      subscribeToTicker(ids)
+      subscribeToOrderBook(ids[0]);
     })
   )
 );
@@ -145,7 +154,7 @@ export const initProducts = () => (
       const selectedProductIds = getState().profile.selectedProducts.map(p => (p.value));
       dispatch(selectProduct(selectedProductIds[0]));
       dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
-      dispatch(initWebsocket([selectedProductIds[0]]));
+      dispatch(initWebsocket(selectedProductIds));
     })
   )
 );

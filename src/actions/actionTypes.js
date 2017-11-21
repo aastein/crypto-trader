@@ -9,6 +9,7 @@ export const FIND_SESSION = 'FIND_SESSION';
 // websocket
 export const SET_PRODUCT_WS_DATA = 'SET_PRODUCT_WS_DATA';
 export const ADD_PRODUCT_WS_DATA = 'ADD_PRODUCT_WS_DATA';
+export const SET_TICKER_WS_DATA = 'SET_TICKER_WS_DATA';
 
 // dashboard: charts
 export const SET_PRODUCTS = 'SET_PRODUCTS';

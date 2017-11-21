@@ -76,6 +76,7 @@ const websocket = (state = INIT_STATE, action) => {
     case actionType.SET_ORDER_BOOK:
       // console.log('reducer/chart.js handle set orderbook',action);
       return { ...state,
+        hasOrderBook: true,
         products: state.products.map(p => (
           { ...p,
             asks: p.id === action.id
@@ -199,6 +200,18 @@ const websocket = (state = INIT_STATE, action) => {
               : p.bids,
           }
         )),
+      };
+    case actionType.SET_TICKER_WS_DATA:
+      // console.log('reducter/websocket ', action.Type, action);
+      return { ...state,
+        products: state.products.map(p => {
+          // console.log(p, action)
+          return { ...p,
+            ticker: p.id === action.data.product_id
+              ? { bestAsk: Number(action.data.best_ask).toFixed(2), bestBid: Number(action.data.best_bid).toFixed(2) }
+              : p.ticker,
+          }
+        }),
       };
     case actionType.UPDATE_HEARTBEAT:
       return { ...state, connected: action.status };
