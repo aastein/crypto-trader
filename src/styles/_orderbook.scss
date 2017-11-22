@@ -1,0 +1,53 @@
+.order-book {
+  height: $orderbook-height;
+  overflow-y: hidden;
+
+  .orderbook-row {
+    p {
+      font-size: 12px;
+      font-weight: bold;
+      margin: 0 0 .3rem;
+    }
+    .ask {
+      color: $red;
+      .bar {
+        background-color: $red;
+      }
+    }
+    .bid {
+      color: $green;
+      .bar {
+        background-color: $green;
+        max-width: 100%;
+      }
+    }
+    .bar-container {
+      height: 14px;
+      width: 20px;
+    }
+  }
+  .bar {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .spread {
+    border-top: 2px solid $ligter-dark;
+    border-bottom: 2px solid $ligter-dark;
+    margin: 0 0 .3rem;
+    span {
+      font-size: 11px;
+      color: #FFFFFF;
+    }
+    p {
+      margin: 0;
+    }
+  }
+}
+.order-book:hover {
+  overflow-y: overlay;
+}
+
+.float-right {
+  float: right;
+}
+

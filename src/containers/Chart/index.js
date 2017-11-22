@@ -96,6 +96,7 @@ class Chart extends Component {
 
   inidcatorYAxis = (top, height, chartMin, chartMax, axisLines, id) => (
     {
+      gridLineColor: 'transparent',
       labels: {
         align: 'left',
         x: 5,
@@ -206,6 +207,7 @@ class Chart extends Component {
   candleStickConfig = (props, volumeOffset) => {
     return {
       yAxis: {
+        gridLineColor: 'transparent',
         labels: {
           align: 'left',
           x: 5,
@@ -231,6 +233,7 @@ class Chart extends Component {
   volumeConfig = (props, volumeOffset) => {
     return {
       yAxis: {
+        gridLineColor: 'transparent',
         labels: {
           enabled: false,
         },
@@ -239,6 +242,7 @@ class Chart extends Component {
         offset: 0,
         lineWidth: 1,
       },
+      gridLineColor: 'transparent',
       series: {
         type: 'column',
         name: 'Volume',
@@ -262,6 +266,7 @@ class Chart extends Component {
     return {
       chart: {
         marginBottom: 15,
+        backgroundColor: 'transparent',
       },
       credits: {
         enabled: false,
@@ -309,7 +314,7 @@ class Chart extends Component {
     console.log('rendering chart container');
 
     return (
-      <div className="">
+      <div className="chart secondary-bg-dark">
         { this.props.selectedProductPriceData.length > 0 ?
           <div>
             <PriceChart ref={(c) => { this.priceChart = c; }} config={this.config(this.props)}

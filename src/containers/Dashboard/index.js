@@ -12,9 +12,9 @@ import DepthChartContainer from '../DepthChart';
 export const Dashboard = () => {
     console.log('rendering dashboard');
     return (
-      <div className="container">
+      <div className="container third-bg-dark">
         <div className="columns">
-          <div className="columns col-10 col-xl-9">
+          <div className="container columns col-10 col-xl-9">
             <div className="col-6 col-xl-12">
               <ChartHeaderContainer />
               <ChartContainer />
@@ -25,7 +25,7 @@ export const Dashboard = () => {
               <WebsocketChartContainer position={'topCenter'} />
             </div>
           </div>
-          <div className="col-2 col-xl-3">
+          <div className="secondary-bg-dark col-2 col-xl-3">
             <CardHeader position={'topRight'} contentOptions={['Order Book', 'Log']}/>
             <LogContainer position={'topRight'} />
             <OrderBookContainer position={'topRight'} />

@@ -114,6 +114,7 @@ class WebsocketChart extends Component {
       },
       chart: {
         marginBottom: 51,
+        backgroundColor: 'transparent',
       },
       xAxis: [{
         type: 'datetime',
@@ -125,6 +126,7 @@ class WebsocketChart extends Component {
         tickLength: 3,
       }],
       yAxis: [{
+        gridLineColor: 'transparent',
         title: { text: null },
         labels: {
           align: 'right',
@@ -134,6 +136,7 @@ class WebsocketChart extends Component {
         lineWidth: 1,
       },
       {
+        gridLineColor: 'transparent',
         title: { text: null },
         labels: {
           enabled: false,
@@ -176,15 +179,15 @@ class WebsocketChart extends Component {
   render() {
     console.log('rendering WebsocketChart');
     return ( this.props.visible &&
-      <div className="websocket-chart">
+      <div className="chart secondary-bg-dark">
         <ConnectedGlyph connected={this.props.connected}/>
         { this.props.websocketPriceData.length > 0 ?
-          <div>
+          <div className="">
             <LineChart ref={(c) => { this.lineChart = c; }} refName="wschart" config={this.wsConfig(this.props)} />
           </div>
-          : <div>
+          : <div className="loading-message">
             <Loader />
-            <p className="loading-message">{`Chart will render when realtime data is received for
+            <p className="message">{`Chart will render when realtime data is received for
               ${this.props.productDisplayName ? this.props.productDisplayName : 'the selected product'}`}</p>
           </div>
         }

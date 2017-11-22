@@ -73,6 +73,7 @@ class DepthChart extends Component {
       chart: {
         type: 'area',
         marginBottom: 51,
+        backgroundColor: 'transparent',
       },
       xAxis: [{
         min: Math.floor(100*(orderbookCenter - orderbookHalfLength))/100,
@@ -87,6 +88,7 @@ class DepthChart extends Component {
         type: 'linear',
       }],
       yAxis: [{
+        gridLineColor: 'transparent',
         title: { text: null },
         min: 0,
         max: yAxisHeight,
@@ -99,6 +101,7 @@ class DepthChart extends Component {
         lineWidth: 1,
       },
       {
+        gridLineColor: 'transparent',
         title: { text: null },
         min: 0,
         max: 1,
@@ -153,17 +156,17 @@ class DepthChart extends Component {
   }
 
   render() {
-    console.log('rendering WebsocketChart');
+    console.log('rendering DepthChart');
     return ( this.props.visible &&
-      <div className="websocket-chart">
+      <div className="chart secondary-bg-dark">
         <ConnectedGlyph connected={this.props.connected}/>
         { this.props.asks.length > 0 ?
-          <div>
+          <div className="">
             <LineChart ref={(c) => { this.lineChart = c; }} refName="depthchart" config={this.config(this.props)} />
           </div>
           : <div>
             <Loader />
-            <p className="loading-message">{`Chart will render when realtime data is received for
+            <p className="centered">{`Chart will render when realtime data is received for
               ${this.props.productDisplayName ? this.props.productDisplayName : 'the selected product'}`}</p>
           </div>
         }
@@ -171,8 +174,6 @@ class DepthChart extends Component {
     );
   }
 }
-
-let asd = 0;
 
 const mapStateToProps = state => {
   const content = 'Depth';
@@ -182,14 +183,14 @@ const mapStateToProps = state => {
     return p.active;
   });
 
-  let asks = selectedWebsocket && selectedWebsocket.asks
+  const asks = selectedWebsocket && selectedWebsocket.asks
     ? selectedWebsocket.asks.slice().reverse().reduce((data, ask) => {
       const volume = data.length > 0 ? parseFloat(ask.size) + data[data.length - 1][1] : parseFloat(ask.size);
       data.push([parseFloat(ask.price), volume])
       return data;
     }, [])
     : [];
-  let bids = selectedWebsocket && selectedWebsocket.bids
+  const bids = selectedWebsocket && selectedWebsocket.bids
     ? selectedWebsocket.bids.slice().reduce((data, bid) => {
       const volume = data.length > 0 ? parseFloat(bid.size) + data[data.length - 1][1] : parseFloat(bid.size);
       data.push([parseFloat(bid.price), volume])
@@ -197,20 +198,14 @@ const mapStateToProps = state => {
     }, []).reverse()
     : [];
 
-  if (asd < 9) {
-    // console.log('bids', bids);
-    asd += 1;
-  } else {
-    // asks = [];
-  }
-
-  // bids = [];
+  const connected = state.websocket.connected;
 
   return ({
     content,
     visible,
     asks,
     bids,
+    connected
   })
 };
 

@@ -14,6 +14,18 @@ $ligter-dark: lighten($primary-dark, 10%);
 $secondary-dark: darken($primary-dark, 10%);
 // darkest background
 $third-dark: darken($secondary-dark, 10%);
+// red
+$red: hsl(15, 83%, 61%);
+// green
+$green: hsl(101, 84%, 71%);
+
+// heights
 
 // select / dropdown height
 $select-height: 30px;
+
+// chart height
+$chart-height: 400px;
+
+// orderbook height
+$orderbook-height: $chart-height;

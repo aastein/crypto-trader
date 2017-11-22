@@ -22,7 +22,7 @@ class CardHeader extends Component {
             this.props.contentOptions.map(content => {
               return (<button
                 key={content}
-                className="btn btn-primary header-button"
+                className={`col-${Math.floor(12 / this.props.contentOptions.length)} btn btn-primary header-button`}
                 onClick={e => {this.handleClick(e, content)}}>{ content }</button>)
             })
           }

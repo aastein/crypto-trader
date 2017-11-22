@@ -16,9 +16,7 @@ export default class PriceChart extends Component {
 
   render() {
     return (
-      <div className="">
-        <ReactHighstock config={this.props.config} ref={(c) => { this.chart = c; }} />
-      </div>
+      <ReactHighstock domProps={{ className: 'chart' }} config={this.props.config} ref={(c) => { this.chart = c; }} />
     );
   }
 }

@@ -10,9 +10,7 @@ export default class PriceChart extends Component {
   render() {
     console.log('linechart config', this.props.config);
     return (
-      <div className="line-chart" >
-        <ReactHighcharts config={this.props.config} ref={(c) => { this[this.props.refName] = c; }} />
-      </div>
+      <ReactHighcharts domProps={{ className: 'chart' }} config={this.props.config} ref={(c) => { this[this.props.refName] = c; }} />
     );
   }
 }

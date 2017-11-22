@@ -135,7 +135,7 @@ class ChartHeader extends Component {
               onChange={this.onSelectDateRange}
               value={this.state.range}
             />
-            <div className="granularity container columns col-3">
+            <div className="granularity columns col-3">
               <Input
                 className="col-9"
                 invalid={this.props.fetchingStatus === 'failure'}
