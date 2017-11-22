@@ -112,25 +112,7 @@
             width: 120px;
           }
 
-          .slider-dropdown {
-            width: 30px;
-            padding-right: 5px;
-            .dropdown-toggle {
-              height: 34px;
-            }
-            .dropdown-menu {
-              position: absolute;
-              .slider-container {
-                width: 110px;
-                z-index: 1;
-                background-color: $active-color-a;
-                padding: 3px 12px;
-                border-radius: 5px;
-                position: relative;
-                right: 100px;
-              }
-            }
-          }
+
 
           .granularity {
             width: 100px;

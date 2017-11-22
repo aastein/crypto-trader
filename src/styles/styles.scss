@@ -1,22 +1,19 @@
-// @import 'bits';
-// @import 'components';
-// @import 'navbar';
-// @import 'profile';
-// @import 'dashboard';
-// @import 'orderbook';
-// @import 'accounts';
-// @import 'cards';
-// @import 'connected-glyph';
-
-// import custom components
-@import 'ticker';
-@import 'navbar';
-@import 'position';
-@import 'logo';
+// import global variables to override spectre vars
 @import 'vars';
-@import 'select';
-@import 'granularity';
 
 // import spectre css
 @import '../../node_modules/spectre.css/src/spectre';
 @import '../../node_modules/spectre.css/src/spectre-icons';
+
+// override spectre definitions
+@import 'global';
+@import 'select';
+@import 'granularity';
+@import 'background';
+@import 'fetch-button';
+@import 'ticker';
+@import 'navbar';
+@import 'position';
+@import 'logo';
+@import 'slider';
+@import 'dropdown';

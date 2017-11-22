@@ -15,11 +15,11 @@ export const Dashboard = () => {
       <div className="container">
         <div className="columns">
           <div className="columns col-10 col-xl-9">
-            <div className="col-6 col-lg-12">
+            <div className="col-6 col-xl-12">
               <ChartHeaderContainer />
               <ChartContainer />
             </div>
-            <div className="col-6 col-lg-12">
+            <div className="col-6 col-xl-12">
               <CardHeader position={'topCenter'} contentOptions={['Price', 'Depth']}/>
               <DepthChartContainer position={'topCenter'} />
               <WebsocketChartContainer position={'topCenter'} />

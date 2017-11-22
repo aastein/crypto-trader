@@ -1,3 +1,11 @@
 .Select-control {
   border-radius: 0px;
 }
+
+.Select-input {
+  height: $select-height;
+}
+
+.Select-control {
+  height: $select-height;
+}

@@ -4,7 +4,7 @@ import Loader from './Loader';
 
 const FetchButton = props => (
   (
-    <button className={props.className} onClick={props.onClick} disabled={props.isFetching}>
+    <button className={`${props.className} ${props.isFetching ? 'fetching' : '' }`} onClick={props.onClick} disabled={props.isFetching}>
       { props.isFetching ?
         <Loader
           color={props.loaderColor}
@@ -31,7 +31,7 @@ FetchButton.propTypes = {
 
 FetchButton.defaultProps = {
   loaderColor: '#fff',
-  loaderClassName: 'fetching-loader',
+  loaderClassName: 'loader',
   loaderFadeIn: 'none',
   loaderName: 'ball-clip-rotate',
 };

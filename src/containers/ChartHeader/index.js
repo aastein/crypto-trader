@@ -113,7 +113,7 @@ class ChartHeader extends Component {
   render() {
     console.log('rendering chart header container');
     return (
-      <div className="">
+      <div className="p-1 bg-dark">
         <div className="container">
           <div className="columns">
             <Dropdown
@@ -146,7 +146,7 @@ class ChartHeader extends Component {
                 type="text"
                 value={this.state.granularity}
               />
-              <span className="col-1">s</span>
+              <div className="relative"><label className="absolute">s</label></div>
               <SliderDropdown
                 className = "col-2"
                 min={Math.ceil(Math.sqrt(this.state.range / 50))}
@@ -156,7 +156,7 @@ class ChartHeader extends Component {
               />
             </div>
             <FetchButton
-              className="col-2"
+              className="btn btn-primary btn-fetch col-2"
               onClick={this.onApply}
               isFetching={this.props.fetchingStatus === 'fetching'}
               text="Apply"

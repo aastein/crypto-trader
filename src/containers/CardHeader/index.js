@@ -17,17 +17,15 @@ class CardHeader extends Component {
   render() {
     console.log('rendering CardHeader:', this.props.position);
     return (
-      <div>
-        <div className="card-header">
-            {
-              this.props.contentOptions.map(content => {
-                return (<button
-                  key={content}
-                  className="btn btn-primary header-button"
-                  onClick={e => {this.handleClick(e, content)}}>{ content }</button>)
-              })
-            }
-          </div>
+      <div className="p-1 bg-dark card-header">
+          {
+            this.props.contentOptions.map(content => {
+              return (<button
+                key={content}
+                className="btn btn-primary header-button"
+                onClick={e => {this.handleClick(e, content)}}>{ content }</button>)
+            })
+          }
       </div>
     )
   }

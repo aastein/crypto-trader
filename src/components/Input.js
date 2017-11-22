@@ -5,7 +5,7 @@ const Input = props => (
   (
     <div className={props.className}>
       <input
-        className={`col-12 form-input ${props.invalid ? 'invalid' : ''}`}
+        className={`col-12 form-input bg-dark ${props.invalid ? 'invalid' : ''}`}
         maxLength={props.maxLength}
         name={props.name}
         onChange={e => props.onChange(props.name, e)}
@@ -13,6 +13,7 @@ const Input = props => (
         type={props.type}
         value={props.value}
       />
+      {props.children}
     </div>
   )
 );
