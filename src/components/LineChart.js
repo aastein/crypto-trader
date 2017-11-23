@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactHighcharts from 'react-highcharts/ReactHighcharts.src';
 import PropTypes from 'prop-types';
+require('highcharts-map')(ReactHighcharts.Highcharts)
 
 
 export default class PriceChart extends Component {

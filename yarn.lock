@@ -3618,6 +3618,10 @@ he@1.1.x:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
+highcharts-map@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/highcharts-map/-/highcharts-map-0.1.2.tgz#c8826f2202510756601113060a1b73c6135d472e"
+
 highcharts@^6.0.0:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-6.0.3.tgz#51348a0c97d8bdc87cb3b273460e3751db4a51cd"

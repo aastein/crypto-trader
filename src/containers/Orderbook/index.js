@@ -45,38 +45,33 @@ class Orderbook extends Component {
       <div className="">
         <div className="order-book secondary-bg-dark">
           { this.props.asks &&
-          <div className="orderbook-row asks">
-          { this.props.asks.map((ask, i) => (
-            <p className="columns" key={i} >
-              <div className="col-2"><span className="ask bar-container"><span style={this.barWidth(ask.size)} className="bar"/></span></div>
+            this.props.asks.map((ask, i) => (
+            <div className="columns orderbook-row asks" key={i} >
+              <div className="col-2"><div className="ask bar-container"><span style={this.barWidth(ask.size)} className="bar"/></div></div>
               <div className="col-5"><span className="col-6 ask size">{`${(ask.size)}`}</span></div>
               <div className="col-5"><span className="col-3 ask price">{`$ ${ask.price}`}</span></div>
-            </p>
+            </div>
           ))}
-          </div>
-          }
           { this.props.asks && this.props.asks.length > 0 &&
             <div className="orderbook-row spread">
-              <p className="columns">
+              <div className="columns">
                 <span className="col-2" />
                 <span className="col-5">SPREAD</span>
                 <span className="col-5">
                   ${(this.props.asks[this.props.asks.length - 1].price
                       - this.props.bids[0].price).toFixed(2) }
                 </span>
-              </p>
+              </div>
             </div>
           }
           { this.props.bids &&
-          <div className="orderbook-row bids">
-          { this.props.bids.map((bid, i) => (
-            <p className="columns" key={i} ref={(c) => { if (i === 7) this.focus = c; }}>
-              <div className="col-2"><span className="bid bar-container"><span style={this.barWidth(bid.size)} className="bar"/></span></div>
+            this.props.bids.map((bid, i) => (
+            <div className="columns orderbook-row bids" key={i} ref={(c) => { if (i === 7) this.focus = c; }}>
+              <div className="col-2"><div className="bid bar-container"><span style={this.barWidth(bid.size)} className="bar"/></div></div>
               <div className="col-5"><span className="bid size">{`${bid.size}`}</span></div>
               <div className="col-5"><span className="bid price">{`$ ${bid.price}`}</span></div>
-            </p>
+            </div>
           ))}
-          </div> }
         </div>
       </div>
     );

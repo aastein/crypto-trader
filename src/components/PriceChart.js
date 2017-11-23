@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactHighstock from 'react-highcharts/ReactHighstock.src';
 import PropTypes from 'prop-types';
+require('highcharts-map')(ReactHighstock.Highcharts)
 
 export default class PriceChart extends Component {
 
@@ -15,6 +16,7 @@ export default class PriceChart extends Component {
   }
 
   render() {
+    console.log('PriceChart.js', Object.keys(ReactHighstock));
     return (
       <ReactHighstock domProps={{ className: 'chart' }} config={this.props.config} ref={(c) => { this.chart = c; }} />
     );

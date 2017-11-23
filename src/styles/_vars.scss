@@ -10,6 +10,8 @@ $light-color: #fff;
 $primary-dark: #3A444D;
 // lighter dark color
 $ligter-dark: lighten($primary-dark, 10%);
+// lighter dark color alpha
+$ligter-dark-a: transparentize($ligter-dark, 0.7);
 // darker background
 $secondary-dark: darken($primary-dark, 10%);
 // darkest background

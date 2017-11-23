@@ -264,20 +264,29 @@ class Chart extends Component {
     const testPlotLines = this.testPlotLines(props);
 
     return {
+      plotOptions: {
+        candlestick: {
+          lineColor: 'hsl(15, 83%, 61%)',
+          color:'hsl(15, 83%, 61%)',
+          upLineColor: 'hsl(101, 84%, 71%)',
+          upColor: 'hsl(101, 84%, 71%)'
+        }
+      },
       chart: {
+        animation: false,
+        zoomType: 'x',
         marginBottom: 15,
         backgroundColor: 'transparent',
+      },
+      mapNavigation: {
+          enabled: true,
+          enableButtons: false
       },
       credits: {
         enabled: false,
       },
       navigator: {
-        height: 10,
-        xAxis: {
-          labels: {
-            y: 13,
-          },
-        },
+        enabled: false,
       },
       rangeSelector: {
         enabled: false,

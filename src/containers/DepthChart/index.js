@@ -20,22 +20,28 @@ class DepthChart extends Component {
       const nextConfig = this.config(nextProps);
       window.chartRef = chart;
       if (this.dataChanged(nextConfig)) {
+        // update series
         for (let i = 0; i < chart.series.length; i += 1) {
           if (nextConfig.series[i]) {
             chart.series[i].update({
               name: nextConfig.series[i].name,
               data: nextConfig.series[i].data,
             });
-            // console.log('updating spread eagle chart');
-            console.log('');
             this.setState(() => ({
               lastUpdateTime: Date.now(),
             }));
           }
         }
+        //update xAxis
+        for (let i = 0; i < nextConfig.xAxis.length; i += 1) {
+          chart.xAxis[i].update({ ...nextConfig.xAxis[i] });
+        }
+        console.log('update map nav');
+        chart.update({ mapNavigation: { ...nextConfig.mapNavigation } });
       }
     }
-    return (this.props.asks.length === 0 && nextProps.asks.length > 0) || this.props.visible !== nextProps.visible ;
+    const mapCenterChanged = this.props.bids.length > 0 ? this.orderbookCenter(nextProps) !== this.orderbookCenter(this.props) : false;
+    return (this.props.asks.length === 0 && nextProps.asks.length > 0) || this.props.visible !== nextProps.visible  || mapCenterChanged;
   }
 
   dataChanged = (nextConfig) => {
@@ -43,14 +49,12 @@ class DepthChart extends Component {
       || JSON.stringify(this.config(this.props).series[1].data) !== JSON.stringify(nextConfig.series[1].data);
   }
 
+  orderbookCenter = (props) => {
+    return props.asks[0][0] + ((props.asks[0][0] - props.bids[props.bids.length - 1][0]) / 2);
+  }
+
   config = (props) => {
-    //console.log('length calc', Math.abs(props.bids[props.bids.length][0] - props.bids[0][0]),
-    //  Math.abs(props.asks[props.asks.length][0] - props.asks[0][0]));
-    const orderbookHalfLength = Math.max(
-      Math.abs(props.bids[props.bids.length - 1][0] - props.bids[0][0]),
-      Math.abs(props.asks[props.asks.length - 1][0] - props.asks[0][0]),
-    );
-    const orderbookCenter = props.asks[0][0] + ((props.asks[0][0] - props.asks[0][0]) / 2);
+    const orderbookCenter = this.orderbookCenter(props);
     const yAxisHeight = Math.ceil(100*props.asks[props.asks.length - 1][1])/100;
     return {
       plotOptions: {
@@ -71,13 +75,32 @@ class DepthChart extends Component {
         enabled: false,
       },
       chart: {
+        animation: false,
+        // zoomType: 'x',
         type: 'area',
         marginBottom: 51,
         backgroundColor: 'transparent',
       },
+      mapNavigation: {
+        // enabled: true,
+        enableButtons: true,
+        buttons: {
+          zoomIn: {
+            onclick: function () {
+              console.log('center is ', orderbookCenter);
+              this.mapZoom(0.5, orderbookCenter, 0);
+            }
+          },
+          zoomOut: {
+            onclick: function () {
+              console.log('center is ', orderbookCenter);
+              this.mapZoom(2, orderbookCenter, 0);
+            }
+          },
+        },
+      },
       xAxis: [{
-        min: Math.floor(100*(orderbookCenter - orderbookHalfLength))/100,
-        max: Math.ceil(100*(orderbookCenter + orderbookHalfLength))/100,
+        minRange: 10,
         allowDecimals: false,
         labels: {
           y: 13,
@@ -178,27 +201,66 @@ class DepthChart extends Component {
 const mapStateToProps = state => {
   const content = 'Depth';
   const visible = state.view.topCenter.find(c => (c.id === content)).selected;
+  const connected = state.websocket.connected;
 
   const selectedWebsocket = state.websocket.products.find(p => {
     return p.active;
   });
 
-  const asks = selectedWebsocket && selectedWebsocket.asks
-    ? selectedWebsocket.asks.slice().reverse().reduce((data, ask) => {
-      const volume = data.length > 0 ? parseFloat(ask.size) + data[data.length - 1][1] : parseFloat(ask.size);
-      data.push([parseFloat(ask.price), volume])
-      return data;
-    }, [])
-    : [];
-  const bids = selectedWebsocket && selectedWebsocket.bids
-    ? selectedWebsocket.bids.slice().reduce((data, bid) => {
-      const volume = data.length > 0 ? parseFloat(bid.size) + data[data.length - 1][1] : parseFloat(bid.size);
-      data.push([parseFloat(bid.price), volume])
-      return data;
-    }, []).reverse()
-    : [];
+  let asks = [];
+  let bids = [];
 
-  const connected = state.websocket.connected;
+  if (selectedWebsocket && selectedWebsocket.asks && selectedWebsocket.bids && selectedWebsocket.asks.length > 0 && selectedWebsocket.bids.length > 0) {
+
+    const minAsk = parseFloat(selectedWebsocket.asks[selectedWebsocket.asks.length - 1].price);
+    const maxAsk = parseFloat(selectedWebsocket.asks[0].price);
+
+    const minBid = parseFloat(selectedWebsocket.bids[selectedWebsocket.bids.length - 1].price);
+    const maxBid = parseFloat(selectedWebsocket.bids[0].price);
+
+    // get the minimum range for the order book, so that the longer data set can be truncated
+    const minRange = Math.min(
+      maxAsk - minAsk,
+      maxBid - minBid,
+    );
+
+    const maxAllowedAsk = minAsk + minRange;
+    const minAllowedBid = maxBid - minRange;
+
+    // add up the size of the orders at each price level to create a volume
+    asks = selectedWebsocket.asks.slice().reverse().reduce((data, ask) => {
+        const volume = data.length > 0 ? parseFloat(ask.size) + data[data.length - 1][1] : parseFloat(ask.size);
+        const price = parseFloat(ask.price);
+        if (price <= maxAllowedAsk) {
+          data.push([price, volume])
+        }
+        return data;
+      }, []);
+
+    // add up the size of the orders at each price level to create a volume
+    bids = selectedWebsocket.bids.slice().reduce((data, bid) => {
+        const volume = data.length > 0 ? parseFloat(bid.size) + data[data.length - 1][1] : parseFloat(bid.size);
+        const price = parseFloat(bid.price);
+        if (price >= minAllowedBid)
+        data.push([price, volume])
+        return data;
+      }, []).reverse();
+
+    const actualMaxAsk = asks[asks.length - 1][0];
+    const actualMinBid = bids[0][0]
+
+    if (asks[asks.length - 1][0] - asks[0][0] < bids[bids.length - 1][0] - bids[0][0]) {
+      // console.log('maxAsk', maxAsk);
+      // console.log('minAsk', minAsk);
+      // console.log('maxBid', maxBid);
+      // console.log('minBid', minBid);
+      // console.log('minRange', minRange);
+      // console.log('maxAllowedAsk', maxAllowedAsk);
+      // console.log('maxAllowedBid', minAllowedBid);
+      // console.log('actualMaxAsk', actualMaxAsk);
+      // console.log('actualMinBid', actualMinBid);
+    }
+  }
 
   return ({
     content,

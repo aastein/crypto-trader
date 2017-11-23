@@ -2,28 +2,36 @@
   height: $orderbook-height;
   overflow-y: hidden;
 
+  .asks {
+    border-bottom: 1px solid $ligter-dark-a;
+  }
+  .bids {
+    border-top: 1px solid $ligter-dark-a;
+  }
   .orderbook-row {
-    p {
-      font-size: 12px;
-      font-weight: bold;
-      margin: 0 0 .3rem;
-    }
+
     .ask {
+      display: table-cell;
       color: $red;
+      font-size: 0.6rem;
       .bar {
+        top: 1px;
+        position: relative;
         background-color: $red;
       }
     }
     .bid {
+      display: table-cell;
       color: $green;
+      font-size: 0.6rem;
       .bar {
+        top: 1px;
+        position: relative;
         background-color: $green;
-        max-width: 100%;
       }
     }
     .bar-container {
-      height: 14px;
-      width: 20px;
+      height: 100%;
     }
   }
   .bar {
@@ -33,13 +41,9 @@
   .spread {
     border-top: 2px solid $ligter-dark;
     border-bottom: 2px solid $ligter-dark;
-    margin: 0 0 .3rem;
     span {
       font-size: 11px;
       color: #FFFFFF;
-    }
-    p {
-      margin: 0;
     }
   }
 }
