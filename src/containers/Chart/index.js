@@ -274,7 +274,7 @@ class Chart extends Component {
       },
       chart: {
         animation: false,
-        zoomType: 'x',
+        // zoomType: 'x',
         marginBottom: 15,
         backgroundColor: 'transparent',
       },
@@ -319,15 +319,23 @@ class Chart extends Component {
     };
   }
 
+  handleMouseOverEnter = () => {
+    window.onwheel = function(){ return false; };
+  }
+
+  handleMouseOverExit = () => {
+    window.onwheel = null;
+  }
+
   render() {
     console.log('rendering chart container');
 
     return (
       <div className="chart secondary-bg-dark">
         { this.props.selectedProductPriceData.length > 0 ?
-          <div>
+          <div onMouseEnter={this.handleMouseOverEnter} onMouseLeave={this.handleMouseOverExit}>
             <PriceChart ref={(c) => { this.priceChart = c; }} config={this.config(this.props)}
-            />
+          />
           </div>
           : <div>
             <Loader />

@@ -41,10 +41,10 @@ class DepthChart extends Component {
         chart.update({ mapNavigation: { ...nextConfig.mapNavigation } });
       }
     }
-    // return (this.props.asks.length === 0 && nextProps.asks.length > 0) || this.props.visible !== nextProps.visible
-    //   || this.props.connected !== nextProps.connected;
-    // eslint-disable-next-line
-    return JSON.stringify(this.props) != JSON.stringify(nextProps);
+    // eslint disable next line
+    const getMidMarketPriceChanged = this.getMidMarketPrice(nextProps) !== this.getMidMarketPrice(this.props);
+    return (this.props.asks.length === 0 && nextProps.asks.length > 0) || this.props.visible !== nextProps.visible
+      || this.props.connected !== nextProps.connected || getMidMarketPriceChanged;
   }
 
   dataChanged = (nextConfig) => {
@@ -178,6 +178,10 @@ class DepthChart extends Component {
     };
   }
 
+  getMidMarketPrice = (props) => {
+    return props.asks.length > 0 ? props.asks[0][0] - ((props.asks[0][0] - props.bids[props.bids.length - 1][0]) / 2) : 0;
+  }
+
   render() {
     console.log('rendering DepthChartContainer');
     return ( this.props.visible &&
@@ -188,11 +192,15 @@ class DepthChart extends Component {
             <div className="columns">
               <div className="col-2 col-mx-auto btn-chart">
                 <button className="btn btn-action minus float-right" onClick={this.handleZoomOut} ><i className="icon icon-minus"></i></button>
-                <span className="h6">{(this.props.asks[0][0] - ((this.props.asks[0][0] - this.props.bids[this.props.bids.length - 1][0]) / 2)).toFixed(3)}</span>
+                <span className="h6">{this.getMidMarketPrice(this.props).toFixed(3)}</span>
                 <button className="btn btn-action plus" onClick={this.handleZoomIn} ><i className="icon icon-plus"></i></button>
               </div>
             </div>
-            <LineChart ref={(c) => { this.lineChart = c; }} refName="depthchart" config={this.config(this.props)} />
+            <LineChart
+              config={this.config(this.props)}
+              ref={(c) => { this.lineChart = c; }}
+              refName="depthchart"
+            />
           </div>
           : <div className="loading-message">
             <Loader />
