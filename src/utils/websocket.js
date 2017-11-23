@@ -24,9 +24,10 @@ export const setActions = (handleMatch, handleSnapshot, handleUpdate, handleTick
         break;
       case 'ticker':
         handleTicker(data);
-        break
+        break;
       case 'error':
         console.error(data);
+        break;
       default:
         console.log('no websocket handler for: ', data.type);
     }

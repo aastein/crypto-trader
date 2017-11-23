@@ -14,7 +14,7 @@ const INITAL_VIEW_STATE = {
     {id: 'Orders', selected: false },
   ],
   bottomRight: [
-    {id: 'Trade History', selected: false },
+    {id: 'Product Data', selected: false },
     {id: 'Trade', selected: true },
   ],
 };

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import run from '../../utils/scriptEnv';
-import test from '../../utils/scriptTestEnv';
+import run from '../utils/scriptEnv';
+import test from '../utils/scriptTestEnv';
 
 export default class CodeEditor extends Component {
 
@@ -15,11 +15,10 @@ export default class CodeEditor extends Component {
       event.preventDefault();
       const val = this.props.script.script,
         start = event.target.selectionStart,
-        end = event.target.selectionEnd,
-        spaces = '  ';
-      const script = { ...this.props.script, script: val.substring(0, start) + spaces + val.substring(end) };
+        end = event.target.selectionEnd;
+      const script = { ...this.props.script, script: val.substring(0, start) + '\t' + val.substring(end) };
       this.props.saveScript(script).then(() => {
-        this.refs.textarea.selectionStart = start + spaces.length;
+        this.refs.textarea.selectionStart = start + 1;
         this.refs.textarea.selectionEnd = this.refs.textarea.selectionStart;
       });
     }
@@ -50,34 +49,36 @@ export default class CodeEditor extends Component {
   render() {
     console.log('rendering CodeEditor');
     return (
-      <div className="code-editor">
-        <form onSubmit={this.handleSave}>
-          <div className="code-editor-header">
-            <span>Script Name:</span>
+      <div className={this.props.className}>
+        <form className="form-horizontal" onSubmit={this.handleSave}>
+          <div className="form-group">
+            <label className="form-label col-1" htmlFor="input-example-1">Name</label>
             <input
-              className="name-input"
-              type="input"
+              className="form-input col-9"
+              type="text"
               value={this.props.script.name}
               onChange={this.handleInputChange}
+              placeholder="Script Name"
             />
             { this.props.script.id !== 0 &&
-            <button className="btn-delete" onClick={this.deleteScript}>Delete</button> }
+            <button className="col-2 btn bg-error" onClick={this.deleteScript}>Delete</button> }
           </div>
-          <div className="textarea">
-            <textarea
-              rows={'3'}
-              cols={'30'}
-              ref={'textarea'}
-              value={this.props.script.script}
-              onChange={this.handleTextAreaChange}
-              onKeyDown={this.handleTabKey}
-            />
-          </div>
-          { this.props.script.id !== 0 &&
-          <div className="action-buttons">
-            <button className="btn-run" onClick={this.runScript}>Run</button>
-            <button className="btn-test" onClick={this.testScript}>Test</button>
-          </div> }
+          <textarea
+            className="form-input col-12"
+            rows={'3'}
+            cols={'30'}
+            ref={'textarea'}
+            value={this.props.script.script}
+            onChange={this.handleTextAreaChange}
+            onKeyDown={this.handleTabKey}
+          >
+            { this.props.script.id !== 0 &&
+              <div className="action-buttons">
+                <button className="btn bg-success" onClick={this.runScript}>Run</button>
+                <button className="btn bg-warning" onClick={this.testScript}>Test</button>
+              </div>
+            }
+          </textarea>
         </form>
       </div>
     );

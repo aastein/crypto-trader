@@ -1,37 +1,19 @@
 import React, { Component } from 'react';
 import { ObjectInspector } from 'react-inspector';
+import { connect } from 'react-redux';
 
-export default class ProductDataList extends Component {
+class ProductDataList extends Component {
   // only render if product price data changed or product doc selection changed
-  shouldComponentUpdate(nextProps, nextState) {
-    const thisData = this.props.products.map(p => (
-      p.data.length
-    ));
-    const nextData = nextProps.products.map(p => (
-      p.data.length
-    ));
-    const thisSelectedDocs = this.props.products.map(p => (
-      p.docSelected
-    ));
-    const nextSelectedDocs = nextProps.products.map(p => (
-      p.docSelected
-    ));
-    const dataChanged = JSON.stringify(thisData)
-      !== JSON.stringify(nextData);
-    const selectedDocsChanged = JSON.stringify(thisSelectedDocs)
-      !== JSON.stringify(nextSelectedDocs);
-    return dataChanged || selectedDocsChanged;
-  }
 
   render() {
     console.log('rendering ProductDataList');
-    return (
+    return ( this.props.visible &&
       <div className="doc-list">
         <h2>
           Product Data
         </h2>
         <div className="docs">
-          { this.props.products.map(p => (
+          { this.props.products && this.props.products.map(p => (
             <div key={p.id}>
               <button
                 className="list-button"
@@ -51,3 +33,20 @@ export default class ProductDataList extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  const products = state.products;
+  const content = 'Product Data';
+  const visible = state.view.bottomRight.find(c => (c.id === content)).selected;
+  return ({
+    products,
+    visible,
+  })
+};
+
+const ProductDataListContainer = connect(
+  mapStateToProps,
+  null,
+)(ProductDataList);
+
+export default ProductDataListContainer;

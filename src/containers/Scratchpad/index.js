@@ -9,9 +9,8 @@ import {
   toggleScriptLive,
 } from '../../actions';
 
-import CodeEditor from '../CodeEditor';
-import ProductDataList from '../ProductDataList';
-import ScriptList from '../ScriptList';
+import CodeEditor from '../../components/CodeEditor';
+import ScriptList from '../../components/ScriptList';
 
 class Scratchpad extends Component {
   render() {
@@ -20,23 +19,24 @@ class Scratchpad extends Component {
       b.active ? b : a
     ), {});
     const scriptHeader = this.props.scripts[0].script;
-    return (
-      <div className="bottom-container">
-        <div className="script-container">
+    return ( this.props.visible &&
+      <div className={this.props.className}>
+        <div className="container columns">
           <ScriptList
+            className="container columns col-3"
             scripts={this.props.scripts}
             addNew={this.props.addScript}
             toggleScriptLive={this.props.toggleScriptLive}
             onScriptClick={this.props.selectScript}
           />
           <CodeEditor
+            className="col-9"
             scriptHeader={scriptHeader}
             script={activeScript}
             deleteScript={this.props.deleteScript}
             saveScript={this.props.saveScript}
           />
         </div>
-        <ProductDataList products={[]} onClick={e => {e.preventDefault()}} />
       </div>
     );
   }
@@ -44,8 +44,11 @@ class Scratchpad extends Component {
 
 const mapStateToProps = state => {
   const scripts = state.scripts;
+  const content = 'Scripts';
+  const visible = state.view.bottomLeft.find(c => (c.id === content)).selected;
   return ({
     scripts,
+    visible,
   })
 };
 

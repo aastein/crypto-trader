@@ -88,7 +88,6 @@ class DepthChart extends Component {
         animation: false,
         // zoomType: 'x',
         type: 'area',
-        marginBottom: 51,
         backgroundColor: 'transparent',
       },
       mapNavigation: {
@@ -104,6 +103,9 @@ class DepthChart extends Component {
         allowDecimals: false,
         labels: {
           y: 13,
+          style: {
+            color: 'white',
+          },
         },
         title: { text: null },
         reversed: false,
@@ -119,6 +121,9 @@ class DepthChart extends Component {
         labels: {
           align: 'right',
           x: -5,
+          style: {
+            color: 'white',
+          },
         },
         opposite: true,
         lineWidth: 1,
@@ -130,7 +135,7 @@ class DepthChart extends Component {
         max: 1,
         allowDecimals: false,
         labels: {
-          enabled: false
+          enabled: false,
         },
         lineWidth: 0,
       }],

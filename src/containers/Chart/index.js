@@ -100,6 +100,9 @@ class Chart extends Component {
       labels: {
         align: 'left',
         x: 5,
+        style: {
+          color: 'white',
+        },
       },
       offset: 0,
       top,
@@ -211,6 +214,9 @@ class Chart extends Component {
         labels: {
           align: 'left',
           x: 5,
+          style: {
+            color: 'white',
+          },
         },
         height: volumeOffset,
         lineWidth: 1,
@@ -236,6 +242,9 @@ class Chart extends Component {
         gridLineColor: 'transparent',
         labels: {
           enabled: false,
+          style: {
+            color: 'white',
+          },
         },
         top: volumeOffset,
         height: '10%',
@@ -295,6 +304,9 @@ class Chart extends Component {
         plotLines: testPlotLines,
         labels: {
           y: 13,
+          style: {
+            color: 'white',
+          },
         },
         tickLength: 3,
       },

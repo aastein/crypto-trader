@@ -114,7 +114,6 @@ class WebsocketChart extends Component {
         enabled: false,
       },
       chart: {
-        marginBottom: 51,
         backgroundColor: 'transparent',
       },
       xAxis: [{
@@ -122,8 +121,12 @@ class WebsocketChart extends Component {
         title: { text: null },
         labels: {
           y: 13,
-          staggerLines: 2,
+          style: {
+            color: 'white',
+          },
         },
+
+        tickInterval: props.granularity * 10,
         tickLength: 3,
       }],
       yAxis: [{
@@ -132,6 +135,9 @@ class WebsocketChart extends Component {
         labels: {
           align: 'right',
           x: -5,
+          style: {
+            color: 'white',
+          },
         },
         opposite: true,
         lineWidth: 1,
