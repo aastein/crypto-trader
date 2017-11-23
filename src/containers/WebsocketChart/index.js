@@ -70,7 +70,8 @@ class WebsocketChart extends Component {
         }
       }
     }
-    return (this.props.websocketPriceData.length === 0 && nextProps.websocketPriceData.length > 0) || this.props.visible !== nextProps.visible;
+    return (this.props.websocketPriceData.length === 0 && nextProps.websocketPriceData.length > 0) || this.props.visible !== nextProps.visible
+      || this.props.connected !== nextProps.connected;
   }
 
   dataChanged = (nextConfig) => {

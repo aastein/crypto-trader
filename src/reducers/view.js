@@ -2,8 +2,8 @@ import * as actionType from '../actions/actionTypes';
 
 const INITAL_VIEW_STATE = {
   topCenter: [
-    { id: 'Price', selected: true },
-    { id: 'Depth', selected: false }
+    { id: 'Price', selected: false },
+    { id: 'Depth', selected: true }
   ],
   topRight: [
     { id: 'Order Book', selected: true },

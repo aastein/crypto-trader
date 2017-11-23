@@ -66,7 +66,7 @@ class Orderbook extends Component {
           }
           { this.props.bids &&
             this.props.bids.map((bid, i) => (
-            <div className="columns orderbook-row bids" key={i} ref={(c) => { if (i === 7) this.focus = c; }}>
+            <div className="columns orderbook-row bids" key={i} ref={(c) => { if (i === 11) this.focus = c; }}>
               <div className="col-2"><div className="bid bar-container"><span style={this.barWidth(bid.size)} className="bar"/></div></div>
               <div className="col-5"><span className="bid size">{`${bid.size}`}</span></div>
               <div className="col-5"><span className="bid price">{`$ ${bid.price}`}</span></div>

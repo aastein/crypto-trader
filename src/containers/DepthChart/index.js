@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ReactDOM from 'react-dom';
 
 import LineChart from '../../components/LineChart';
 import Loader from '../../components/Loader';
@@ -36,12 +37,14 @@ class DepthChart extends Component {
         for (let i = 0; i < nextConfig.xAxis.length; i += 1) {
           chart.xAxis[i].update({ ...nextConfig.xAxis[i] });
         }
-        console.log('update map nav');
+        // console.log('update map nav');
         chart.update({ mapNavigation: { ...nextConfig.mapNavigation } });
       }
     }
-    const mapCenterChanged = this.props.bids.length > 0 ? this.orderbookCenter(nextProps) !== this.orderbookCenter(this.props) : false;
-    return (this.props.asks.length === 0 && nextProps.asks.length > 0) || this.props.visible !== nextProps.visible  || mapCenterChanged;
+    // return (this.props.asks.length === 0 && nextProps.asks.length > 0) || this.props.visible !== nextProps.visible
+    //   || this.props.connected !== nextProps.connected;
+    // eslint-disable-next-line
+    return JSON.stringify(this.props) != JSON.stringify(nextProps);
   }
 
   dataChanged = (nextConfig) => {
@@ -49,12 +52,19 @@ class DepthChart extends Component {
       || JSON.stringify(this.config(this.props).series[1].data) !== JSON.stringify(nextConfig.series[1].data);
   }
 
-  orderbookCenter = (props) => {
-    return props.asks[0][0] + ((props.asks[0][0] - props.bids[props.bids.length - 1][0]) / 2);
+  handleZoomIn = (e) => {
+    e.preventDefault();
+    const chart = this.lineChart.depthchart.getChart();
+    chart.mapZoom(0.5, this.props.asks[0][0], 0);
+  }
+
+  handleZoomOut = (e) => {
+    e.preventDefault();
+    const chart = this.lineChart.depthchart.getChart();
+    chart.mapZoom(2, this.props.asks[0][0], 0);
   }
 
   config = (props) => {
-    const orderbookCenter = this.orderbookCenter(props);
     const yAxisHeight = Math.ceil(100*props.asks[props.asks.length - 1][1])/100;
     return {
       plotOptions: {
@@ -82,22 +92,12 @@ class DepthChart extends Component {
         backgroundColor: 'transparent',
       },
       mapNavigation: {
-        // enabled: true,
-        enableButtons: true,
-        buttons: {
-          zoomIn: {
-            onclick: function () {
-              console.log('center is ', orderbookCenter);
-              this.mapZoom(0.5, orderbookCenter, 0);
-            }
-          },
-          zoomOut: {
-            onclick: function () {
-              console.log('center is ', orderbookCenter);
-              this.mapZoom(2, orderbookCenter, 0);
-            }
-          },
+        buttonOptions: {
+          //align: 'center',
+          // alignTo: 'spacingBox',
+          x: 20,
         },
+        enableButtons: false,
       },
       xAxis: [{
         minRange: 10,
@@ -159,7 +159,7 @@ class DepthChart extends Component {
         type: 'column',
         color: 'rgba(255,255,255,0.2)',
         data: [
-          [orderbookCenter, 3.5],
+          [props.asks[0][0], 3.5],
         ],
         yAxis: 1,
       }
@@ -179,17 +179,24 @@ class DepthChart extends Component {
   }
 
   render() {
-    console.log('rendering DepthChart');
+    console.log('rendering DepthChartContainer');
     return ( this.props.visible &&
       <div className="chart secondary-bg-dark">
         <ConnectedGlyph connected={this.props.connected}/>
         { this.props.asks.length > 0 ?
           <div className="">
+            <div className="columns">
+              <div className="col-2 col-mx-auto btn-chart">
+                <button className="btn btn-action minus float-right" onClick={this.handleZoomOut} ><i className="icon icon-minus"></i></button>
+                <span className="h6">{(this.props.asks[0][0] - ((this.props.asks[0][0] - this.props.bids[this.props.bids.length - 1][0]) / 2)).toFixed(3)}</span>
+                <button className="btn btn-action plus" onClick={this.handleZoomIn} ><i className="icon icon-plus"></i></button>
+              </div>
+            </div>
             <LineChart ref={(c) => { this.lineChart = c; }} refName="depthchart" config={this.config(this.props)} />
           </div>
-          : <div>
+          : <div className="loading-message">
             <Loader />
-            <p className="centered">{`Chart will render when realtime data is received for
+            <p className="message">{`Chart will render when realtime data is received for
               ${this.props.productDisplayName ? this.props.productDisplayName : 'the selected product'}`}</p>
           </div>
         }
@@ -232,6 +239,8 @@ const mapStateToProps = state => {
         const volume = data.length > 0 ? parseFloat(ask.size) + data[data.length - 1][1] : parseFloat(ask.size);
         const price = parseFloat(ask.price);
         if (price <= maxAllowedAsk) {
+          // add data at same price - Number.MIN_VALUE with last volume so you get the level steps
+          if(data.length > 0) data.push([price - Number.MIN_VALUE, data[data.length - 1][1]]);
           data.push([price, volume])
         }
         return data;
@@ -239,27 +248,19 @@ const mapStateToProps = state => {
 
     // add up the size of the orders at each price level to create a volume
     bids = selectedWebsocket.bids.slice().reduce((data, bid) => {
-        const volume = data.length > 0 ? parseFloat(bid.size) + data[data.length - 1][1] : parseFloat(bid.size);
+        const volume = data.length > 0 ? parseFloat(bid.size) + data[0][1] : parseFloat(bid.size);
         const price = parseFloat(bid.price);
-        if (price >= minAllowedBid)
-        data.push([price, volume])
+        if (price >= minAllowedBid) {
+          // add data at same price - Number.MIN_VALUE with last volume so you get the level steps
+          if(data.length > 0) data.unshift([price + Number.MIN_VALUE, data[0][1]]);
+          data.unshift([price, volume]);
+        }
         return data;
-      }, []).reverse();
+      }, []);//.reverse();
 
-    const actualMaxAsk = asks[asks.length - 1][0];
-    const actualMinBid = bids[0][0]
-
-    if (asks[asks.length - 1][0] - asks[0][0] < bids[bids.length - 1][0] - bids[0][0]) {
-      // console.log('maxAsk', maxAsk);
-      // console.log('minAsk', minAsk);
-      // console.log('maxBid', maxBid);
-      // console.log('minBid', minBid);
-      // console.log('minRange', minRange);
-      // console.log('maxAllowedAsk', maxAllowedAsk);
-      // console.log('maxAllowedBid', minAllowedBid);
-      // console.log('actualMaxAsk', actualMaxAsk);
-      // console.log('actualMinBid', actualMinBid);
-    }
+    // make sure a data point exists at range max so chart always has correct range
+    asks.push([maxAllowedAsk, asks[asks.length - 1][1]]);
+    bids.unshift([minAllowedBid, bids[0][1]]);
   }
 
   return ({
@@ -271,17 +272,9 @@ const mapStateToProps = state => {
   })
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    // setZoomLevel: (level) => {
-    //   dispatch(setZoomLevel(level));
-    // },
-  }
-);
-
 const DepthChartContainer = connect(
   mapStateToProps,
-  mapDispatchToProps,
+  null,
 )(DepthChart);
 
 export default DepthChartContainer;
