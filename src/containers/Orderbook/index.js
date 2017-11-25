@@ -43,10 +43,10 @@ class Orderbook extends Component {
   render() {
     return ( this.props.visible &&
       <div className="">
-        <div className="order-book secondary-bg-dark">
+        <div className="container order-book secondary-bg-dark">
           { this.props.asks &&
             this.props.asks.map((ask, i) => (
-            <div className="columns orderbook-row asks" key={i} >
+            <div className="columns px-1 orderbook-row asks" key={i} >
               <div className="col-2"><div className="ask bar-container"><span style={this.barWidth(ask.size)} className="bar"/></div></div>
               <div className="col-5"><span className="col-6 ask size">{`${(ask.size)}`}</span></div>
               <div className="col-5"><span className="col-3 ask price">{`$ ${ask.price}`}</span></div>
@@ -54,7 +54,7 @@ class Orderbook extends Component {
           ))}
           { this.props.asks && this.props.asks.length > 0 &&
             <div className="orderbook-row spread">
-              <div className="columns">
+              <div className="columns px-1">
                 <span className="col-2" />
                 <span className="col-5">SPREAD</span>
                 <span className="col-5">
@@ -66,7 +66,7 @@ class Orderbook extends Component {
           }
           { this.props.bids &&
             this.props.bids.map((bid, i) => (
-            <div className="columns orderbook-row bids" key={i} ref={(c) => { if (i === 11) this.focus = c; }}>
+            <div className="columns px-1 orderbook-row bids" key={i} ref={(c) => { if (i === 11) this.focus = c; }}>
               <div className="col-2"><div className="bid bar-container"><span style={this.barWidth(bid.size)} className="bar"/></div></div>
               <div className="col-5"><span className="bid size">{`${bid.size}`}</span></div>
               <div className="col-5"><span className="bid price">{`$ ${bid.price}`}</span></div>

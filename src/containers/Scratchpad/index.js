@@ -20,17 +20,17 @@ class Scratchpad extends Component {
     ), {});
     const scriptHeader = this.props.scripts[0].script;
     return ( this.props.visible &&
-      <div className={this.props.className}>
-        <div className="container columns">
+      <div className={`${this.props.className}`}>
+        <div className="columns flex-1">
           <ScriptList
-            className="container columns col-3"
+            className="col-3"
             scripts={this.props.scripts}
             addNew={this.props.addScript}
             toggleScriptLive={this.props.toggleScriptLive}
             onScriptClick={this.props.selectScript}
           />
           <CodeEditor
-            className="col-9"
+            className="col-9 flex-column"
             scriptHeader={scriptHeader}
             script={activeScript}
             deleteScript={this.props.deleteScript}

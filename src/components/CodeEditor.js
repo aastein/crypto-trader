@@ -50,7 +50,7 @@ export default class CodeEditor extends Component {
     console.log('rendering CodeEditor');
     return (
       <div className={this.props.className}>
-        <form className="form-horizontal" onSubmit={this.handleSave}>
+        <form className="form-horizontal flex-column flex-1" onSubmit={this.handleSave}>
           <div className="form-group">
             <label className="form-label col-1" htmlFor="input-example-1">Name</label>
             <input
@@ -64,7 +64,7 @@ export default class CodeEditor extends Component {
             <button className="col-2 btn bg-error" onClick={this.deleteScript}>Delete</button> }
           </div>
           <textarea
-            className="form-input col-12"
+            className="form-input flex-1 col-12"
             rows={'3'}
             cols={'30'}
             ref={'textarea'}
