@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as actionType from './actionTypes';
-import { getAccounts, getOrders, getProductData, getProducts } from '../utils/api';
+import { getAccounts, getOrders, getProductData, getProducts, deleteOrder } from '../utils/api';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
 import connect, { setActions, subscribeToTicker, subscribeToOrderBook } from '../utils/websocket';
 
@@ -66,6 +66,17 @@ export const setLocation = location => ({ type: actionType.SET_LOCATION, locatio
 export const showCard = (card, content) => ({ type: actionType.SHOW_CARD, card, content });
 
 // api
+export const cancelOrder = order => (
+  (dispatch, getState) => {
+    const sessionId = getState().profile.session;
+    return deleteOrder(order.id, sessionId).then(() => {
+      // console.log('delete order request completed');
+      // console.log(order);
+      dispatch(fetchOrders(order.product_id, sessionId));
+    })
+  }
+);
+
 export const fetchAccounts = session => (
   dispatch => (
     getAccounts(session).then((accounts) => {
@@ -81,7 +92,7 @@ export const fetchAccounts = session => (
 export const fetchOrders = (product, session) => {
   return dispatch => {
     return getOrders(product, session).then((orders) => {
-      console.log(orders);
+      // console.log('fetch order res', orders);
       dispatch(setOrders(product, orders));
     })
   };
@@ -165,10 +176,16 @@ export const initProducts = () => (
   (dispatch, getState) => (
     getProducts().then((products) => {
       dispatch(setProducts(products.data));
-      const selectedProductIds = getState().profile.selectedProducts.map(p => (p.value));
+      const state = getState();
+      const session = state.profile.session;
+      const selectedProductIds = state.profile.selectedProducts.map(p => (p.value));
       dispatch(selectProduct(selectedProductIds[0]));
       dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
-      dispatch(initWebsocket(selectedProductIds));
+      if (session) {
+        dispatch(fetchOrders(selectedProductIds[0], session));
+        dispatch(fetchAccounts(session));
+      }
+      // dispatch(initWebsocket(selectedProductIds));
     })
   )
 );

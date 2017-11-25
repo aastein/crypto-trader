@@ -52,7 +52,7 @@ export default class CodeEditor extends Component {
       <div className={this.props.className}>
         <form className="form-horizontal flex-column flex-1" onSubmit={this.handleSave}>
           <div className="form-group">
-            <label className="form-label col-1" htmlFor="input-example-1">Name</label>
+            <label className="form-label col-1 text-light" htmlFor="input-example-1">Name</label>
             <input
               className="form-input col-9"
               type="text"

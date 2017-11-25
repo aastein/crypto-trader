@@ -21,13 +21,13 @@ const authRequest = (uri, params, method, body, session) => {
  * Private Endpoints
 */
 
-export const getOrder = (id, session) => {
-  const uri = `/orders/${id}`;
+export const getOrder = (orderId, session) => {
+  const uri = `/orders/${orderId}`;
   return authRequest(uri, '', 'get', '', session).then(res => (
     res.data
   )).catch((error) => {
     if (error.response.status >= 400) {
-      console.warn(`Cannot find order ${id}`);
+      console.warn(`Find order failed ${orderId}`);
     }
   });
 };
@@ -38,7 +38,7 @@ export const getOrders = (product, session) => {
     res.data
   )).catch((error) => {
     if (error.response.status >= 400) {
-      console.warn(`Cannot find orders. Product: ${product}`);
+      console.warn(`Find orders failed. Product: ${product}`);
     }
   });
 }
@@ -47,8 +47,16 @@ export const getAccounts = (session) => {
   const uri = '/accounts';
   return authRequest(uri, '', 'get', '', session).then(res => (
     res.data
-  )).catch((err) => { alert('Session ID invalid', err); });
+  )).catch((err) => { alert('Get accounts failed', err); });
 };
+
+export const deleteOrder = (orderId, session) => {
+  const uri = `/orders/${orderId}`;
+  return authRequest(uri, '', 'delete', '', session).then(res => {
+    // console.log('cancel order res', res);
+    return res.data;
+  }).catch((err) => { console.warn('Cancel order failed.', orderId, err); });
+}
 
 /*
  * Public Endpoints

@@ -46,14 +46,16 @@ class DepthChart extends Component {
     const getMidMarketPriceChanged = this.getMidMarketPrice(nextProps) !== this.getMidMarketPrice(this.props);
 
     return  (
-              (
+              ( // order book changes that happen a lot
                 (this.props.asks.length === 0 && nextProps.asks.length > 0)
-                || this.props.connected !== nextProps.connected
                 || getMidMarketPriceChanged
               )
+              // thus should be rate limited
               && updateTimeValid
             )
-            || this.props.visible !== nextProps.visible ;
+            // these are application state changes which should always trigger a rerender
+            || this.props.visible !== nextProps.visible
+            || this.props.connected !== nextProps.connected;
   }
 
   dataChanged = (nextConfig) => {
