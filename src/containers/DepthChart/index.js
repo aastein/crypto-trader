@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReactDOM from 'react-dom';
 
 import LineChart from '../../components/LineChart';
 import Loader from '../../components/Loader';
@@ -16,7 +15,9 @@ class DepthChart extends Component {
 
   // return false, do update with child chart API via ref
   shouldComponentUpdate(nextProps) {
-    if(this.lineChart && this.lineChart.depthchart && Date.now() - this.state.lastUpdateTime > 1000) {
+    const updateTimeValid = Date.now() - this.state.lastUpdateTime > 1000
+    // do updates via highchars update apis
+    if(this.lineChart && this.lineChart.depthchart && updateTimeValid) {
       const chart = this.lineChart.depthchart.getChart();
       const nextConfig = this.config(nextProps);
       window.chartRef = chart;
@@ -28,9 +29,6 @@ class DepthChart extends Component {
               name: nextConfig.series[i].name,
               data: nextConfig.series[i].data,
             });
-            this.setState(() => ({
-              lastUpdateTime: Date.now(),
-            }));
           }
         }
         //update xAxis
@@ -39,12 +37,23 @@ class DepthChart extends Component {
         }
         // console.log('update map nav');
         chart.update({ mapNavigation: { ...nextConfig.mapNavigation } });
+        this.setState(() => ({
+          lastUpdateTime: Date.now(),
+        }));
       }
     }
     // eslint disable next line
     const getMidMarketPriceChanged = this.getMidMarketPrice(nextProps) !== this.getMidMarketPrice(this.props);
-    return (this.props.asks.length === 0 && nextProps.asks.length > 0) || this.props.visible !== nextProps.visible
-      || this.props.connected !== nextProps.connected || getMidMarketPriceChanged;
+
+    return  (
+              (
+                (this.props.asks.length === 0 && nextProps.asks.length > 0)
+                || this.props.connected !== nextProps.connected
+                || getMidMarketPriceChanged
+              )
+              && updateTimeValid
+            )
+            || this.props.visible !== nextProps.visible ;
   }
 
   dataChanged = (nextConfig) => {
@@ -189,6 +198,7 @@ class DepthChart extends Component {
 
   render() {
     console.log('rendering DepthChartContainer');
+    console.log('DepthChartTimer', Date.now() - this.state.lastUpdateTime, 1000);
     return ( this.props.visible &&
       <div className="chart secondary-bg-dark">
         <ConnectedGlyph connected={this.props.connected}/>

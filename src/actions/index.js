@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as actionType from './actionTypes';
-import { getAccounts, getProductData, getProducts } from '../utils/api';
+import { getAccounts, getOrders, getProductData, getProducts } from '../utils/api';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
 import connect, { setActions, subscribeToTicker, subscribeToOrderBook } from '../utils/websocket';
 
@@ -12,6 +12,7 @@ export const saveProfile = settings => ({ type: actionType.SAVE_PROFILE, setting
 export const saveSession = session => ({ type: actionType.SAVE_SESSION, session });
 export const updateAccounts = accounts => ({ type: actionType.UPDATE_ACCOUNTS, accounts });
 export const addOrder = (id, productId, time, price) => ({ type: actionType.ADD_ORDER, id, productId, time, price });
+export const setOrders = (product, orders) => ({ type: actionType.SET_ORDERS, product, orders});
 
 // websocket
 export const setProductWSData = (id, data) => ({ type: actionType.SET_PRODUCT_WS_DATA, id, data });
@@ -68,10 +69,23 @@ export const showCard = (card, content) => ({ type: actionType.SHOW_CARD, card, 
 export const fetchAccounts = session => (
   dispatch => (
     getAccounts(session).then((accounts) => {
-      if (accounts) dispatch(updateAccounts(accounts));
+      if (accounts) {
+        dispatch(updateAccounts(accounts));
+        return true;
+      }
+      return false;
     })
   )
 );
+
+export const fetchOrders = (product, session) => {
+  return dispatch => {
+    return getOrders(product, session).then((orders) => {
+      console.log(orders);
+      dispatch(setOrders(product, orders));
+    })
+  };
+}
 
 export const fetchProductData = (id, range, granularity) => (
   (dispatch) => {

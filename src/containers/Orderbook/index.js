@@ -7,14 +7,23 @@ class Orderbook extends Component {
     super(props);
     this.state = {
       scrolled: false,
+      lastUpdateTime: 0,
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
+    const updateTimeValid = Date.now() - this.state.lastUpdateTime > 200;
+    return JSON.stringify(this.props) !== JSON.stringify(nextProps) && updateTimeValid;
+  }
+
+  resetTimer() {
+    this.setState(() => ({
+      lastUpdateTime: Date.now(),
+    }));
   }
 
   componentDidUpdate(prevProps) {
+    this.resetTimer();
     if (!this.props.visible && this.state.scrolled) {
       this.setState(() => (
         { scrolled: false }
@@ -41,6 +50,7 @@ class Orderbook extends Component {
   }
 
   render() {
+    console.log('rendering orderbook');
     return ( this.props.visible &&
       <div className="">
         <div className="container order-book secondary-bg-dark">

@@ -11,6 +11,8 @@ import 'font-awesome/scss/font-awesome.scss';
 import App from './App';
 import reducer from './reducers';
 import './styles/styles.scss';
+import { INIT_CHART_STATE } from './reducers/chart';
+import { INIT_WEBSOCKET_STATE } from './reducers/websocket';
 
 const composeEnhancers = typeof window === 'object' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
@@ -24,14 +26,29 @@ const getComposeEnhancers = () => {
   return compose(applyMiddleware(thunk));
 };
 
-const initialState = () => {
+const localStorageState = () => {
   const local = JSON.parse(localStorage.getItem('redux'))
-  return typeof local === 'object' ? localStorage.getItem('redux') : {};
+  return typeof local === 'object' ? JSON.parse(localStorage.getItem('redux')) : null;
+}
+
+const initialState = () => {
+  // merge locally saved state with missing state slices.
+  if (localStorageState === null) {
+    return null;
+  }
+
+  const initState = {
+    ...localStorageState(),
+    chart : INIT_CHART_STATE,
+    websocket: INIT_WEBSOCKET_STATE,
+  }
+  console.log('initstate', initState);
+  return initState;
 }
 
 const store = createStore(
   reducer,
-  // JSON.parse(initialState()),
+  initialState(),
   getComposeEnhancers(),
 );
 

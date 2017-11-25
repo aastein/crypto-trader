@@ -2,7 +2,7 @@ import * as actionType from '../actions/actionTypes';
 import calculateIndicators from '../utils/indicators';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
 
-const INITAL_CHART_STATE = {
+export const INIT_CHART_STATE = {
   indicators: [{
     name: 'Stoch RSI',
     id: 'srsi',
@@ -256,7 +256,7 @@ const INITAL_CHART_STATE = {
   fetchingStatus: 'success',
 };
 
-const chart = (state = INITAL_CHART_STATE, action) => {
+const chart = (state = INIT_CHART_STATE, action) => {
   switch (action.type) {
     case actionType.SET_FETCHING_STATUS:
       return { ...state, fetchingStatus: action.status };

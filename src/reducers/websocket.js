@@ -2,7 +2,7 @@ import moment from 'moment';
 
 import * as actionType from '../actions/actionTypes';
 
-const INIT_STATE = {
+export const INIT_WEBSOCKET_STATE = {
   connected: false,
   heartbeatTime: 0,
   products: [
@@ -20,7 +20,7 @@ const INIT_STATE = {
 
 const maxOrderbookLength = 300;
 
-const websocket = (state = INIT_STATE, action) => {
+const websocket = (state = INIT_WEBSOCKET_STATE, action) => {
   switch (action.type) {
     // This is to set the products array.
     // case actionType.SET_PRODUCTS:

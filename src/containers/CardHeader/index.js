@@ -15,7 +15,7 @@ class CardHeader extends Component {
   }
 
   render() {
-    console.log('rendering CardHeader:', this.props.position);
+    console.log('rendering CardHeader');
     return (
       <div className="p-1 bg-dark card-header">
           {

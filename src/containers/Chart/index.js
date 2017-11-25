@@ -341,7 +341,6 @@ class Chart extends Component {
 
   render() {
     console.log('rendering chart container');
-
     return (
       <div className="chart secondary-bg-dark">
         { this.props.selectedProductPriceData.length > 0 ?

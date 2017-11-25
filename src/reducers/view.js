@@ -10,8 +10,8 @@ const INITAL_VIEW_STATE = {
     { id: 'Log', selected: false },
   ],
   bottomLeft: [
-    {id: 'Scripts', selected: true },
-    {id: 'Orders', selected: false },
+    {id: 'Scripts', selected: false },
+    {id: 'Orders', selected: true },
   ],
   bottomRight: [
     {id: 'Product Data', selected: false },

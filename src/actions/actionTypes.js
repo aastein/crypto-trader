@@ -5,6 +5,7 @@ export const SAVE_SESSION = 'SAVE_SESSION';
 export const UPDATE_ACCOUNTS = 'UPDATE_ACCOUNTS';
 export const ADD_ORDER = 'ADD_ORDER';
 export const FIND_SESSION = 'FIND_SESSION';
+export const SET_ORDERS = 'SET_ORDERS';
 
 // websocket
 export const SET_PRODUCT_WS_DATA = 'SET_PRODUCT_WS_DATA';

@@ -15,7 +15,7 @@ import OrderHistoryContainer from '../OrderHistory';
 export const Dashboard = () => {
   console.log('rendering dashboard');
   return (
-    <div className="container third-bg-dark">
+    <div className="flex-1 flex-column container third-bg-dark">
       <div className="container">
         <div className="columns">
           <div className="col-10 col-xl-9">
@@ -40,12 +40,12 @@ export const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="container">
-        <div className="columns">
+      <div className="container flex-column flex-1">
+        <div className="flex-1 columns">
           <div className="container flex-column col-8">
             <CardHeader position={'bottomLeft'} contentOptions={['Scripts', 'Orders']}/>
             <ScratchpadContainer className="container flex-1 d-flex" position={'bottomLeft'}/>
-            <OrderHistoryContainer position={'bottomLeft'}/>
+            <OrderHistoryContainer className="container flex-1 d-flex" position={'bottomLeft'}/>
           </div>
           <div className="container col-4">
             <CardHeader position={'bottomRight'} contentOptions={['Trade', 'Product Data']}/>

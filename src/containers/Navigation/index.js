@@ -30,7 +30,6 @@ class Navigation extends Component {
     }, 10000);
   }
 
-  // only render if accounts or orderbook or location changed
   shouldComponentUpdate(nextProps) {
     const accountsChanged = JSON.stringify(this.props.accounts)
       !== JSON.stringify(nextProps.accounts);
@@ -38,12 +37,15 @@ class Navigation extends Component {
       !== JSON.stringify(nextProps.location);
     const tickerChanged = JSON.stringify(this.props.ticker)
       !== JSON.stringify(nextProps.ticker);
-    return accountsChanged || locationChanged || tickerChanged;
+    const liveChanged = JSON.stringify(this.props.live)
+      !== JSON.stringify(nextProps.live);
+    return accountsChanged || locationChanged || tickerChanged || liveChanged;
   }
 
   render() {
+    console.log('rendering Navigation');
     return (
-      <nav className={`navbar ${this.props.live ? 'live' : ''}`}>
+      <nav className={`navbar ${this.props.live ? 'bg-error' : ''}`}>
         <section className="navbar-section">
           <a
             className="logo"
@@ -56,33 +58,22 @@ class Navigation extends Component {
             src="https://avatars0.githubusercontent.com/u/18291415?v=3&s=50"
           />
           </a>
-          <div className="btn vcenter">
-            <NavLink
-              exact
-              activeClassName="text-secondary"
-              to="/"
-            >
-                Dashboard
-            </NavLink>
-          </div>
-          <div className="btn vcenter">
-            <NavLink
-              exact
-              activeClassName="text-secondary"
-              to="/profile"
-            >
-              Profile
-            </NavLink>
-          </div>
-          <div className="btn vcenter">
-            <NavLink
-              exact
-              activeClassName="text-secondary"
-              to="/accounts"
-            >
-              Accounts
-            </NavLink>
-          </div>
+          <NavLink
+            className="btn vcenter"
+            exact
+            activeClassName="text-secondary"
+            to="/"
+          >
+              Dashboard
+          </NavLink>
+          <NavLink
+            className="btn vcenter"
+            exact
+            activeClassName="text-secondary"
+            to="/profile"
+          >
+            Profile
+          </NavLink>
           {
             this.props.ticker.map(a => (
               <div className="ticker vcenter" key={a.name}>

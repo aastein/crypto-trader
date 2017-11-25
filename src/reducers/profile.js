@@ -14,20 +14,17 @@ const INITAL_PROFILE_STATE = {
 
 const profile = (state = INITAL_PROFILE_STATE, action) => {
   switch (action.type) {
-    case actionType.ADD_ORDER:
+    case actionType.SET_ORDERS:
+      console.log(action);
+      const orders = { ...state.orders };
+      orders[action.product] = action.orders;
       return { ...state,
-        orders: [...state.orders,
-          {
-            id: action.id,
-            time: action.time,
-            price: action.price,
-          },
-        ],
+        orders,
       };
     case actionType.IMPORT_PROFILE:
       return { ...state, ...action.userData.profile };
     case actionType.SAVE_PROFILE:
-      return { ...state, ...action.settings.profile };
+      return { ...state, ...action.settings };
     case actionType.SAVE_SESSION:
       return { ...state, session: action.session };
     case actionType.UPDATE_ACCOUNTS:

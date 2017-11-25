@@ -1,77 +1,48 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReactDOM from 'react-dom';
+import moment from 'moment';
 
 class OrderHistory extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      scrolled: false,
-    };
-  }
 
   shouldComponentUpdate(nextProps, nextState) {
     return JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
 
-  componentDidUpdate(prevProps) {
-    if (!this.props.visible && this.state.scrolled) {
-      this.setState(() => (
-        { scrolled: false }
-      ));
-    }
-    if (this.focus && !this.state.scrolled) {
-      const node = ReactDOM.findDOMNode(this.focus);
-      if (node) {
-        node.scrollIntoView(false);
-        this.setState(() => (
-          { scrolled: true }
-        ));
-      }
-    }
-  }
-  // y = ( $maxPixles x^2 ) / ( x^2 + $damperConstant )
-  // todo: damper constant = f(average size order per price) =~ f( C * 1 / maket rate), c = 1600000
-  barWidth(size) {
-    const damper = 160000 / this.props.bids[0].price;
-    return {
-      height: '14px',
-      width: `${30*Math.pow(size, 2) / (Math.pow(size, 2) + damper)}px`,
-    }
+  handleClick(e, order) {
+    e.preventDefault();
+    console.log('canceling order', order.id);
   }
 
   render() {
+    console.log('renderig orders container', this.props);
     return ( this.props.visible &&
-      <div className="">
-        <div className="order-book secondary-bg-dark">
-          { this.props.asks &&
-            this.props.asks.map((ask, i) => (
-            <div className="columns orderbook-row asks" key={i} >
-              <div className="col-2"><div className="ask bar-container"><span style={this.barWidth(ask.size)} className="bar"/></div></div>
-              <div className="col-5"><span className="col-6 ask size">{`${(ask.size)}`}</span></div>
-              <div className="col-5"><span className="col-3 ask price">{`$ ${ask.price}`}</span></div>
-            </div>
-          ))}
-          { this.props.asks && this.props.asks.length > 0 &&
-            <div className="orderbook-row spread">
-              <div className="columns">
-                <span className="col-2" />
-                <span className="col-5">SPREAD</span>
-                <span className="col-5">
-                  ${(this.props.asks[this.props.asks.length - 1].price
-                      - this.props.bids[0].price).toFixed(2) }
-                </span>
-              </div>
-            </div>
+      <div className="container d-flex">
+        <div className="flex-1">
+          <div key="heading" className="columns border-bottom-thick px-2">
+            <div className="col-1 text-center">Type</div>
+            <div className="col-2 text-center">Size</div>
+            <div className="col-2 text-center">Filled (BTC)</div>
+            <div className="col-2 text-center">Price (USD)</div>
+            <div className="col-2 text-center">Fee (USD)</div>
+            <div className="col-1 text-center">Time</div>
+            <div className="col-1 text-center">Status</div>
+          </div>
+          { this.props.orders.map(order => {
+              console.log('order', order);
+              return (
+                <div key={order.id} className="columns border-bottom-light px-2">
+                  <div className="col-1 text-center">{order.type}</div>
+                  <div className="col-2 text-center">{order.size}</div>
+                  <div className="col-2 text-center">{order.filled_size}</div>
+                  <div className="col-2 text-center">{Number(order.price).toFixed(2)}</div>
+                  <div className="col-2 text-center">{Number(order.fill_fees).toFixed(2)}</div>
+                  <div className="col-1 text-center">{moment(order.created_at).fromNow()}</div>
+                  <div className="col-1 text-center">{order.status}</div>
+                  <button className="col-1 btn bg-error btn-order" onClick={(e) => { this.handleClick(e, order)}}>Cancel</button>
+                </div>
+              );
+            })
           }
-          { this.props.bids &&
-            this.props.bids.map((bid, i) => (
-            <div className="columns orderbook-row bids" key={i} ref={(c) => { if (i === 11) this.focus = c; }}>
-              <div className="col-2"><div className="bid bar-container"><span style={this.barWidth(bid.size)} className="bar"/></div></div>
-              <div className="col-5"><span className="bid size">{`${bid.size}`}</span></div>
-              <div className="col-5"><span className="bid price">{`$ ${bid.price}`}</span></div>
-            </div>
-          ))}
         </div>
       </div>
     );
@@ -81,19 +52,15 @@ class OrderHistory extends Component {
 const mapStateToProps = state => {
   const content = 'Orders';
   const visible = state.view.bottomLeft.find(c => (c.id === content)).selected;
-
-  const selectedWebsocket = state.websocket.products.find(p => {
+  const selectedProduct = state.chart.products.find(p => {
     return p.active;
   });
-
-  const asks = selectedWebsocket && selectedWebsocket.asks ? selectedWebsocket.asks.slice(selectedWebsocket.asks.length - 25, selectedWebsocket.asks.length - 0) : [];
-  const bids = selectedWebsocket && selectedWebsocket.bids ? selectedWebsocket.bids.slice(0, 25) : [];
+  const orders = selectedProduct ? state.profile.orders[selectedProduct.id] : [];
 
   return ({
     content,
     visible,
-    asks,
-    bids,
+    orders: orders ? orders : [],
   })
 };
 
