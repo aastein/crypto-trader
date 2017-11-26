@@ -9,9 +9,11 @@
     border-radius: 100%;
     position: relative;
     margin-left: 20px;
+    z-index: 1;
     top: 75px;
     // left: 6rem;
     .highcharts-button-box {
+      z-index: 1;
       border-radius: 100%
     }
   }
@@ -21,9 +23,11 @@
     border-radius: 100%;
     position: relative;
     margin-right: 20px;
+    z-index: 1;
     top: 75px;
     // right: 6rem;
     .highcharts-button-box {
+      z-index: 1;
       border-radius: 100%
     }
   }

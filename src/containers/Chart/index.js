@@ -135,6 +135,7 @@ class Chart extends Component {
     });
     return seriesData.map(d => (
       {
+        animation: false,
         data: d.data,
         type: 'line',
         name: d.name,
@@ -223,6 +224,7 @@ class Chart extends Component {
         floor: 0,
       },
       series: {
+        animation: false,
         name: props.productDisplayName,
         data: props.selectedProductPriceData,
         type: 'candlestick',
@@ -253,6 +255,7 @@ class Chart extends Component {
       },
       gridLineColor: 'transparent',
       series: {
+        animation: false,
         type: 'column',
         name: 'Volume',
         dataGrouping: {

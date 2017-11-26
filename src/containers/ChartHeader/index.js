@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactModal from 'react-modal';
 import { connect } from 'react-redux';
 
 import {
@@ -163,21 +162,22 @@ class ChartHeader extends Component {
             />
           </div>
         </div>
-        <ReactModal
-          contentLabel={'indicator name'}
-          className={'react-modal'}
-          overlayClassName={'react-modal-overlay'}
-          isOpen={this.state.editing !== false}
-          shouldCloseOnOverlayClick
-        >
-          <h3 className="title">{this.state.editing ? this.state.editing.name : ''}</h3>
-          <ObjectForm
-            hidden={['id', 'name', 'active', 'valueIds']}
-            object={this.state.editing}
-            onSave={this.onSave}
-          />
-          <button className="close" onClick={this.onClose}>Close</button>
-        </ReactModal>
+        { this.state.editing !== false && <div className='modal active'>
+          <div className="modal-overlay"></div>
+          <div className="modal-container">
+            <div className="modal-body">
+              <div className="content">
+                <div className="h3 text-dark">{this.state.editing ? this.state.editing.name : ''}</div>
+                <ObjectForm
+                  hidden={['id', 'name', 'active', 'valueIds']}
+                  object={this.state.editing}
+                  onSave={this.onSave}
+                  closeButton={(<button className="btn col-3" onClick={this.onClose}>Close</button>)}
+                />
+              </div>
+            </div>
+          </div>
+        </div> }
       </div>
     );
   }
