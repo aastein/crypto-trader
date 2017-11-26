@@ -1,30 +1,28 @@
 .btn-chart {
   height: 0;
   z-index: 1;
+  width: 100%;
+  text-align: center;
+
   // plus button
-  .btn-action.minus {
+  .btn-action.plus {
     border-radius: 100%;
     position: relative;
+    margin-left: 20px;
     top: 75px;
-    right: 6rem;
+    // left: 6rem;
     .highcharts-button-box {
       border-radius: 100%
     }
   }
 
-  span {
-    position: relative;
-    top: 78px;
-    left: 1.4rem;
-    color: white;
-  }
-
   // minus button
-  .btn-action.plus {
+  .btn-action.minus {
     border-radius: 100%;
     position: relative;
-    top: 53px;
-    left: 6rem;
+    margin-right: 20px;
+    top: 75px;
+    // right: 6rem;
     .highcharts-button-box {
       border-radius: 100%
     }

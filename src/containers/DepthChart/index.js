@@ -206,12 +206,9 @@ class DepthChart extends Component {
         <ConnectedGlyph connected={this.props.connected}/>
         { this.props.asks.length > 0 ?
           <div className="">
-            <div className="columns">
-              <div className="col-2 col-mx-auto btn-chart">
-                <button className="btn btn-action minus float-right" onClick={this.handleZoomOut} ><i className="icon icon-minus"></i></button>
-                <span className="h6">{this.getMidMarketPrice(this.props).toFixed(3)}</span>
-                <button className="btn btn-action plus" onClick={this.handleZoomIn} ><i className="icon icon-plus"></i></button>
-              </div>
+            <div className="btn-chart">
+              <button className="btn btn-action minus" onClick={this.handleZoomOut} ><i className="icon icon-minus"></i></button>
+              <button className="btn btn-action plus" onClick={this.handleZoomIn} ><i className="icon icon-plus"></i></button>
             </div>
             <LineChart
               config={this.config(this.props)}
