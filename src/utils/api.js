@@ -164,32 +164,48 @@ export const getProducts = () => {
   return axios.get(url);
 };
 
-export const placeOrder = (type, side, productId, price, size, session, log) => {
+export const placeMarketOrder = (side, productId, price, session) => {
   const uri = '/orders';
   const body = {
-    type,
+    type: 'market',
+    side,
+    product_id: productId,
+    price,
+  };
+  return authRequest(uri, '', 'post', body, session).then((res) => {
+    const data = res.data;
+    return data;
+  }).catch((error) => {
+    if (error.response) {
+      // human readable error
+      console.log(`Order Error: ${error.response.data.message}`);
+    } else {
+      console.log('Error', error);
+    }
+  });
+}
+
+export const placeLimitOrder = (side, productId, price, size, session) => {
+  const uri = '/orders';
+  const body = {
+    type: 'limit',
     side,
     product_id: productId,
     price,
     size,
-    time_in_force: 'GTT',
-    cancel_after: 'min',
+    time_in_force: 'GTC',
     post_only: true,
   };
 
   return authRequest(uri, '', 'post', body, session).then((res) => {
     const data = res.data;
-    log(`Sent ${data.side} ${type} order.\nProduct: ${data.product_id}.\nPrice: ${data.price}\nSize: ${data.size}`);
     return data;
   }).catch((error) => {
     if (error.response) {
-      if (side === 'buy' && error.response.data.message.toLowerCase().includes('insufficient')) {
-        placeOrder(type, side, productId, price, floor(size - 0.01, 2), session, log);
-      } else {
-        log(`Order Error: ${error.response.data.message}`);
-      }
+      // human readable error
+      console.log(`Order Error: ${error.response.data.message}`);
     } else {
-      log('Error', error);
+      console.log('Error', error);
     }
   });
 };

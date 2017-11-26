@@ -21,6 +21,16 @@ const profile = (state = INITAL_PROFILE_STATE, action) => {
       return { ...state,
         orders,
       };
+    case actionType.ADD_ACTIVE_ORDER:
+      const activeOrders = { ...state.activeOrders };
+      activeOrders[action.productId] = [ ...activeOrders[action.productId], action.order ];
+      return { ...state, activeOrders }
+    case actionType.DELETE_ACTIVE_ORDER:
+      const activeOrdersForProduct = state.activeOrders[action.productId];
+      const index = activeOrdersForProduct.find(o => (o.id === action.orderId));
+      activeOrdersForProduct.splice(index, 1);
+      activeOrders[action.productId] = activeOrdersForProduct;
+      return { ...state,  activeOrders};
     case actionType.IMPORT_PROFILE:
       return { ...state, ...action.userData.profile };
     case actionType.SAVE_PROFILE:

@@ -13,6 +13,8 @@ export const saveSession = session => ({ type: actionType.SAVE_SESSION, session 
 export const updateAccounts = accounts => ({ type: actionType.UPDATE_ACCOUNTS, accounts });
 export const addOrder = (id, productId, time, price) => ({ type: actionType.ADD_ORDER, id, productId, time, price });
 export const setOrders = (product, orders) => ({ type: actionType.SET_ORDERS, product, orders});
+export const addActiveOrder = (productId, order) => ({ type: actionType.ADD_ACTIVE_ORDER, productId, order});
+export const deleteActiveOrder = (productId, orderId) => ({ type: actionType.DELETE_ACTIVE_ORDER, productId, orderId});
 
 // websocket
 export const setProductWSData = (id, data) => ({ type: actionType.SET_PRODUCT_WS_DATA, id, data });
@@ -66,12 +68,38 @@ export const setLocation = location => ({ type: actionType.SET_LOCATION, locatio
 export const showCard = (card, content) => ({ type: actionType.SHOW_CARD, card, content });
 
 // api
+export const placeLimitOrder = (appOrderType, side, productId, price, size) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const sessionId = getState().profile.session;
+    if (appOrderType === 'bestPrice' || appOrderType === 'activeBestPrice') {
+      const productWSData = state.websocket.products.find(wsProduct => wsProduct.id === productId);
+      if (side === 'buy') {
+        //match highest bid price, first bid.price
+        price = productWSData.bids[0].price;
+      } else if (side ==='sell') {
+        // match lowest ask price, last ask.price
+        price = productWSData.asks[productWSData.asks.length - 1].price;
+      }
+    }
+    return placeLimitOrder(side, productId, price, size, sessionId).then(res => {
+      console.log('order response', res);
+      // add order id to watched order id list, to replace order when needed
+      if (appOrderType === 'activeBestPrice') {
+        dispatch(addActiveOrder(res.product_id, res));
+      }
+      return res;
+    });
+  }
+}
+
 export const cancelOrder = order => (
   (dispatch, getState) => {
     const sessionId = getState().profile.session;
     return deleteOrder(order.id, sessionId).then(() => {
       // console.log('delete order request completed');
       // console.log(order);
+      dispatch(deleteActiveOrder(order.product_id, order.id));
       dispatch(fetchOrders(order.product_id, sessionId));
     })
   }
@@ -110,6 +138,75 @@ export const fetchProductData = (id, range, granularity) => (
     });
   }
 );
+
+export const initProducts = () => (
+  (dispatch, getState) => (
+    getProducts().then((products) => {
+      dispatch(setProducts(products.data));
+      const state = getState();
+      const session = state.profile.session;
+      const selectedProductIds = state.profile.selectedProducts.map(p => (p.value));
+      dispatch(selectProduct(selectedProductIds[0]));
+      dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
+      if (session) {
+        dispatch(fetchOrders(selectedProductIds[0], session));
+        dispatch(fetchAccounts(session));
+      }
+      dispatch(initWebsocket(selectedProductIds));
+    })
+  )
+);
+
+export const fetchSettings = acceptedFiles => (
+  dispatch => (
+    axios.create({ baseURL: '' }).get(acceptedFiles[0].preview).then((res) => {
+      dispatch(importProfile(res.data));
+      return res.data;
+    })
+  )
+);
+
+export const findSession = acceptedFiles => (
+  dispatch => (
+    axios.create({ baseURL: '' }).get(acceptedFiles[0].preview).then((res) => {
+      const content = res.data;
+      const key = 'session';
+      const idLength = 64;
+      const re = new RegExp('^[a-z0-9]+$');
+      const sessionLocations = [];
+      let index = 0;
+
+      // get indexs of key
+      while (index < content.length) {
+        index = content.indexOf(key, index);
+        sessionLocations.push(index);
+        if (index === -1) break;
+        index += 1;
+      }
+
+      // get string os idLength past the key positions then filter strings with non-alpha-num chars
+      const sessions = sessionLocations.map(s => (
+        content.substring(s + key.length, s + key.length + idLength)
+      )).filter(s => (
+        re.test(s)
+      ));
+
+      // call accounts api with remainng session ids
+      for (let i = 0; i < sessions.length; i += 1) {
+        getAccounts(sessions[i]).then((accounts) => {
+          if (accounts) {
+            dispatch(saveSession(sessions[i]));
+            dispatch(updateAccounts(accounts));
+          }
+        });
+      }
+    })
+  )
+);
+
+/*
+ * Websocket
+*/
 
 const handleMatch = dispatch => {
   return data => {
@@ -168,71 +265,6 @@ export const initWebsocket = ids => (
       setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch), handleTicker(dispatch));
       subscribeToTicker(ids)
       subscribeToOrderBook(ids[0]);
-    })
-  )
-);
-
-export const initProducts = () => (
-  (dispatch, getState) => (
-    getProducts().then((products) => {
-      dispatch(setProducts(products.data));
-      const state = getState();
-      const session = state.profile.session;
-      const selectedProductIds = state.profile.selectedProducts.map(p => (p.value));
-      dispatch(selectProduct(selectedProductIds[0]));
-      dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
-      if (session) {
-        dispatch(fetchOrders(selectedProductIds[0], session));
-        dispatch(fetchAccounts(session));
-      }
-      // dispatch(initWebsocket(selectedProductIds));
-    })
-  )
-);
-
-export const fetchSettings = acceptedFiles => (
-  dispatch => (
-    axios.create({ baseURL: '' }).get(acceptedFiles[0].preview).then((res) => {
-      dispatch(importProfile(res.data));
-      return res.data;
-    })
-  )
-);
-
-export const findSession = acceptedFiles => (
-  dispatch => (
-    axios.create({ baseURL: '' }).get(acceptedFiles[0].preview).then((res) => {
-      const content = res.data;
-      const key = 'session';
-      const idLength = 64;
-      const re = new RegExp('^[a-z0-9]+$');
-      const sessionLocations = [];
-      let index = 0;
-
-      // get indexs of key
-      while (index < content.length) {
-        index = content.indexOf(key, index);
-        sessionLocations.push(index);
-        if (index === -1) break;
-        index += 1;
-      }
-
-      // get string os idLength past the key positions then filter strings with non-alpha-num chars
-      const sessions = sessionLocations.map(s => (
-        content.substring(s + key.length, s + key.length + idLength)
-      )).filter(s => (
-        re.test(s)
-      ));
-
-      // call accounts api with remainng session ids
-      for (let i = 0; i < sessions.length; i += 1) {
-        getAccounts(sessions[i]).then((accounts) => {
-          if (accounts) {
-            dispatch(saveSession(sessions[i]));
-            dispatch(updateAccounts(accounts));
-          }
-        });
-      }
     })
   )
 );

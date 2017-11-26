@@ -6,6 +6,8 @@ export const UPDATE_ACCOUNTS = 'UPDATE_ACCOUNTS';
 export const ADD_ORDER = 'ADD_ORDER';
 export const FIND_SESSION = 'FIND_SESSION';
 export const SET_ORDERS = 'SET_ORDERS';
+export const ADD_ACTIVE_ORDER = 'ADD_ACTIVE_ORDER';
+export const DELETE_ACTIVE_ORDER = 'DELETE_ACTIVE_ORDER';
 
 // websocket
 export const SET_PRODUCT_WS_DATA = 'SET_PRODUCT_WS_DATA';
