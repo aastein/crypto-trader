@@ -18,14 +18,14 @@ export const Dashboard = () => {
     <div className="flex-1 flex-column container third-bg-dark">
       <div className="container">
         <div className="columns">
-          <div className="col-10 col-xl-9">
+          <div className="col-10">
             <div className="container">
               <div className="columns px-1">
-                <div className="col-6 col-xl-12">
+                <div className="col-6">
                   <ChartHeaderContainer />
                   <ChartContainer />
                 </div>
-                <div className="col-6 col-xl-12">
+                <div className="col-6">
                   <CardHeader position={'topCenter'} contentOptions={['Price', 'Depth']}/>
                   <DepthChartContainer position={'topCenter'} />
                   <WebsocketChartContainer position={'topCenter'} />
@@ -33,7 +33,7 @@ export const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="secondary-bg-dark col-2 col-xl-3">
+          <div className="secondary-bg-dark col-2">
             <CardHeader position={'topRight'} contentOptions={['Order Book', 'Log']}/>
             <LogContainer position={'topRight'} />
             <OrderBookContainer position={'topRight'} />

@@ -259,13 +259,20 @@ const handleTicker = dispatch => {
   }
 }
 
+const handleDeleteOrder = (dispatch, sessionId) => {
+  return data => {
+    dispatch(deleteActiveOrder(data.product_id, data.id));
+    dispatch(fetchOrders(data.product_id, sessionId));
+  }
+}
+
 
 export const initWebsocket = ids => (
   (dispatch, getState) => (
     connect().then(() => {
       const sessionId = getState().profile.session;
-      // handleMatch, handleSnapshot, handleUpdate
-      setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch), handleTicker(dispatch));
+      // pass in methods that the WS will need to call.
+      setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch), handleTicker(dispatch), handleDeleteOrder(dispatch, sessionId));
       subscribeToTicker(ids)
       subscribeToOrderBook(ids[0], sessionId);
     })

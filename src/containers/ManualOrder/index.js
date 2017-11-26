@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { placeLimitOrder } from '../../actions'
+import { floor } from '../../utils/math';
 
 class ManualOrder extends Component {
   constructor(props) {
@@ -21,8 +22,8 @@ class ManualOrder extends Component {
         activeBestPrice: false,
       },
       postOnly: true,
-      amount: null,
-      price: null,
+      amount: 0,
+      price: 0,
     };
   }
 
@@ -32,7 +33,12 @@ class ManualOrder extends Component {
   }
 
   handleInputChange(event, key) {
-    const value = event.target.value;
+    let value = event.target.value;
+    if (key === 'amount') {
+      value = floor(value, 8);
+    } else if (key === 'price'){
+      value = floor(value, 2);
+    }
     const state = this.state;
     state[key] = value;
     this.setState(() => ({ ...state }));
@@ -94,6 +100,22 @@ class ManualOrder extends Component {
     return amount * price;
   }
 
+  amountToMax(event) {
+    event.preventDefault();
+    let value;
+    if (this.state.side.sell) {
+      // if sell, sell all BTC
+      value = this.props.amountBaseCurrency;
+    } else if (this.state.side.buy) {
+      // if buy, but max BTC with USD at price == best bid = 8000 usd / btc
+      value = Number(this.props.amountQuoteCurrency) / Number(this.props.bid);
+    }
+    value = floor(value, 8);
+    const state = { ...this.state };
+    state['amount'] = value;
+    this.setState(() => ({ ...state }));
+  }
+
   render() {
     // console.log('rendering manual order');
     return ( this.props.visible &&
@@ -115,18 +137,21 @@ class ManualOrder extends Component {
           </div>
         }
         <div className="form-group">
-          <label className="form-label text-light">Amount</label>
-          <input onChange={(e) => {this.handleInputChange(e, 'amount')}} className="form-input"/>
+          <div className="columns px-1">
+            <label className="form-label text-light">{`Amount ${this.props.baseCurrency}`}</label>
+            <button className="btn btn-order m-2" onClick={(e) => {this.amountToMax(e)}}>Max</button>
+          </div>
+          <input step="any" value={this.state.amount} type="number" onChange={(e) => {this.handleInputChange(e, 'amount')}} className="form-input"/>
         </div>
         { this.state.orderType.limit && this.state.appOrderType.manual &&
           <div className="form-group">
             <label className="form-label text-light">Price $</label>
-            <input onChange={(e) => {this.handleInputChange(e, 'price')}} className="form-input"/>
+            <input step="any" value={this.state.price} type="number" onChange={(e) => {this.handleInputChange(e, 'price')}} className="form-input"/>
           </div>
         }
         { this.state.orderType.limit && (this.state.appOrderType.bestPrice || this.state.appOrderType.activeBestPrice) &&
           <div className="form-group">
-            <label className="form-label text-light">{`Price $${ this.state.amount * (this.state.side.buy ? this.props.bid : this.props.ask) }`}</label>
+            <label className="form-label text-light">{`Price $${this.state.side.buy ? this.props.bid : this.props.ask}`}</label>
           </div>
         }
         <div className="form-group">
@@ -151,11 +176,19 @@ const mapStateToProps = state => {
   let bid = '';
   let ask = '';
   let selectedProductId = '';
+  let baseCurrency = '';
+  let quoteCurrency = '';
+  let amountQuoteCurrency = 0;
+  let amountBaseCurrency = 0;
   if (selectedProduct) {
     selectedProductId = selectedProduct.id;
     const ticker = state.websocket.products.find(wsProduct => wsProduct.id === selectedProduct.id).ticker;
     bid = ticker ? ticker.bestBid : bid;
     ask = ticker ? ticker.bestAsk : ask;
+    baseCurrency = selectedProduct.base_currency;
+    quoteCurrency = selectedProduct.quote_currency;
+    amountBaseCurrency = state.profile.accounts.find(a => (a.currency === baseCurrency)).available;
+    amountQuoteCurrency = state.profile.accounts.find(a => (a.currency === quoteCurrency)).available;
   }
 
   return ({
@@ -164,6 +197,10 @@ const mapStateToProps = state => {
     visible,
     ask,
     bid,
+    baseCurrency,
+    quoteCurrency,
+    amountQuoteCurrency,
+    amountBaseCurrency,
   })
 };
 

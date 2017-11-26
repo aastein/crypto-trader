@@ -20,14 +20,14 @@ class Navigation extends Component {
       if (this.props.session.length > 5) {
         this.props.fetchAccounts(this.props.session);
       }
-    }, 20000);
+    }, 5000);
 
     setInterval(() => {
       if (moment().unix() - moment(this.props.heartbeatTime).unix() > 30
           && this.props.connected === true) {
         this.props.updateHeartbeat(false);
       }
-    }, 10000);
+    }, 5000);
   }
 
   shouldComponentUpdate(nextProps) {

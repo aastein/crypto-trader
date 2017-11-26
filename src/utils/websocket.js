@@ -2,7 +2,7 @@ let connection;
 const url = 'wss://ws-feed.gdax.com';
 
 // set the action to be dispatched when data is received
-export const setActions = (handleMatch, handleSnapshot, handleUpdate, handleTicker) => {
+export const setActions = (handleMatch, handleSnapshot, handleUpdate, handleTicker, handleDeleteOrder) => {
   connection.onmessage = (event) => {
     const data = JSON.parse(event.data);
     switch (data.type) {
@@ -30,6 +30,8 @@ export const setActions = (handleMatch, handleSnapshot, handleUpdate, handleTick
         break;
       case 'done':
         console.log('ws user data', data);
+        // cancel order by id
+        handleDeleteOrder(data);
         break;
       case 'received':
         console.log('ws user made order', data);
