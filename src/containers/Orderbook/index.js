@@ -50,7 +50,7 @@ class Orderbook extends Component {
   }
 
   render() {
-    console.log('rendering orderbook');
+    // console.log('rendering orderbook');
     return ( this.props.visible &&
       <div className="">
         <div className="container order-book secondary-bg-dark">

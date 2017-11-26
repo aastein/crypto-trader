@@ -199,8 +199,8 @@ class DepthChart extends Component {
   }
 
   render() {
-    console.log('rendering DepthChartContainer');
-    console.log('DepthChartTimer', Date.now() - this.state.lastUpdateTime, 1000);
+   // console.log('rendering DepthChartContainer');
+   // console.log('DepthChartTimer', Date.now() - this.state.lastUpdateTime, 1000);
     return ( this.props.visible &&
       <div className="chart secondary-bg-dark">
         <ConnectedGlyph connected={this.props.connected}/>

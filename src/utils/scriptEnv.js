@@ -1,4 +1,4 @@
-import { placeLimitOrder, getOrder } from './api';
+import { postLimitOrder, getOrder } from './api';
 import { round, floor } from './math';
 
 let products;
@@ -37,7 +37,7 @@ const limitOrder = (side, productId, orderbook) => {
   }
   if (profile.live) {
     if (size > 0) {
-      placeLimitOrder('limit', side, productId, price, size, profile.session, log).then((data) => {
+      postLimitOrder('limit', side, productId, price, size, profile.session, log).then((data) => {
         if (side === 'buy') {
           addOrder(data.id, data.product_id, data.created_at, -1 * data.price);
         } else if (side === 'sell') {

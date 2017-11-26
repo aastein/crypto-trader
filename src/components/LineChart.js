@@ -9,7 +9,7 @@ export default class PriceChart extends Component {
   shouldComponentUpdate = nextProps => (false)
 
   render() {
-    console.log('rendering LineChart');
+    // console.log('rendering LineChart');
     return (
       <ReactHighcharts domProps={{ className: 'chart' }} config={this.props.config} ref={(c) => { this[this.props.refName] = c; }} />
     );

@@ -13,7 +13,7 @@ import ProductDataListContainer from '../ProductDataList';
 import OrderHistoryContainer from '../OrderHistory';
 
 export const Dashboard = () => {
-  console.log('rendering dashboard');
+  // console.log('rendering dashboard');
   return (
     <div className="flex-1 flex-column container third-bg-dark">
       <div className="container">

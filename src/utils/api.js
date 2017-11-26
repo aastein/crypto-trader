@@ -164,7 +164,7 @@ export const getProducts = () => {
   return axios.get(url);
 };
 
-export const placeMarketOrder = (side, productId, price, session) => {
+export const postMarketOrder = (side, productId, price, session) => {
   const uri = '/orders';
   const body = {
     type: 'market',
@@ -185,7 +185,7 @@ export const placeMarketOrder = (side, productId, price, session) => {
   });
 }
 
-export const placeLimitOrder = (side, productId, price, size, session) => {
+export const postLimitOrder = (side, productId, price, size, session) => {
   const uri = '/orders';
   const body = {
     type: 'limit',
@@ -196,7 +196,6 @@ export const placeLimitOrder = (side, productId, price, size, session) => {
     time_in_force: 'GTC',
     post_only: true,
   };
-
   return authRequest(uri, '', 'post', body, session).then((res) => {
     const data = res.data;
     return data;

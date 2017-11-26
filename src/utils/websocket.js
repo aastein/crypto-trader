@@ -28,6 +28,12 @@ export const setActions = (handleMatch, handleSnapshot, handleUpdate, handleTick
       case 'error':
         console.error(data);
         break;
+      case 'done':
+        console.log('ws user data', data);
+        break;
+      case 'received':
+        console.log('ws user made order', data);
+        break;
       default:
         console.log('no websocket handler for: ', data.type);
     }
@@ -53,25 +59,29 @@ export const unsubscribeFromTicker = (products) => {
 };
 
 // subscribe with an array of product ids
-export const subscribeToOrderBook = (product) => {
+export const subscribeToOrderBook = (product, sessionId) => {
   connection.send(JSON.stringify({
     type: 'subscribe',
     product_ids: [ product ],
+    session_token: sessionId,
     channels: [
       'level2',
       'matches',
+      'user',
     ],
   }));
 };
 
 // subscribe with an array of product ids
-export const unSubscribeFromOrderBook = (product) => {
+export const unSubscribeFromOrderBook = (product, sessionId) => {
   connection.send(JSON.stringify({
     type: 'unsubscribe',
     product_ids: [ product ],
+    session_token: sessionId,
     channels: [
       'level2',
       'matches',
+      'user',
     ],
   }));
 };

@@ -19,7 +19,7 @@ class OrderHistory extends Component {
   }
 
   render() {
-    console.log('renderig orders container', this.props);
+   // console.log('renderig orders container', this.props);
     return ( this.props.visible &&
       <div className="container d-flex">
         <div className="flex-1">

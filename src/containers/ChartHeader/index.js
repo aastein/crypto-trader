@@ -111,7 +111,7 @@ class ChartHeader extends Component {
   }
 
   render() {
-    console.log('rendering chart header container');
+    // console.log('rendering chart header container');
     return (
       <div className="p-1 bg-dark">
         <div className="container">

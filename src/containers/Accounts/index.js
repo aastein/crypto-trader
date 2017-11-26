@@ -11,7 +11,7 @@ class Accounts extends Component {
   }
 
   render() {
-    console.log('rendering accounts container');
+    // console.log('rendering accounts container');
     return (
       <div className="accounts-page">
         <ul>

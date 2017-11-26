@@ -20,7 +20,7 @@ class Navigation extends Component {
       if (this.props.session.length > 5) {
         this.props.fetchAccounts(this.props.session);
       }
-    }, 5000);
+    }, 20000);
 
     setInterval(() => {
       if (moment().unix() - moment(this.props.heartbeatTime).unix() > 30
@@ -43,7 +43,7 @@ class Navigation extends Component {
   }
 
   render() {
-    console.log('rendering Navigation');
+    // console.log('rendering Navigation');
     return (
       <nav className={`navbar ${this.props.live ? 'bg-error' : ''}`}>
         <section className="navbar-section">

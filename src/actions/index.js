@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as actionType from './actionTypes';
-import { getAccounts, getOrders, getProductData, getProducts, deleteOrder } from '../utils/api';
+import { getAccounts, getOrders, getProductData, getProducts, deleteOrder, postLimitOrder } from '../utils/api';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
 import connect, { setActions, subscribeToTicker, subscribeToOrderBook } from '../utils/websocket';
 
@@ -68,12 +68,13 @@ export const setLocation = location => ({ type: actionType.SET_LOCATION, locatio
 export const showCard = (card, content) => ({ type: actionType.SHOW_CARD, card, content });
 
 // api
-export const placeLimitOrder = (appOrderType, side, productId, price, size) => {
+export const placeLimitOrder = (appOrderType, side, productId, price, amount) => {
   return (dispatch, getState) => {
     const state = getState();
     const sessionId = getState().profile.session;
     if (appOrderType === 'bestPrice' || appOrderType === 'activeBestPrice') {
       const productWSData = state.websocket.products.find(wsProduct => wsProduct.id === productId);
+      console.log('placeLimitOrder index.js ln 77', state, productWSData);
       if (side === 'buy') {
         //match highest bid price, first bid.price
         price = productWSData.bids[0].price;
@@ -82,10 +83,11 @@ export const placeLimitOrder = (appOrderType, side, productId, price, size) => {
         price = productWSData.asks[productWSData.asks.length - 1].price;
       }
     }
-    return placeLimitOrder(side, productId, price, size, sessionId).then(res => {
+    return postLimitOrder(side, productId, price, amount, sessionId).then(res => {
       console.log('order response', res);
       // add order id to watched order id list, to replace order when needed
-      if (appOrderType === 'activeBestPrice') {
+      dispatch(fetchOrders(productId, sessionId));
+      if (res && appOrderType === 'activeBestPrice') {
         dispatch(addActiveOrder(res.product_id, res));
       }
       return res;
@@ -259,12 +261,13 @@ const handleTicker = dispatch => {
 
 
 export const initWebsocket = ids => (
-  dispatch => (
+  (dispatch, getState) => (
     connect().then(() => {
+      const sessionId = getState().profile.session;
       // handleMatch, handleSnapshot, handleUpdate
       setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch), handleTicker(dispatch));
       subscribeToTicker(ids)
-      subscribeToOrderBook(ids[0]);
+      subscribeToOrderBook(ids[0], sessionId);
     })
   )
 );

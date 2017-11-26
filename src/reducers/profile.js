@@ -10,9 +10,11 @@ const INITAL_PROFILE_STATE = {
   ],
   accounts: [{ available: 0, balance: 0, currency: 'USD' }],
   orders: [],
+  activeOrders: [],
 };
 
 const profile = (state = INITAL_PROFILE_STATE, action) => {
+  const activeOrders = { ...state.activeOrders };
   switch (action.type) {
     case actionType.SET_ORDERS:
       console.log(action);
@@ -22,13 +24,23 @@ const profile = (state = INITAL_PROFILE_STATE, action) => {
         orders,
       };
     case actionType.ADD_ACTIVE_ORDER:
-      const activeOrders = { ...state.activeOrders };
-      activeOrders[action.productId] = [ ...activeOrders[action.productId], action.order ];
-      return { ...state, activeOrders }
+      console.log(state, action);
+      if (state.activeOrders[action.productId]) {
+        activeOrders[action.productId] = [ ...activeOrders[action.productId], action.order ];
+      } else {
+        activeOrders[action.productId] = [ action.order ];
+      }
+      console.log('profile reducer, add act order.', activeOrders);
+      return { ...state, activeOrders };
     case actionType.DELETE_ACTIVE_ORDER:
+      console.log(state, action);
       const activeOrdersForProduct = state.activeOrders[action.productId];
-      const index = activeOrdersForProduct.find(o => (o.id === action.orderId));
-      activeOrdersForProduct.splice(index, 1);
+      if (activeOrdersForProduct) {
+        const index = activeOrdersForProduct.find(o => (o.id === action.orderId));
+        if (index > -1) {
+          activeOrdersForProduct.splice(index, 1);
+        }
+      }
       activeOrders[action.productId] = activeOrdersForProduct;
       return { ...state,  activeOrders};
     case actionType.IMPORT_PROFILE:

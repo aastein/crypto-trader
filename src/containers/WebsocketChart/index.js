@@ -184,7 +184,7 @@ class WebsocketChart extends Component {
   }
 
   render() {
-    console.log('rendering WebsocketChart');
+   //  console.log('rendering WebsocketChart');
     return ( this.props.visible &&
       <div className="chart secondary-bg-dark">
         <ConnectedGlyph connected={this.props.connected}/>

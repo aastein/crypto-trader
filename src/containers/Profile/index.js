@@ -84,7 +84,7 @@ class Profile extends Component {
   }
 
   render() {
-    console.log('rendering profile container');
+   //  console.log('rendering profile container');
     return (
       <div className="container secondary-bg-dark">
         <div className="columns">

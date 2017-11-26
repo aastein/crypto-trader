@@ -31,14 +31,14 @@ class Select extends Component {
               this.props.options.map((o, i) => (
                 <div key={`${o.value}${i}`}className="container columns col-12 dropdown-item Select-option">
                   <span className="col-9">{o.label}</span>
-                  <div class="col-2">
-                    <label class="form-checkbox">
+                  <div className="col-2">
+                    <label className="form-checkbox">
                       <input
                         defaultChecked={o.active}
                         type="checkbox"
                         onChange={(e) => { this.props.onCheck(o.value); }}
                       />
-                      <i class="form-icon"></i>
+                      <i className="form-icon"></i>
                     </label>
                   </div>
                   <div className="col-1" role="button" onClick={(e) => { this.props.handleDrilldown(o.value); }} tabIndex={0}>

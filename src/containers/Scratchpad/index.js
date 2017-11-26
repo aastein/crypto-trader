@@ -14,7 +14,7 @@ import ScriptList from '../../components/ScriptList';
 
 class Scratchpad extends Component {
   render() {
-    console.log('rendering scratchpad container');
+    // console.log('rendering scratchpad container');
     const activeScript = this.props.scripts.reduce((a, b) => (
       b.active ? b : a
     ), {});

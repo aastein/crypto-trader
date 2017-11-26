@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { placeLimitOrder } from '../../actions'
+
 class ManualOrder extends Component {
   constructor(props) {
     super(props);
@@ -51,7 +53,22 @@ class ManualOrder extends Component {
 
   handleOrder(event) {
     event.preventDefault();
-    console.log('placing order', this.state);
+    const appOrderType = Object.keys(this.state.appOrderType).find(k => {
+      return this.state.appOrderType[k];
+    });
+    const orderType = Object.keys(this.state.orderType).find(k => {
+      return this.state.orderType[k];
+    });
+    const side = Object.keys(this.state.side).find(k => {
+      return this.state.side[k];
+    });
+    if (orderType === 'limit') {
+      console.log('placing limit order:', orderType, appOrderType, side, this.props.selectedProductId, this.state.price, this.state.amount);
+      this.props.placeLimitOrder(appOrderType, side, this.props.selectedProductId, this.state.price, this.state.amount)
+    }
+    if (orderType === 'market' ) {
+
+    }
   }
 
   totalPrice() {
@@ -78,7 +95,7 @@ class ManualOrder extends Component {
   }
 
   render() {
-    console.log('rendering manual order', this.props);
+    // console.log('rendering manual order');
     return ( this.props.visible &&
       <div className="container">
         <div className="columns px-1">
@@ -116,7 +133,7 @@ class ManualOrder extends Component {
           <label className="form-label text-light">{`Total $${this.totalPrice()}`}</label>
         </div>
         <div className="columns px-1">
-          <button className="col-6 col-mx-auto btn">Place Order</button>
+          <button onClick={(e) => {this.handleOrder(e)}} className="col-6 col-mx-auto btn">Place Order</button>
         </div>
       </div>
     );
@@ -133,13 +150,16 @@ const mapStateToProps = state => {
 
   let bid = '';
   let ask = '';
+  let selectedProductId = '';
   if (selectedProduct) {
+    selectedProductId = selectedProduct.id;
     const ticker = state.websocket.products.find(wsProduct => wsProduct.id === selectedProduct.id).ticker;
     bid = ticker ? ticker.bestBid : bid;
     ask = ticker ? ticker.bestAsk : ask;
   }
 
   return ({
+    selectedProductId,
     content,
     visible,
     ask,
@@ -147,9 +167,17 @@ const mapStateToProps = state => {
   })
 };
 
+const mapDispatchToProps = dispatch => (
+  {
+    placeLimitOrder: (appOrderType, side, productId, price, size) => {
+      dispatch(placeLimitOrder(appOrderType, side, productId, price, size));
+    },
+  }
+);
+
 const ManualOrderContainer = connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 )(ManualOrder);
 
 export default ManualOrderContainer;

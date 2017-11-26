@@ -6,7 +6,7 @@ class ProductDataList extends Component {
   // only render if product price data changed or product doc selection changed
 
   render() {
-    console.log('rendering ProductDataList');
+    // console.log('rendering ProductDataList');
     return ( this.props.visible &&
       <div className="doc-list">
         <h2>

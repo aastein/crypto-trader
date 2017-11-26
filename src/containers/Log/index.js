@@ -9,7 +9,7 @@ class Log extends Component {
   }
 
   render() {
-    console.log('rendering log');
+    // console.log('rendering log');
     return ( this.props.visible &&
       <div className="card log">
         <div className="card-body log-messages">
