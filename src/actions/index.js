@@ -1,6 +1,14 @@
 import axios from 'axios';
 import * as actionType from './actionTypes';
-import { getAccounts, getOrders, getProductData, getProducts, deleteOrder, postLimitOrder } from '../utils/api';
+import {
+  getAccounts,
+  getOrders,
+  getProductData,
+  getProducts,
+  deleteOrder,
+  postLimitOrder,
+  getFills,
+} from '../utils/api';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
 import connect, { setActions, subscribeToTicker, subscribeToOrderBook } from '../utils/websocket';
 import { floor } from '../utils/math';
@@ -17,6 +25,7 @@ export const setOrders = (product, orders) => ({ type: actionType.SET_ORDERS, pr
 export const addActiveOrder = (productId, order) => ({ type: actionType.ADD_ACTIVE_ORDER, productId, order});
 export const deleteActiveOrder = (productId, orderId) => ({ type: actionType.DELETE_ACTIVE_ORDER, productId, orderId});
 export const setCancelling = (productId, orderId) => ({ type: actionType.SET_CANCELLING, productId, orderId});
+export const setFills = (productId, fills) => ({ type: actionType.SET_FILLS, productId, fills });
 
 // websocket
 export const setProductWSData = (id, data) => ({ type: actionType.SET_PRODUCT_WS_DATA, id, data });
@@ -89,6 +98,7 @@ export const placeLimitOrder = (appOrderType, side, productId, price, amount) =>
       console.log('order response', res);
       // add order id to watched order id list, to replace order when needed
       dispatch(fetchOrders(productId, sessionId));
+      dispatch(fetchFills(productId, sessionId));
       if (res && appOrderType === 'activeBestPrice') {
         dispatch(addActiveOrder(res.product_id, res));
       }
@@ -106,6 +116,7 @@ export const cancelOrder = order => (
         console.log('delete order request completed', order);
         dispatch(deleteActiveOrder(order.product_id, order.id));
         dispatch(fetchOrders(order.product_id, sessionId));
+        dispatch(fetchFills(order.product_id, sessionId));
         resolve();
       })
     });
@@ -127,8 +138,15 @@ export const fetchAccounts = session => (
 export const fetchOrders = (product, session) => {
   return dispatch => {
     return getOrders(product, session).then((orders) => {
-      // console.log('fetch order res', orders);
       dispatch(setOrders(product, orders));
+    })
+  };
+}
+
+export const fetchFills = (product, session) => {
+  return dispatch => {
+    return getFills(product, session).then((fills) => {
+      dispatch(setFills(product, fills));
     })
   };
 }
@@ -157,6 +175,7 @@ export const initProducts = () => (
       dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
       if (session) {
         dispatch(fetchOrders(selectedProductIds[0], session));
+        dispatch(fetchFills(selectedProductIds[0], session));
         dispatch(fetchAccounts(session));
       }
       dispatch(initWebsocket(selectedProductIds));
@@ -338,6 +357,7 @@ const handleDeleteOrder = (dispatch, sessionId) => {
   return data => {
     dispatch(deleteActiveOrder(data.product_id, data.order_id));
     dispatch(fetchOrders(data.product_id, sessionId));
+    dispatch(fetchFills(data.product_id, sessionId));
   }
 }
 

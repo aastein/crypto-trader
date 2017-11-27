@@ -11,12 +11,18 @@ const INITAL_PROFILE_STATE = {
   accounts: [{ available: 0, balance: 0, currency: 'USD' }],
   orders: [],
   activeOrders: [],
+  fills: [],
 };
 
 const profile = (state = INITAL_PROFILE_STATE, action) => {
   let activeOrders;
   let orders;
+  let fills;
   switch (action.type) {
+    case actionType.SET_FILLS:
+      fills = { ...state.fills };
+      fills[action.productId] = action.fills;
+      return { ...state, fills };
     case actionType.SET_ORDERS:
       // console.log(action);
       orders = { ...state.orders };

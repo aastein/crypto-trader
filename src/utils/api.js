@@ -47,7 +47,7 @@ export const getAccounts = (session) => {
   const uri = '/accounts';
   return authRequest(uri, '', 'get', '', session).then(res => (
     res.data
-  )).catch((err) => { alert('Get accounts failed', err); });
+  )).catch((err) => { console.warn('Get accounts failed', err); });
 };
 
 export const deleteOrder = (orderId, session) => {
@@ -56,6 +56,13 @@ export const deleteOrder = (orderId, session) => {
     // console.log('cancel order res', res);
     return res.data;
   }).catch((err) => { console.warn('Cancel order failed.', orderId, err); });
+}
+
+export const getFills = (productId, session) => {
+  const uri = `/fills?product_id=${productId}`;
+  return authRequest(uri, '', 'get', '', session).then(res => (
+    res.data
+  )).catch((err) => { console.warn('Get fills failed', err); });
 }
 
 /*

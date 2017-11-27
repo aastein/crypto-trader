@@ -9,6 +9,7 @@ export const SET_ORDERS = 'SET_ORDERS';
 export const ADD_ACTIVE_ORDER = 'ADD_ACTIVE_ORDER';
 export const DELETE_ACTIVE_ORDER = 'DELETE_ACTIVE_ORDER';
 export const SET_CANCELLING = 'SET_CANCELLING';
+export const SET_FILLS = 'SET_FILLS';
 
 // websocket
 export const SET_PRODUCT_WS_DATA = 'SET_PRODUCT_WS_DATA';

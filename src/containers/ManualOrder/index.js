@@ -97,7 +97,7 @@ class ManualOrder extends Component {
         price = this.props.bid;
       }
     }
-    return amount * price;
+    return floor((amount * price), 2);
   }
 
   amountToMax(event) {
