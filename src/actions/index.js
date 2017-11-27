@@ -280,25 +280,25 @@ const handleUpdate = (dispatch, getState) => {
       // for each active order
       for (let i = 0; i < activeOrders.length; i +=1) {
         const order = { ...activeOrders[i] };
-        console.log('order to update id', order.id);
-        console.log('orders being handled', ordersBeingHandled);
+        // console.log('order to update id', order.id);
+        // console.log('orders being handled', ordersBeingHandled);
         let orderHandleIndex = ordersBeingHandled.indexOf(order.id);
-        console.log('index of candidate order in handle array', orderHandleIndex);
+        // console.log('index of candidate order in handle array', orderHandleIndex);
         if (orderHandleIndex < 0) {
             ordersBeingHandled.push(order.id);
-            console.log('order is handleing added', order.id);
+            // console.log('order is handleing added', order.id);
             // if order is sell and order price is greater than bestAsk
           if (order.side === 'sell' && Number(order.price) > bestAsk(getState, order.product_id)) {
-            console.log('cancelling sell order', order);
+            // console.log('cancelling sell order', order);
             // cancel order
             dispatch(cancelOrder(order)).then(() => {
               // re-place order. keep size constant, adjust price
               order.price = floor(bestAsk(getState, order.product_id), 2);
-              console.log('replacing sell order', order);
+              // console.log('replacing sell order', order);
               dispatch(placeLimitOrder('activeBestPrice', order.side, order.product_id, order.price, order.size));
               orderHandleIndex = ordersBeingHandled.indexOf(order.id);
               ordersBeingHandled.splice(orderHandleIndex, 1);
-              console.log('order is handleing removed', order.id);
+              // console.log('order is handleing removed', order.id);
             });
           }
           // if order is buy and order price is less than bestBid
@@ -313,12 +313,12 @@ const handleUpdate = (dispatch, getState) => {
               dispatch(placeLimitOrder('activeBestPrice', order.side, order.product_id, order.price, order.size));
               orderHandleIndex = ordersBeingHandled.indexOf(order.id);
               ordersBeingHandled.splice(orderHandleIndex, 1);
-              console.log('order is handleing removed', order.id);
+              // console.log('order is handleing removed', order.id);
             });
           } else {
             orderHandleIndex = ordersBeingHandled.indexOf(order.id);
             ordersBeingHandled.splice(orderHandleIndex, 1);
-            console.log('order is handleing removed', order.id);
+            // console.log('order is handleing removed', order.id);
           }
         }
       }
