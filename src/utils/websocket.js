@@ -92,6 +92,7 @@ export const unSubscribeFromOrderBook = (product, sessionId) => {
 const connect = () => (
   new Promise((resolve, reject) => {
     // check for exising connection
+    if (connection) connection.close();
     if (!connection || connection.redystate !== 1) {
       // open the connection and wait 5s for connection.
       connection = new WebSocket(url);

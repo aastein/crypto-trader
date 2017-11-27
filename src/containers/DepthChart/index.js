@@ -101,6 +101,9 @@ class DepthChart extends Component {
         type: 'area',
         backgroundColor: 'transparent',
       },
+      tooltip: {
+        enabled: false,
+      },
       mapNavigation: {
         buttonOptions: {
           //align: 'center',

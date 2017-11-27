@@ -3,6 +3,7 @@ import * as actionType from './actionTypes';
 import { getAccounts, getOrders, getProductData, getProducts, deleteOrder, postLimitOrder } from '../utils/api';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
 import connect, { setActions, subscribeToTicker, subscribeToOrderBook } from '../utils/websocket';
+import { floor } from '../utils/math';
 
 let nextScriptId = 2;
 
@@ -15,6 +16,7 @@ export const addOrder = (id, productId, time, price) => ({ type: actionType.ADD_
 export const setOrders = (product, orders) => ({ type: actionType.SET_ORDERS, product, orders});
 export const addActiveOrder = (productId, order) => ({ type: actionType.ADD_ACTIVE_ORDER, productId, order});
 export const deleteActiveOrder = (productId, orderId) => ({ type: actionType.DELETE_ACTIVE_ORDER, productId, orderId});
+export const setCancelling = (productId, orderId) => ({ type: actionType.SET_CANCELLING, productId, orderId});
 
 // websocket
 export const setProductWSData = (id, data) => ({ type: actionType.SET_PRODUCT_WS_DATA, id, data });
@@ -97,13 +99,16 @@ export const placeLimitOrder = (appOrderType, side, productId, price, amount) =>
 
 export const cancelOrder = order => (
   (dispatch, getState) => {
-    const sessionId = getState().profile.session;
-    return deleteOrder(order.id, sessionId).then(() => {
-      // console.log('delete order request completed');
-      // console.log(order);
-      dispatch(deleteActiveOrder(order.product_id, order.id));
-      dispatch(fetchOrders(order.product_id, sessionId));
-    })
+    return new Promise((resolve, reject) => {
+      const sessionId = getState().profile.session;
+      // dispatch(setCancelling(order.product_id, order.id));
+      deleteOrder(order.id, sessionId).then(() => {
+        console.log('delete order request completed', order);
+        dispatch(deleteActiveOrder(order.product_id, order.id));
+        dispatch(fetchOrders(order.product_id, sessionId));
+        resolve();
+      })
+    });
   }
 );
 
@@ -169,7 +174,7 @@ export const fetchSettings = acceptedFiles => (
 );
 
 export const findSession = acceptedFiles => (
-  dispatch => (
+  (dispatch, getState) => (
     axios.create({ baseURL: '' }).get(acceptedFiles[0].preview).then((res) => {
       const content = res.data;
       const key = 'session';
@@ -210,6 +215,7 @@ export const findSession = acceptedFiles => (
  * Websocket
 */
 
+// handles realtime price data
 const handleMatch = dispatch => {
   return data => {
     dispatch(addProductWSData(data));
@@ -223,6 +229,7 @@ const transformOrderData = order => {
   }
 }
 
+// handles initial orderbook data
 const handleSnapshot = dispatch => {
   return data => {
     // console.log('actions/index.js handleSnapshot', data);
@@ -246,33 +253,101 @@ const handleSnapshot = dispatch => {
   }
 }
 
-const handleUpdate = dispatch => {
+const bestAsk = (getState, productId) => {
+  // console.log('getting best ask', productId);
+  const wsProductData = getState().websocket.products.find(p => (p.id === productId));
+  // console.log('bestAsk is', wsProductData.asks[wsProductData.asks.length - 1].price);
+  return wsProductData.asks[wsProductData.asks.length - 1].price;
+}
+
+const bestBid = (getState, productId) => {
+  const wsProductData = getState().websocket.products.find(p => (p.id === productId));
+  return wsProductData.bids[0].price;
+}
+
+const ordersBeingHandled = [];
+
+// handles new orderbook diff
+// BUG - active orders do not get deleted!
+const handleUpdate = (dispatch, getState) => {
   return data => {
     // console.log('actions/index.js handleUpdate', data);
-    dispatch(updateOrderBook(data.product_id, data.changes))
+    dispatch(updateOrderBook(data.product_id, data.changes));
+    // get best price and update active orders
+    const state = getState();
+    const activeOrders = state.profile.activeOrders[data.product_id];
+    if (activeOrders && activeOrders.length > 0) {
+      // for each active order
+      for (let i = 0; i < activeOrders.length; i +=1) {
+        const order = { ...activeOrders[i] };
+        console.log('order to update id', order.id);
+        console.log('orders being handled', ordersBeingHandled);
+        let orderHandleIndex = ordersBeingHandled.indexOf(order.id);
+        console.log('index of candidate order in handle array', orderHandleIndex);
+        if (orderHandleIndex < 0) {
+            ordersBeingHandled.push(order.id);
+            console.log('order is handleing added', order.id);
+            // if order is sell and order price is greater than bestAsk
+          if (order.side === 'sell' && Number(order.price) > bestAsk(getState, order.product_id)) {
+            console.log('cancelling sell order', order);
+            // cancel order
+            dispatch(cancelOrder(order)).then(() => {
+              // re-place order. keep size constant, adjust price
+              order.price = floor(bestAsk(getState, order.product_id), 2);
+              console.log('replacing sell order', order);
+              dispatch(placeLimitOrder('activeBestPrice', order.side, order.product_id, order.price, order.size));
+              orderHandleIndex = ordersBeingHandled.indexOf(order.id);
+              ordersBeingHandled.splice(orderHandleIndex, 1);
+              console.log('order is handleing removed', order.id);
+            });
+          }
+          // if order is buy and order price is less than bestBid
+          else if (order.side === 'buy' && Number(order.price) < bestBid(getState, order.product_id)) {
+            // cancel order
+            dispatch(cancelOrder(order)).then(() => {
+              // re-place order. keep total (price * amount) constant
+              const total = order.price * order.size;
+              const newPrice = bestBid(getState, order.product_id);
+              order.size = floor((total / newPrice), 8);
+              order.price = newPrice;
+              dispatch(placeLimitOrder('activeBestPrice', order.side, order.product_id, order.price, order.size));
+              orderHandleIndex = ordersBeingHandled.indexOf(order.id);
+              ordersBeingHandled.splice(orderHandleIndex, 1);
+              console.log('order is handleing removed', order.id);
+            });
+          } else {
+            orderHandleIndex = ordersBeingHandled.indexOf(order.id);
+            ordersBeingHandled.splice(orderHandleIndex, 1);
+            console.log('order is handleing removed', order.id);
+          }
+        }
+      }
+    }
   }
 }
 
+// handles ticker price for all products
 const handleTicker = dispatch => {
   return data => {
     dispatch(setTickerWSData(data))
   }
 }
 
+// when a user's order is matched, delete the order
 const handleDeleteOrder = (dispatch, sessionId) => {
   return data => {
-    dispatch(deleteActiveOrder(data.product_id, data.id));
+    dispatch(deleteActiveOrder(data.product_id, data.order_id));
     dispatch(fetchOrders(data.product_id, sessionId));
   }
 }
 
-
+// initialize all websocket stuff
 export const initWebsocket = ids => (
   (dispatch, getState) => (
     connect().then(() => {
       const sessionId = getState().profile.session;
       // pass in methods that the WS will need to call.
-      setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch), handleTicker(dispatch), handleDeleteOrder(dispatch, sessionId));
+      setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch, getState), handleTicker(dispatch), handleDeleteOrder(dispatch, sessionId));
       subscribeToTicker(ids)
       subscribeToOrderBook(ids[0], sessionId);
     })

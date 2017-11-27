@@ -187,8 +187,10 @@ const mapStateToProps = state => {
     ask = ticker ? ticker.bestAsk : ask;
     baseCurrency = selectedProduct.base_currency;
     quoteCurrency = selectedProduct.quote_currency;
-    amountBaseCurrency = state.profile.accounts.find(a => (a.currency === baseCurrency)).available;
-    amountQuoteCurrency = state.profile.accounts.find(a => (a.currency === quoteCurrency)).available;
+    const baseAccount = state.profile.accounts.find(a => (a.currency === baseCurrency));
+    amountBaseCurrency = baseAccount ? baseAccount.available : amountQuoteCurrency;
+    const quoteAccount = state.profile.accounts.find(a => (a.currency === quoteCurrency));
+    amountQuoteCurrency = quoteAccount ? quoteAccount.available: amountQuoteCurrency;
   }
 
   return ({

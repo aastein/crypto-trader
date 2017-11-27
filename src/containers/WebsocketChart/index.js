@@ -116,6 +116,9 @@ class WebsocketChart extends Component {
       chart: {
         backgroundColor: 'transparent',
       },
+      tooltip: {
+        enabled: false,
+      },
       xAxis: [{
         type: 'datetime',
         title: { text: null },

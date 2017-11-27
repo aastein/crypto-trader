@@ -33,7 +33,6 @@ class OrderHistory extends Component {
             <div className="col-1 text-center text-light">Status</div>
           </div>
           { this.props.orders.map(order => {
-              console.log('order', order);
               return (
                 <div key={order.id} className="columns border-bottom-light px-2">
                   <div className="col-1 text-center text-light">{order.type}</div>

@@ -11,7 +11,8 @@ import {
   setLocation,
   findSession,
   fetchOrders,
-  saveSession
+  saveSession,
+  initWebsocket
 } from '../../actions';
 import Input from '../../components/Input';
 import Dropdown from '../../components/Dropdown';
@@ -71,7 +72,11 @@ class Profile extends Component {
     // if session id exists, fetch private data
     if (this.state.session.length > 0) {
       this.props.fetchAccounts(this.state.session).then(res => {
-        if (res) this.props.saveSession(this.state.session);
+        if (res) {
+          this.props.saveSession(this.state.session);
+          const selectedProductIds = this.state.selectedProducts.map(p => (p.value));
+          this.props.initWebsocket(selectedProductIds);
+        }
       })
       for (let i = 0; i < this.state.selectedProducts.length; i += 1) {
         this.props.fetchOrders(this.state.selectedProducts[i].value, this.state.session);
@@ -195,7 +200,10 @@ const mapDispatchToProps = dispatch => (
     },
     saveSession: (session) => {
       dispatch(saveSession(session));
-    }
+    },
+    initWebsocket: (ids) => {
+      dispatch(initWebsocket(ids));
+    },
   }
 );
 
