@@ -61,7 +61,7 @@ class Navigation extends Component {
           <NavLink
             className="btn vcenter"
             exact
-            activeClassName="text-secondary"
+            activeClassName="text-dark"
             to="/"
           >
               Dashboard
@@ -69,7 +69,7 @@ class Navigation extends Component {
           <NavLink
             className="btn vcenter"
             exact
-            activeClassName="text-secondary"
+            activeClassName="text-dark"
             to="/profile"
           >
             Profile

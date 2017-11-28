@@ -294,7 +294,7 @@ class Chart extends Component {
         backgroundColor: 'transparent',
       },
       mapNavigation: {
-          enabled: true,
+          enabled: false,
           enableButtons: false
       },
       credits: {

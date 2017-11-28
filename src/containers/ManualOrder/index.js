@@ -139,7 +139,7 @@ class ManualOrder extends Component {
         <div className="form-group">
           <div className="columns px-1">
             <label className="form-label text-light">{`Amount ${this.props.baseCurrency}`}</label>
-            <button className="btn btn-order m-2" onClick={(e) => {this.amountToMax(e)}}>Max</button>
+            <button className="btn btn-order btn-nofocus m-2" onClick={(e) => {this.amountToMax(e)}}>Max</button>
           </div>
           <input step="any" value={this.state.amount} type="number" onChange={(e) => {this.handleInputChange(e, 'amount')}} className="form-input"/>
         </div>

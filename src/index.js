@@ -26,9 +26,11 @@ const getComposeEnhancers = () => {
   return compose(applyMiddleware(thunk));
 };
 
+const localStorageName = 'decentrav0.0.01'
+
 const localStorageState = () => {
-  const local = JSON.parse(localStorage.getItem('redux'))
-  return typeof local === 'object' ? JSON.parse(localStorage.getItem('redux')) : null;
+  const local = JSON.parse(localStorage.getItem(localStorageName))
+  return typeof local === 'object' ? JSON.parse(localStorage.getItem(localStorageName)) : null;
 }
 
 const initialState = () => {
@@ -64,7 +66,7 @@ store.subscribe(function () {
     });
     if (writenState !== lastState) {
        console.log('Writing new state to localStorage with length: ',writenState.length);
-       localStorage.setItem('redux', writenState);
+       localStorage.setItem(localStorageName, writenState);
        lastState = writenState;
     }
   } catch (e) {

@@ -114,7 +114,7 @@ class Profile extends Component {
               </button>
             </div>
             <div className="form-group">
-              <label className="col-1" htmlFor="live">Live</label>
+              <label className="col-1 text-light" htmlFor="live">Live</label>
               <div className="col-11">
                 <ToggleSwitch
                   className=""
@@ -124,7 +124,7 @@ class Profile extends Component {
               </div>
             </div>
             <div className="form-group">
-              <label className="col-2" htmlFor="session">Session</label>
+              <label className="col-2 text-light" htmlFor="session">Session</label>
               <Input
                 className="col-10"
                 name="session"
@@ -133,23 +133,23 @@ class Profile extends Component {
                 onChange={this.handleInputChange}
               />
             </div>
-            <p className="col-12">
+            <p className="col-12 text-light">
               {'Can\'t find your session ID? Session data is stored by your browser. You can upload browser data and the app will try to find your session.'}
             </p>
             <table className="col-12">
                 <tbody>
                   <tr>
-                    <th>OS</th>
-                    <th>Browser</th>
-                    <th>Path</th>
+                    <th className="text-light">OS</th>
+                    <th className="text-light">Browser</th>
+                    <th className="text-light">Path</th>
                   </tr>
                   {
                     this.state.sessionIdPaths.map(s => (
                       (
                         <tr key={s.os}>
-                          <td>{s.os}</td>
-                          <td>{s.browser}</td>
-                          <td>{s.path}</td>
+                          <td className="text-light">{s.os}</td>
+                          <td className="text-light">{s.browser}</td>
+                          <td className="text-light">{s.path}</td>
                           <td>
                             <CopyToClipboard onCopy={() => {}} text={s.path} >
                               <button className="btn" onClick={(e) => { e.preventDefault(); }}>
@@ -171,7 +171,7 @@ class Profile extends Component {
               </button>
             </div>
             <div className="form-group">
-              <label className="col-2" htmlFor="watched-products">Watched Products</label>
+              <label className="col-2 text-light" htmlFor="watched-products">Watched Products</label>
               <Dropdown
                 className="col-10"
                 multi
