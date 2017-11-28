@@ -12,7 +12,8 @@ import {
   findSession,
   fetchOrders,
   saveSession,
-  initWebsocket
+  initWebsocket,
+  fetchFills,
 } from '../../actions';
 import Input from '../../components/Input';
 import Dropdown from '../../components/Dropdown';
@@ -81,16 +82,18 @@ class Profile extends Component {
       )),
     });
     // save session if it is valid
+    console.log('profile session', this.state.session);
     if (this.state.session.length > 0) {
       this.props.fetchAccounts(this.state.session).then(res => {
         if (res) {
           this.props.saveSession(this.state.session);
           const selectedProductIds = this.state.selectedProducts.map(p => (p.value));
-          this.props.initWebsocket(selectedProductIds);
+          this.props.initWebsocket(this.props.activeProductId, selectedProductIds);
         }
       })
       for (let i = 0; i < this.state.selectedProducts.length; i += 1) {
         this.props.fetchOrders(this.state.selectedProducts[i].value, this.state.session);
+        this.props.fetchFills(this.state.selectedProducts[i].value, this.state.session);
       }
     }
   }
@@ -212,11 +215,14 @@ const mapDispatchToProps = dispatch => (
     fetchOrders: (product, session) => {
       dispatch(fetchOrders(product, session));
     },
+    fetchFills: (product, session) => {
+      dispatch(fetchFills(product, session));
+    },
     saveSession: (session) => {
       dispatch(saveSession(session));
     },
-    initWebsocket: (ids) => {
-      dispatch(initWebsocket(ids));
+    initWebsocket: (id, ids) => {
+      dispatch(initWebsocket(id, ids));
     },
   }
 );

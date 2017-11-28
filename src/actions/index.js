@@ -119,28 +119,31 @@ export const cancelOrder = order => (
   }
 );
 
-export const fetchAccounts = () => (
-  (dispatch, getState) => (
-    getAccounts(getState().profile.session).then((accounts) => {
+export const fetchAccounts = (session) => (
+  (dispatch, getState) => {
+    session = session ? session : getState().profile.session;
+    return getAccounts(session).then((accounts) => {
       if (accounts) {
         dispatch(updateAccounts(accounts));
         return true;
       }
       return false;
     })
-  )
+  }
 );
 
-export const fetchOrders = (product) => {
+export const fetchOrders = (product, session) => {
   return (dispatch, getState) => {
-    return getOrders(product, getState().profile.session).then((orders) => {
+    session = session ? session : getState().profile.session;
+    return getOrders(product, session).then((orders) => {
       dispatch(setOrders(product, orders));
     })
   };
 }
 
-export const fetchFills = (product) => {
+export const fetchFills = (product, session) => {
   return (dispatch, getState) => {
+    session = session ? session : getState().profile.session;
     return getFills(product, getState().profile.session).then((fills) => {
       dispatch(setFills(product, fills));
     })
