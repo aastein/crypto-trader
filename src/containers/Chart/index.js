@@ -284,6 +284,9 @@ class Chart extends Component {
           upColor: 'hsl(101, 84%, 71%)'
         }
       },
+      tooltip: {
+        enabled: false,
+      },
       chart: {
         animation: false,
         // zoomType: 'x',
@@ -362,27 +365,31 @@ class Chart extends Component {
 
 const mapStateToProps = state => {
 
-  const selectedProduct = state.chart.products.find(p => {
+  const selectedProduct = state.profile.products.find(p => {
     return p.active;
   });
 
-  const productDisplayName = selectedProduct ? selectedProduct.display_name : '';
+  const selectedProductData = state.chart.products.find(p => {
+    return p.id === selectedProduct.id;
+  });
+
+  const productDisplayName = selectedProduct ? selectedProduct.label : '';
 
   const selectedIndicators = state.chart.indicators.filter(i => (i.active));
 
-  const selectedIndicatorsData = selectedIndicators.reduce((ids, i) => {
-    ids = [ ...ids, i.id ];
-    return ids;
-  }, []).reduce((data, id) => {
-    data[id] = { data: selectedProduct[id] };
+  const selectedIndicatorsData = selectedIndicators.reduce((indicatorIds, i) => {
+    indicatorIds = [ ...indicatorIds, i.id ];
+    return indicatorIds;
+  }, []).reduce((data, indicatorId) => {
+    data[indicatorId] = { data: selectedProductData[indicatorId] };
     return data;
   }, {});
 
-  const selectedProductPriceData = selectedProduct && selectedProduct.data ?
-      selectedProduct.data.map(d => ([d.time, d.open, d.high, d.low, d.close])) : [];
+  const selectedProductPriceData = selectedProductData && selectedProductData.data ?
+      selectedProductData.data.map(d => ([d.time, d.open, d.high, d.low, d.close])) : [];
 
-  const selectedProductVolumeData = selectedProduct && selectedProduct.data ?
-      selectedProduct.data.map(d => ([d.time, round(d.volume, 2)])) : [];
+  const selectedProductVolumeData = selectedProductData && selectedProductData.data ?
+      selectedProductData.data.map(d => ([d.time, round(d.volume, 2)])) : [];
 
   const testResultData = state.chart.testResult.data;
 

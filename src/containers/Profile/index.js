@@ -21,7 +21,10 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ...props,
+      session: this.props.session,
+      live: this.props.live,
+      selectedProducts: this.props.selectedProducts,
+      productOptions: this.props.productOptions,
       sessionIdPaths: [
         {
           os: 'OSX',
@@ -41,10 +44,15 @@ class Profile extends Component {
       || JSON.stringify(this.state) !== JSON.stringify(nextState);
   }
 
-  onSelectProducts = (value) => {
-    const selectedProducts = value;
+  onSelectProducts = (values) => {
+    const selectedProducts = values;
+    const selectedProductIds = selectedProducts.map(p => p.value);
+    const productOptions = this.props.productOptions.filter(p => {
+      return selectedProductIds.indexOf(p.value) < 0;
+    });
     this.setState(prevState => ({
       selectedProducts,
+      productOptions,
     }));
   }
 
@@ -65,11 +73,14 @@ class Profile extends Component {
 
   handleSave = (event) => {
     event.preventDefault();
+    // save all data not session
     this.props.saveProfile({
       live: this.state.live,
-      selectedProducts: this.state.selectedProducts,
+      products: this.state.selectedProducts.map(p => (
+        { label: p.label, id: p.value, active: p.value === this.props.activeProductId }
+      )),
     });
-    // if session id exists, fetch private data
+    // save session if it is valid
     if (this.state.session.length > 0) {
       this.props.fetchAccounts(this.state.session).then(res => {
         if (res) {
@@ -89,7 +100,7 @@ class Profile extends Component {
   }
 
   render() {
-   //  console.log('rendering profile container');
+    console.log('rendering profile container', this.state);
     return (
       <div className="container secondary-bg-dark">
         <div className="columns">
@@ -162,7 +173,7 @@ class Profile extends Component {
                 className="col-10"
                 multi
                 simpleValue
-                options={this.props.products}
+                options={this.state.productOptions}
                 onChange={this.onSelectProducts}
                 value={this.state.selectedProducts}
               />
@@ -176,8 +187,11 @@ class Profile extends Component {
 
 const mapStateToProps = state => (
   {
-    products: state.chart.products ? state.chart.products.map(p => ({ label: p.display_name, value: p.id })) : [],
-    ...state.profile,
+    activeProductId: state.profile.products.find(p => (p.active)).id,
+    selectedProducts: state.profile.products.map(p => ({ label: p.label, value: p.id })),
+    live: state.profile.live,
+    session: state.profile.session,
+    productOptions: state.chart.products ? state.chart.products.map(p => ({ label: p.display_name, value: p.id })) : [],
   }
 );
 

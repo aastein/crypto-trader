@@ -11,7 +11,10 @@ import {
   setFetchingStatus,
   fetchProductData,
   calculateIndicators,
-  saveTestResult
+  saveTestResult,
+  initWebsocket,
+  fetchOrders,
+  fetchFills
 } from '../../actions';
 
 import Dropdown from '../../components/Dropdown';
@@ -37,17 +40,22 @@ class ChartHeader extends Component {
     return JSON.stringify(this.props) !== JSON.stringify(nextProps) || JSON.stringify(this.state) !== JSON.stringify(nextState);
   }
 
+  // re-init websocket, fetch product specific data, change active flags in product arrays
+  // todo: remve active flag from products and wensocket, only maintain this in profie.
   onProductChange = (event) => {
     if (event) {
       const id = event.value;
-      const granularity = this.product(id).granularity + '';
-      const range = this.product(id).range;
-      const nextProduct = this.product(id);
-      if (nextProduct.data.length === 0) {
-        this.props.fetchProductData(nextProduct.id, nextProduct.range, nextProduct.granularity);
-      }
+      // fetch historical data
+      this.props.fetchProductData(id, this.state.range, this.state.granularity);
+      // init websocket for product
+      this.props.initWebsocket(id, this.props.dropdownProductOptions.map(p => (p.value)));
+      // fetch orders
+      this.props.fetchOrders(id);
+      // fetch fills
+      this.props.fetchFills(id);
+      // set product
       this.props.selectProduct(id);
-      this.setState(() => ({ granularity, range }));
+      // clear test result
       this.props.saveTestResult({});
     }
   }
@@ -97,13 +105,6 @@ class ChartHeader extends Component {
     this.props.fetchProductData(this.props.productId, this.state.range, this.state.granularity);
     this.props.saveTestResult({});
   }
-
-  // get product by id
-  product = id => (
-    this.props.chart.products.length > 0 ? this.props.chart.products.reduce((a, p) => (
-      p.id === id ? p : a
-    ), {}) : {}
-  )
 
   handleGranularityChange = granularity => {
     this.setState(() => ({ granularity:  Math.pow(granularity, 2) + '' }));
@@ -186,19 +187,15 @@ class ChartHeader extends Component {
 
 const mapStateToProps = state => {
 
-  const selectedProduct = state.chart.products.find(p => {
+  const selectedProduct = state.profile.products.find(p => {
     return p.active;
   });
 
   const productId = selectedProduct ? selectedProduct.id : '';
 
-  const selectedProductIds = state.profile.selectedProducts.map(p => (p.value))
-
   // create data to populate product dropdown items
-  const dropdownProductOptions = state.chart.products.map(product => (
-    { value: product.id, label: product.display_name }
-  )).filter(p => ( // filter out products not in the scope dictated by profile selections
-    selectedProductIds.indexOf(p.value) > -1
+  const dropdownProductOptions = state.profile.products.map(product => (
+    { value: product.id, label: product.label, active: product.active }
   ));
 
   const dropdownIndicatorOptions = state.chart.indicators.map(indicator => (
@@ -252,6 +249,15 @@ const mapDispatchToProps = dispatch => (
     },
     saveTestResult: result => {
       dispatch(saveTestResult(result));
+    },
+    initWebsocket: (activeId, ids) => {
+      dispatch(initWebsocket(activeId, ids));
+    },
+    fetchOrders: (id) => {
+      dispatch(fetchOrders(id));
+    },
+    fetchFills: (id) => {
+      dispatch(fetchFills(id));
     },
   }
 );

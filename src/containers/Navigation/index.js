@@ -116,8 +116,8 @@ const mapStateToProps = state => {                    // p.value == id, p.label 
     products: state.chart.products,
     connected: state.websocket.connected,
     heartbeatTime: state.websocket.heartbeatTime,
-    ticker: state.profile.selectedProducts.map(selectedProduct => {
-      const t = state.websocket.products.find(wsProduct => wsProduct.id === selectedProduct.value).ticker;
+    ticker: state.profile.products.map(selectedProduct => {
+      const t = state.websocket.products.find(wsProduct => wsProduct.id === selectedProduct.id).ticker;
       return { name: selectedProduct.label,
           bid: t ? t.bestBid : '',
           ask: t ? t.bestAsk : '',

@@ -274,14 +274,6 @@ const chart = (state = INIT_CHART_STATE, action) => {
           i.id === action.indicator.id ? action.indicator : i
         )),
       };
-    case actionType.SELECT_PRODUCT_DOC:
-      return { ...state,
-        products: state.products.map(p => (
-          { ...p,
-            docSelected: p.id === action.id ? !p.docSelected : p.docSelected,
-          }
-        )),
-      };
     case actionType.SELECT_DATE_RANGE:
       return { ...state,
         products: state.products.map(p => (
@@ -302,12 +294,6 @@ const chart = (state = INIT_CHART_STATE, action) => {
       return { ...state,
         products: action.products.map(product => (
           { ...product, granularity: INIT_GRANULARITY, range: INIT_RANGE, data: [], docSelected: false, bids: [], asks: [] }
-        )),
-      };
-    case actionType.SELECT_PRODUCT:
-      return { ...state,
-        products: state.products.map(p => (
-          { ...p, active: p.id === action.id }
         )),
       };
     case actionType.SET_PRODUCT_DATA:

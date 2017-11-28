@@ -22,17 +22,6 @@ const maxOrderbookLength = 300;
 
 const websocket = (state = INIT_WEBSOCKET_STATE, action) => {
   switch (action.type) {
-    // This is to set the products array.
-    // case actionType.SET_PRODUCTS:
-    //   return { ...state, products: action.products.map(p => ({ id: p.id, data: [] })) };
-    case actionType.SELECT_PRODUCT:
-      return { ...state,
-        products: state.products.map((p) => {
-          const product = { ...p };
-          product.active = p.id === action.id;
-          return product;
-        }),
-      };
     case actionType.ADD_PRODUCT_WS_DATA:
       return { ...state,
         products: state.products.map((p) => {

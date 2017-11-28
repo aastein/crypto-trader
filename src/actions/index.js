@@ -81,11 +81,8 @@ export const showCard = (card, content) => ({ type: actionType.SHOW_CARD, card, 
 // api
 export const placeLimitOrder = (appOrderType, side, productId, price, amount) => {
   return (dispatch, getState) => {
-    const state = getState();
-    const sessionId = getState().profile.session;
     if (appOrderType === 'bestPrice' || appOrderType === 'activeBestPrice') {
-      const productWSData = state.websocket.products.find(wsProduct => wsProduct.id === productId);
-      console.log('placeLimitOrder index.js ln 77', state, productWSData);
+      const productWSData = getState().websocket.products.find(wsProduct => wsProduct.id === productId);
       if (side === 'buy') {
         //match highest bid price, first bid.price
         price = productWSData.bids[0].price;
@@ -94,11 +91,11 @@ export const placeLimitOrder = (appOrderType, side, productId, price, amount) =>
         price = productWSData.asks[productWSData.asks.length - 1].price;
       }
     }
-    return postLimitOrder(side, productId, price, amount, sessionId).then(res => {
+    return postLimitOrder(side, productId, price, amount, getState().profile.session).then(res => {
       console.log('order response', res);
       // add order id to watched order id list, to replace order when needed
-      dispatch(fetchOrders(productId, sessionId));
-      dispatch(fetchFills(productId, sessionId));
+      dispatch(fetchOrders(productId));
+      dispatch(fetchFills(productId));
       if (res && appOrderType === 'activeBestPrice') {
         dispatch(addActiveOrder(res.product_id, res));
       }
@@ -110,22 +107,21 @@ export const placeLimitOrder = (appOrderType, side, productId, price, amount) =>
 export const cancelOrder = order => (
   (dispatch, getState) => {
     return new Promise((resolve, reject) => {
-      const sessionId = getState().profile.session;
       // dispatch(setCancelling(order.product_id, order.id));
-      deleteOrder(order.id, sessionId).then(() => {
+      deleteOrder(order.id, getState().profile.session).then(() => {
         console.log('delete order request completed', order);
         dispatch(deleteActiveOrder(order.product_id, order.id));
-        dispatch(fetchOrders(order.product_id, sessionId));
-        dispatch(fetchFills(order.product_id, sessionId));
+        dispatch(fetchOrders(order.product_id));
+        dispatch(fetchFills(order.product_id));
         resolve();
       })
     });
   }
 );
 
-export const fetchAccounts = session => (
-  dispatch => (
-    getAccounts(session).then((accounts) => {
+export const fetchAccounts = () => (
+  (dispatch, getState) => (
+    getAccounts(getState().profile.session).then((accounts) => {
       if (accounts) {
         dispatch(updateAccounts(accounts));
         return true;
@@ -135,17 +131,17 @@ export const fetchAccounts = session => (
   )
 );
 
-export const fetchOrders = (product, session) => {
-  return dispatch => {
-    return getOrders(product, session).then((orders) => {
+export const fetchOrders = (product) => {
+  return (dispatch, getState) => {
+    return getOrders(product, getState().profile.session).then((orders) => {
       dispatch(setOrders(product, orders));
     })
   };
 }
 
-export const fetchFills = (product, session) => {
-  return dispatch => {
-    return getFills(product, session).then((fills) => {
+export const fetchFills = (product) => {
+  return (dispatch, getState) => {
+    return getFills(product, getState().profile.session).then((fills) => {
       dispatch(setFills(product, fills));
     })
   };
@@ -169,16 +165,15 @@ export const initProducts = () => (
     getProducts().then((products) => {
       dispatch(setProducts(products.data));
       const state = getState();
-      const session = state.profile.session;
-      const selectedProductIds = state.profile.selectedProducts.map(p => (p.value));
+      const selectedProductIds = state.profile.products.map(p => (p.id));
       dispatch(selectProduct(selectedProductIds[0]));
       dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
-      if (session) {
-        dispatch(fetchOrders(selectedProductIds[0], session));
-        dispatch(fetchFills(selectedProductIds[0], session));
-        dispatch(fetchAccounts(session));
+      if (state.profile.session) {
+        dispatch(fetchOrders(selectedProductIds[0]));
+        dispatch(fetchFills(selectedProductIds[0]));
+        dispatch(fetchAccounts(state.profile.session));
       }
-      dispatch(initWebsocket(selectedProductIds));
+      dispatch(initWebsocket(selectedProductIds[0], selectedProductIds));
     })
   )
 );
@@ -353,23 +348,23 @@ const handleTicker = dispatch => {
 }
 
 // when a user's order is matched, delete the order
-const handleDeleteOrder = (dispatch, sessionId) => {
+const handleDeleteOrder = (dispatch) => {
   return data => {
     dispatch(deleteActiveOrder(data.product_id, data.order_id));
-    dispatch(fetchOrders(data.product_id, sessionId));
-    dispatch(fetchFills(data.product_id, sessionId));
+    dispatch(fetchOrders(data.product_id));
+    dispatch(fetchFills(data.product_id));
   }
 }
 
 // initialize all websocket stuff
-export const initWebsocket = ids => (
+export const initWebsocket = (activeId, ids) => (
   (dispatch, getState) => (
     connect().then(() => {
-      const sessionId = getState().profile.session;
       // pass in methods that the WS will need to call.
-      setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch, getState), handleTicker(dispatch), handleDeleteOrder(dispatch, sessionId));
+      // console.log('initwebsocker', activeId, ids);
+      setActions(handleMatch(dispatch), handleSnapshot(dispatch), handleUpdate(dispatch, getState), handleTicker(dispatch), handleDeleteOrder(dispatch));
       subscribeToTicker(ids)
-      subscribeToOrderBook(ids[0], sessionId);
+      subscribeToOrderBook(activeId, getState().profile.session);
     })
   )
 );

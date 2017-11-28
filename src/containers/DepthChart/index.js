@@ -76,7 +76,7 @@ class DepthChart extends Component {
   }
 
   config = (props) => {
-    const yAxisHeight = Math.ceil(100*props.asks[props.asks.length - 1][1])/100;
+    const yAxisHeight = props.asks.length > 0 ? Math.ceil(100*props.asks[props.asks.length - 1][1])/100 : 100;
     return {
       plotOptions: {
         column: {
@@ -178,7 +178,7 @@ class DepthChart extends Component {
         type: 'column',
         color: 'rgba(255,255,255,0.2)',
         data: [
-          [props.asks[0][0], 3.5],
+          [ props.asks.length > 0 ? props.asks[0][0] : 0 , 3.5],
         ],
         yAxis: 1,
       }
@@ -235,8 +235,12 @@ const mapStateToProps = state => {
   const visible = state.view.topCenter.find(c => (c.id === content)).selected;
   const connected = state.websocket.connected;
 
-  const selectedWebsocket = state.websocket.products.find(p => {
+  const selectedProduct = state.profile.products.find(p => {
     return p.active;
+  });
+
+  const selectedWebsocket = state.websocket.products.find(p => {
+    return p.id === selectedProduct.id;
   });
 
   let asks = [];

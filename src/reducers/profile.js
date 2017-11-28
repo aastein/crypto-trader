@@ -3,10 +3,10 @@ import * as actionType from '../actions/actionTypes';
 const INITAL_PROFILE_STATE = {
   session: '',
   live: false,
-  selectedProducts: [
-    { label: 'BTC/USD', value: 'BTC-USD' },
-    { label: 'LTC/USD', value: 'LTC-USD' },
-    { label: 'ETH/USD', value: 'ETH-USD' },
+  products: [
+    { label: 'BTC/USD', id: 'BTC-USD', active: true },
+    { label: 'LTC/USD', id: 'LTC-USD', active: false },
+    { label: 'ETH/USD', id: 'ETH-USD', active: false },
   ],
   accounts: [{ available: 0, balance: 0, currency: 'USD' }],
   orders: [],
@@ -19,6 +19,13 @@ const profile = (state = INITAL_PROFILE_STATE, action) => {
   let orders;
   let fills;
   switch (action.type) {
+    case actionType.SELECT_PRODUCT:
+      console.log(action);
+      return { ...state,
+        products: state.products.map(p => (
+          { ...p, active: p.id === action.id }
+        )),
+      };
     case actionType.SET_FILLS:
       fills = { ...state.fills };
       fills[action.productId] = action.fills;

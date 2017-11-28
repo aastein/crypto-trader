@@ -92,8 +92,12 @@ const mapStateToProps = state => {
   const content = 'Order Book';
   const visible = state.view.topRight.find(c => (c.id === content)).selected;
 
-  const selectedWebsocket = state.websocket.products.find(p => {
+  const selectedProduct = state.profile.products.find(p => {
     return p.active;
+  });
+
+  const selectedWebsocket = state.websocket.products.find(p => {
+    return p.id === selectedProduct.id;
   });
 
   const asks = selectedWebsocket && selectedWebsocket.asks ? selectedWebsocket.asks.slice(selectedWebsocket.asks.length - 25, selectedWebsocket.asks.length - 0) : [];

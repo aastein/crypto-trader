@@ -168,25 +168,26 @@ class ManualOrder extends Component {
 const mapStateToProps = state => {
   const content = 'Trade';
   const visible = state.view.bottomRight.find(c => (c.id === content)).selected;
-
-  const selectedProduct = state.chart.products.find(p => {
+  const selectedProduct = state.profile.products.find(p => {
     return p.active;
   });
+  const selectedProductData = state.chart.products.find(p => {
+    return p.id === selectedProduct.id;
+  });
+  const selectedProductId = selectedProduct.id;
 
   let bid = '';
   let ask = '';
-  let selectedProductId = '';
   let baseCurrency = '';
   let quoteCurrency = '';
   let amountQuoteCurrency = 0;
   let amountBaseCurrency = 0;
-  if (selectedProduct) {
-    selectedProductId = selectedProduct.id;
-    const ticker = state.websocket.products.find(wsProduct => wsProduct.id === selectedProduct.id).ticker;
+  if (selectedProductData) {
+    const ticker = state.websocket.products.find(wsProduct => wsProduct.id === selectedProductId).ticker;
     bid = ticker ? ticker.bestBid : bid;
     ask = ticker ? ticker.bestAsk : ask;
-    baseCurrency = selectedProduct.base_currency;
-    quoteCurrency = selectedProduct.quote_currency;
+    baseCurrency = selectedProductData.base_currency;
+    quoteCurrency = selectedProductData.quote_currency;
     const baseAccount = state.profile.accounts.find(a => (a.currency === baseCurrency));
     amountBaseCurrency = baseAccount ? baseAccount.available : amountQuoteCurrency;
     const quoteAccount = state.profile.accounts.find(a => (a.currency === quoteCurrency));

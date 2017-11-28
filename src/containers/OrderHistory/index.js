@@ -58,7 +58,8 @@ class OrderHistory extends Component {
                   <div className={`col-2 text-center text-light ${color}`}>{Number(fill.price).toFixed(2)}</div>
                   <div className={`col-2 text-center text-light ${color}`}>{Number(fill.fee).toFixed(2)}</div>
                   <div className={`small col-1 text-center text-light ${color}`}>{moment(fill.created_at).fromNow()}</div>
-                  <div className={`col-2 text-center text-light ${color}`}>filled</div>
+                  <div className={`col-1 text-center text-light ${color}`}>filled</div>
+                  <div className={`col-1 text-center text-light ${color}`}></div>
                 </div>
               );
             })
@@ -72,17 +73,17 @@ class OrderHistory extends Component {
 const mapStateToProps = state => {
   const content = 'Orders';
   const visible = state.view.bottomLeft.find(c => (c.id === content)).selected;
-  const selectedProduct = state.chart.products.find(p => {
+  const selectedProduct = state.profile.products.find(p => {
     return p.active;
   });
-  const orders = selectedProduct ? state.profile.orders[selectedProduct.id] : [];
-  const fills = selectedProduct ? state.profile.fills[selectedProduct.id] : [];
+  const orders = state.profile.orders[selectedProduct.id];
+  const fills = state.profile.fills[selectedProduct.id];
 
   return ({
     content,
     visible,
-    orders,
-    fills
+    orders: orders ? orders : [],
+    fills: fills ? fills : [],
   })
 };
 

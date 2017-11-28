@@ -208,15 +208,15 @@ class WebsocketChart extends Component {
 
 
 const mapStateToProps = state => {
-  const selectedProduct = state.chart.products.find(p => {
+  const selectedProduct = state.profile.products.find(p => {
     return p.active;
   });
   const selectedWebsocket = state.websocket.products.find(p => {
-    return p.active;
+    return p.id === selectedProduct.id;
   });
-  const productId = selectedProduct ? selectedProduct.id : '';
+  const productId = selectedProduct.id;
 
-  const productDisplayName = selectedProduct ? selectedProduct.display_name : '';
+  const productDisplayName = selectedProduct.label;
 
   const websocketPriceData =  selectedWebsocket && selectedWebsocket.data ?
       selectedWebsocket.data.map(d => ([d.time, d.price])) : [];
@@ -228,13 +228,17 @@ const mapStateToProps = state => {
     ? websocketPriceData[websocketPriceData.length - 1][0]
     : null;
 
-  const historicalData = selectedProduct ? selectedProduct.data : [];
+  const selectedProductData = state.chart.products.find(p => {
+    return p.id === selectedProduct.id;
+  });
+
+  const historicalData = selectedProductData && selectedProductData.data ? selectedProductData.data : [];
 
   const latestHistoricalDataTime = historicalData[historicalData.length - 1] && historicalData[historicalData.length - 1].time
     ? historicalData[historicalData.length - 1].time
     : null;
 
-  const granularity = selectedProduct ? selectedProduct.granularity : null ;
+  const granularity = selectedProductData ? selectedProduct.granularity : null ;
 
   const connected = state.websocket.connected;
 
