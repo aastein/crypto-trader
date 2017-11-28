@@ -117,25 +117,25 @@ class ChartHeader extends Component {
         <div className="container">
           <div className="columns">
             <Dropdown
-              className="col-2"
+              className="col-2 col-lg-4"
               options={this.props.dropdownProductOptions}
               onChange={this.onProductChange}
               value={this.props.productId}
             />
             <Select
-              className="col-3"
+              className="col-3 col-lg-4"
               options={this.props.dropdownIndicatorOptions}
               value={'Indicators'}
               onCheck={this.onSelectIndicator}
               handleDrilldown={this.onEditIndicator}
             />
             <Dropdown
-              className="col-2"
+              className="col-2 col-lg-4"
               options={this.props.dateRanges}
               onChange={this.onSelectDateRange}
               value={this.state.range}
             />
-            <div className="granularity columns col-3">
+            <div className="granularity columns col-3 col-lg-6">
               <Input
                 className="col-9"
                 invalid={this.props.fetchingStatus === 'failure'}
@@ -156,7 +156,7 @@ class ChartHeader extends Component {
               />
             </div>
             <FetchButton
-              className="btn btn-primary btn-fetch col-2"
+              className="btn btn-primary btn-fetch col-2 col-lg-4"
               onClick={this.onApply}
               isFetching={this.props.fetchingStatus === 'fetching'}
               text="Apply"

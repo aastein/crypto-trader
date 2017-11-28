@@ -119,7 +119,7 @@ class ManualOrder extends Component {
   render() {
     // console.log('rendering manual order');
     return ( this.props.visible &&
-      <div className="container">
+      <div className="container secondary-bg-dark p-2 flex-1">
         <div className="columns px-1">
           <button onClick={(e) => {this.handleClick(e, 'orderType', 'market')}} className={`col-6 btn order ${this.state.orderType.market ? '' : 'text-gray bg-dark'}`}>Market</button>
           <button onClick={(e) => {this.handleClick(e, 'orderType', 'limit')}} className={`col-6 btn order ${this.state.orderType.limit ? '' : 'text-gray bg-dark'}`}>Limit</button>

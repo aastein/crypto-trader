@@ -297,6 +297,7 @@ const chart = (state = INIT_CHART_STATE, action) => {
         )),
       };
     case actionType.SET_PRODUCT_DATA:
+      // console.log(action);
       return { ...state,
         products: state.products.map((p) => {
           const product = { ...p };
@@ -331,6 +332,7 @@ const chart = (state = INIT_CHART_STATE, action) => {
         }),
       };
     case actionType.ADD_PRODUCT_DATA:
+      // console.log(action);
       return { ...state,
         products: state.products.map((p) => {
           const product = { ...p };

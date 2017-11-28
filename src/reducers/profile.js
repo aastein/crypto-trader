@@ -20,7 +20,7 @@ const profile = (state = INITAL_PROFILE_STATE, action) => {
   let fills;
   switch (action.type) {
     case actionType.SELECT_PRODUCT:
-      console.log(action);
+      // console.log(action);
       return { ...state,
         products: state.products.map(p => (
           { ...p, active: p.id === action.id }

@@ -107,7 +107,7 @@ class Profile extends Component {
     return (
       <div className="container secondary-bg-dark">
         <div className="columns">
-          <form className="form-horizontal col-mx-auto col-6" onSubmit={this.props.onSaveClick}>
+          <form className="form-horizontal col-mx-auto col-6 col-md-10" onSubmit={this.props.onSaveClick}>
             <div className="form-group">
               <button type="submit" className="col-3 col-mx-auto btn btn-primary" onClick={this.handleSave}>
                 Save
@@ -117,26 +117,26 @@ class Profile extends Component {
               <label className="col-1 text-light" htmlFor="live">Live</label>
               <div className="col-11">
                 <ToggleSwitch
-                  className=""
+                  className="mx-2"
                   on={this.state.live}
                   onClick={this.handleToggle}
                 />
               </div>
             </div>
             <div className="form-group">
-              <label className="col-2 text-light" htmlFor="session">Session</label>
+              <label className="form-label col-2 text-light" htmlFor="session">Session</label>
               <Input
-                className="col-10"
+                className="col-10 mx-2"
                 name="session"
                 placeholder="Session"
                 value={this.state.session}
                 onChange={this.handleInputChange}
               />
             </div>
-            <p className="col-12 text-light">
+            <p className="col-12 text-light hide-md">
               {'Can\'t find your session ID? Session data is stored by your browser. You can upload browser data and the app will try to find your session.'}
             </p>
-            <table className="col-12">
+            <table className="col-12 hide-md">
                 <tbody>
                   <tr>
                     <th className="text-light">OS</th>
@@ -163,17 +163,17 @@ class Profile extends Component {
                   }
                 </tbody>
             </table>
-            <div className="form-group col-12">
+            <div className="form-group col-12 hide-md">
               <button type="submit" className="btn" onClick={(e) => { e.preventDefault(); }}>
                 <Dropzone className="dropzone" onDrop={this.handleFindSession}>
                   Find Session
                 </Dropzone>
               </button>
             </div>
-            <div className="form-group">
-              <label className="col-2 text-light" htmlFor="watched-products">Watched Products</label>
+            <div className="d-block">
+              <label className="col-2 col-md-12 text-light" htmlFor="watched-products">Watched Products</label>
               <Dropdown
-                className="col-10"
+                className="col-10 col-md-12"
                 multi
                 simpleValue
                 options={this.state.productOptions}

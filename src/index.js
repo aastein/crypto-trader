@@ -44,7 +44,7 @@ const initialState = () => {
     chart : INIT_CHART_STATE,
     websocket: INIT_WEBSOCKET_STATE,
   }
-  console.log('initstate', initState);
+  // console.log('initstate', initState);
   return initState;
 }
 
@@ -65,7 +65,7 @@ store.subscribe(function () {
       websocket: null,
     });
     if (writenState !== lastState) {
-       console.log('Writing new state to localStorage with length: ',writenState.length);
+       // console.log('Writing new state to localStorage with length: ',writenState.length);
        localStorage.setItem(localStorageName, writenState);
        lastState = writenState;
     }

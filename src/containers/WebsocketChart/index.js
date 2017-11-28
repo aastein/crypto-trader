@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
 import {
-  setProductData,
   setProductWSData,
   addProductData,
 } from '../../actions';
@@ -238,7 +237,7 @@ const mapStateToProps = state => {
     ? historicalData[historicalData.length - 1].time
     : null;
 
-  const granularity = selectedProductData ? selectedProduct.granularity : null ;
+  const granularity = selectedProductData ? selectedProductData.granularity : null ;
 
   const connected = state.websocket.connected;
 
@@ -261,9 +260,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => (
   {
-    setProductData: (id, data) => {
-      dispatch(setProductData(id, data));
-    },
     setProductWSData: (id, data) => {
       dispatch(setProductWSData(id, data));
     },

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 
-import { floor } from './math';
+// import { floor } from './math';
 
 axios.defaults.baseURL = 'https://api.gdax.com';
 

@@ -288,6 +288,7 @@ class Chart extends Component {
         enabled: false,
       },
       chart: {
+        panning: false,
         animation: false,
         // zoomType: 'x',
         marginBottom: 15,

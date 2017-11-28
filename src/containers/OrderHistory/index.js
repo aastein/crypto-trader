@@ -21,7 +21,7 @@ class OrderHistory extends Component {
   render() {
    // console.log('renderig orders container', this.props);
     return ( this.props.visible &&
-      <div className="container d-flex">
+      <div className="container d-flex flex-1 secondary-bg-dark">
         <div className="flex-1 scroll-y">
           <div key="heading" className="columns border-bottom-thick px-2">
             <div className="col-1 text-center text-light">Type</div>

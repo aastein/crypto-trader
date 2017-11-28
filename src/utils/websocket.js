@@ -29,12 +29,14 @@ export const setActions = (handleMatch, handleSnapshot, handleUpdate, handleTick
         console.error(data);
         break;
       case 'done':
-        console.log('ws user data', data);
+        // console.log('ws user data', data);
         // cancel order by id
         handleDeleteOrder(data);
         break;
       case 'received':
-        console.log('ws user made order', data);
+        // console.log('ws user made order', data);
+        break;
+      case 'subscriptions':
         break;
       default:
         console.log('no websocket handler for: ', data.type);

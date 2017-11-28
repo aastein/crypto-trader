@@ -47,7 +47,7 @@ export default class CodeEditor extends Component {
   }
 
   render() {
-    console.log('rendering CodeEditor');
+    // console.log('rendering CodeEditor');
     return (
       <div className={this.props.className}>
         <form className="form-horizontal flex-column flex-1" onSubmit={this.handleSave}>

@@ -76,14 +76,14 @@ class Navigation extends Component {
           </NavLink>
           {
             this.props.ticker.map(a => (
-              <div className="ticker vcenter" key={a.name}>
+              <div className="ticker vcenter hide-md" key={a.name}>
                 <p>{a.name}</p>
                 <p>{`Bid: ${a.bid}`}</p>
                 <p>{`Ask: ${a.ask}`}</p>
               </div>
           ))}
         </section>
-        <section className="navbar-section accounts">
+        <section className="navbar-section accounts hide-md">
           {this.props.accounts.map(a => (
             <div className="ticker vcenter" key={a.currency}>
               <p>{a.currency}</p>
