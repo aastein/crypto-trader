@@ -1,34 +1,30 @@
 import { round } from './math';
 
-let products;
-let p;
 let orderHist;
 
-const test = (header, script, prods, appendLog) => {
-  const scriptWithHeader = header + ';' + script;
-  const log = appendLog;
+const test = (props) => {
+  const scriptWithHeader = props.header + ';' + props.script;
+  const products = props.product;
   let maxGain = 0;
+  let losses = [0];
+  let gains = [0];
   orderHist = [];
-  products = prods;
-  p = products.reduce((a, b) => (
-    b.active ? b : a
-  ), {});
 
-  for (let i = 1; i < p.data.length - 1; i += 1) {
+  for (let i = 1; i < props.product.data.length - 1; i += 1) {
     const now = i;
     const lastOrder = orderHist.length > 0 ? orderHist[orderHist.length - 1] : {};
-    const order = { time: p.data[i + 1].time, price: 0 };
+    const order = { time: props.product.data[i + 1].time, price: 0 };
 
-    if (p.data[i].close > p.data[i].open) {
-      maxGain += p.data[i].close - p.data[i].open;
+    if (props.product.data[i].close > props.product.data[i].open) {
+      maxGain += props.product.data[i].close - props.product.data[i].open;
     }
 
     try {
       const buy = (id) => {
         if (orderHist.length === 0) {
-          orderHist = [...orderHist, { ...order, label: id, price: (-1) * p.data[i + 1].open }];
+          orderHist = [...orderHist, { ...order, label: id, price: (-1) * props.product.data[i + 1].open }];
         } else if (orderHist[orderHist.length - 1].price > 0) {
-          orderHist = [...orderHist, { ...order, label: id, price: (-1) * p.data[i + 1].open }];
+          orderHist = [...orderHist, { ...order, label: id, price: (-1) * props.product.data[i + 1].open }];
         }
       };
 
@@ -36,29 +32,23 @@ const test = (header, script, prods, appendLog) => {
         if (orderHist.length !== 0) {
           if (orderHist[orderHist.length - 1].price) {
             if (orderHist[orderHist.length - 1].price < 0) {
-              orderHist = [...orderHist, { ...order, label: id, price: p.data[i + 1].open }];
+              orderHist = [...orderHist, { ...order, label: id, price: props.product.data[i + 1].open }];
             }
           }
         }
       };
       eval(scriptWithHeader);
     } catch (err) {
-      appendLog(`Script encountered error: ${err}`);
+      console.warn(`Script encountered error: ${err}`);
     }
   }
 
-  let losses = [0];
-  let gains = [0];
   const numTrades = orderHist.length;
 
   for (let i = 1; i < numTrades; i += 1) {
     const thisTrade = orderHist[i].price;
     const lastTrade = orderHist[i - 1].price;
     const tradeDiff = thisTrade + lastTrade;
-
-    // console.log('tradeDiff', tradeDiff)
-    // console.log('thisTrade', thisTrade)
-    // console.log('lastTrade', lastTrade)
     // for every sell
     if (thisTrade > 0) {
       if (tradeDiff > 0) { // gain
@@ -74,9 +64,9 @@ const test = (header, script, prods, appendLog) => {
   const avgLoss = round(losses.reduce((a, b) => (a + b), 0) / losses.length, 2);
   const avgGain = round(gains.reduce((a, b) => (a + b), 0) / losses.length, 2);
   const total = round(losses.reduce((a, b) => (a + b), 0) + gains.reduce((a, b) => (a + b), 0), 2);
-  const range = (p.data[p.data.length - 1].time - p.data[0].time) / 1000;
+  const range = (props.product.data[props.product.data.length - 1].time - props.product.data[0].time) / 1000;
   const rate = round((total / range) * 3600, 2);
-  const baseGain = round(p.data[p.data.length - 1].open - p.data[1].open, 2);
+  const baseGain = round(props.product.data[props.product.data.length - 1].open - props.product.data[1].open, 2);
   maxGain = round(maxGain, 2);
   const baseEfficiency = round((total / baseGain) * 100, 2);
   const maxEfficiency = round((total / maxGain) * 100, 2);
@@ -92,7 +82,7 @@ const test = (header, script, prods, appendLog) => {
     total,
   };
 
-  appendLog(`Test Results ${p.display_name}:
+  console.log(`Test Results ${props.product.label}:
     Gain: ${avgGain} [ % / trade ]
     Loss: ${avgLoss} [ % / trade ]
     Rate: ${rate} [ $ / hr / coin ]

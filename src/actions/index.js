@@ -10,6 +10,7 @@ import {
   getFills,
 } from '../utils/api';
 import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
+import run from '../utils/scriptEnv';
 import connect, { setActions, subscribeToTicker, subscribeToOrderBook } from '../utils/websocket';
 import { floor } from '../utils/math';
 
@@ -144,7 +145,7 @@ export const fetchOrders = (product, session) => {
 export const fetchFills = (product, session) => {
   return (dispatch, getState) => {
     session = session ? session : getState().profile.session;
-    return getFills(product, getState().profile.session).then((fills) => {
+    return getFills(product, session).then((fills) => {
       dispatch(setFills(product, fills));
     })
   };
@@ -288,11 +289,25 @@ const ordersBeingHandled = [];
 // BUG - active orders do not get deleted!
 const handleUpdate = (dispatch, getState) => {
   return data => {
-    // console.log('actions/index.js handleUpdate', data);
     dispatch(updateOrderBook(data.product_id, data.changes));
-    // get best price and update active orders
     const state = getState();
+    const scriptHeaderd = state.scripts.find(s => (s.id === 0));
+    const activeScripts = state.scripts.map(s => (s.active));
     const activeOrders = state.profile.activeOrders[data.product_id];
+    /*
+      Run all scripts wich are live
+    */
+    // for (let i = 0; i < activeScripts.length; i +=1 ) {
+    //   // run({
+    //   //   script: scriptHeaderd + ';' + activeScripts,
+    //   // });
+    // }
+
+    // get best price and update active orders
+    /*
+      All of the code below this line is for handling canelling and re-placing of active orders
+    */
+
     if (activeOrders && activeOrders.length > 0) {
       // for each active order
       for (let i = 0; i < activeOrders.length; i +=1) {
