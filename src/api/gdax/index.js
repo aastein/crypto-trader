@@ -1,9 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 
-// import { floor } from './math';
-
-axios.defaults.baseURL = 'https://api.gdax.com';
+const baseUrl = 'https://api.gdax.com';
 
 const handleError = (error, setFetchingStatus) => {
   console.log('handling err');
@@ -11,58 +9,70 @@ const handleError = (error, setFetchingStatus) => {
   return console.warn(error);
 };
 
-const authRequest = (uri, params, method, body, session) => {
+const authRequest = (url, method, body, session) => {
   const headers = { 'CB-SESSION': session };
-  const options = { method, headers, url: uri + params, data: body };
+  const options = { method, headers, url: url, data: body };
   return axios(options);
 };
+
+const getUrl = (path) => (`${baseUrl}${path}`);
 
 /*
  * Private Endpoints
 */
 
 export const getOrder = (orderId, session) => {
-  const uri = `/orders/${orderId}`;
-  return authRequest(uri, '', 'get', '', session).then(res => (
+  const url = getUrl(`/orders/${orderId}`);
+  return authRequest(url, 'get', '', session).then(res => (
     res.data
   )).catch((error) => {
     if (error.response.status >= 400) {
-      console.warn(`Find order failed ${orderId}`);
+      console.warn(`Find order failed. Order ID: ${orderId}`);
     }
+    return error;
   });
 };
 
 export const getOrders = (product, session) => {
-  const uri = `/orders?product_id=${product}`
-  return authRequest(uri, '', 'get', '', session).then(res => (
+  const url = getUrl(`/orders?product_id=${product}`);
+  return authRequest(url, 'get', '', session).then(res => (
     res.data
   )).catch((error) => {
     if (error.response.status >= 400) {
       console.warn(`Find orders failed. Product: ${product}`);
     }
+    return error;
   });
 }
 
 export const getAccounts = (session) => {
-  const uri = '/accounts';
-  return authRequest(uri, '', 'get', '', session).then(res => (
+  const url= getUrl('/accounts');
+  return authRequest(url, 'get', '', session).then(res => (
     res.data
-  )).catch((err) => { console.warn('Get accounts failed', err); });
+  )).catch((error) => {
+    console.warn('Get accounts failed:', error.response.statusText);
+    return error;
+  });
 };
 
 export const deleteOrder = (orderId, session) => {
-  const uri = `/orders/${orderId}`;
-  return authRequest(uri, '', 'delete', '', session).then(res => {
-    // console.log('cancel order res', res);
+  const url = getUrl(`/orders/${orderId}`);
+  return authRequest(url, 'delete', '', session).then(res => {
     return res.data;
-  }).catch((err) => { console.warn('Cancel order failed.', orderId, err); });
+  }).catch((error) => {
+    console.warn('Cancel order failed. Order id: ', orderId, ", Message:", error.response.statusText);
+    return error;
+  });
 }
 
 export const getFills = (productId, session) => {
-  const uri = `/fills?product_id=${productId}`;
-  return authRequest(uri, '', 'get', '', session).then(res => (
+  const url = getUrl(`/fills?product_id=${productId}`);
+  return authRequest(url, 'get', '', session).then(res => (
     res.data
-  )).catch((err) => { console.warn('Get fills failed', err); });
+  )).catch((error) => {
+    console.warn('Get fills failed', error.response.statusText);
+    return error;
+  });
 }
 
 /*
@@ -93,11 +103,11 @@ export const getHistorialData = (product, startDate, endDate, gran) => {
   ));
 };
 
-// GDAX doesnt like handling large requests to if the requested range is too big to be
+// GDAX doesnt like handling large requests, so if the requested range is too big to be
 // served in a single response, split up into multiple requests
 // GDAX also has a burst request limit so it is important to not initialize the app a rage so wide
 // that it needs to split the requests
-// granularity == 300000 = 30s => I want a data point ever 30s
+// granularity == 300000 = 30s => I want a data point every 30s
 export const tryGetHistoricalData = (productId, time, range, desiredGranularity) => {
   // console.log('time', time)
   let rateConstant;
@@ -140,22 +150,6 @@ export const tryGetHistoricalData = (productId, time, range, desiredGranularity)
   return new Promise((resolve, reject) => (
     reject('Ganularity too small!')
   ));
-};
-
-export const fetchProductData = (id, range, granularity, setProductData, setFetchingStatus) => {
-  setFetchingStatus(true);
-  serverTime().then((time) => {
-    if (time) {
-      tryGetHistoricalData(id, time, range, granularity, setFetchingStatus).then((data) => {
-        setFetchingStatus(false);
-        setProductData(id, data);
-      }).catch((err) => {
-        setFetchingStatus(false);
-        alert(err);
-      });
-    }
-    setFetchingStatus(false);
-  });
 };
 
 export const getProductData = (id, range, granularity) => (

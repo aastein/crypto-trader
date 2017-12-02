@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 
-import run from '../utils/scriptEnv';
-import test from '../utils/scriptTestEnv';
-
 export default class CodeEditor extends Component {
 
   handleTextAreaChange = (event) => {
@@ -31,7 +28,7 @@ export default class CodeEditor extends Component {
 
   runScript = (event) => {
     event.preventDefault();
-    run(this.props.scriptHeader, this.props.script.script, this.props.products, this.props.profile, this.props.appendLog,
+    this.props.run(this.props.scriptHeader, this.props.script.script, this.props.products, this.props.profile, this.props.appendLog,
       this.props.addOrder);
   }
 

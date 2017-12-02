@@ -1,6 +1,6 @@
 import * as actionType from '../actions/actionTypes';
-import calculateIndicators from '../utils/indicators';
-import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
+import calculateIndicators from '../indicators';
+import { INIT_RANGE, INIT_GRANULARITY } from '../constants/chart';
 
 export const INIT_CHART_STATE = {
   indicators: [{

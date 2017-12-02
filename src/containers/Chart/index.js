@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 import Loader from '../../components/Loader';
 import PriceChart from '../../components/PriceChart';
-import { round } from '../../utils/math';
+import { round } from '../../math';
 
 class Chart extends Component {
 

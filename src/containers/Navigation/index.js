@@ -9,7 +9,7 @@ import {
   fetchAccounts,
   initProducts,
 } from '../../actions';
-import { round } from '../../utils/math';
+import { round } from '../../math';
 
 class Navigation extends Component {
 

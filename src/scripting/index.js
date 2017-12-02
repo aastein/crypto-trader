@@ -1,5 +1,5 @@
-import { postLimitOrder } from './api';
-import { round, floor } from './math';
+import  api from '../api';
+import { round, floor } from '../math';
 
 // todo: pass in orderbook for the user
 const buyLimit = (id) => {

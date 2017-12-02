@@ -1,18 +1,10 @@
 import axios from 'axios';
 import * as actionType from './actionTypes';
-import {
-  getAccounts,
-  getOrders,
-  getProductData,
-  getProducts,
-  deleteOrder,
-  postLimitOrder,
-  getFills,
-} from '../utils/api';
-import { INIT_RANGE, INIT_GRANULARITY } from '../utils/constants';
-import run from '../utils/scriptEnv';
-import connect, { setActions, subscribeToTicker, subscribeToOrderBook } from '../utils/websocket';
-import { floor } from '../utils/math';
+import api from '../api';
+import { INIT_RANGE, INIT_GRANULARITY } from '../constants/chart';
+import run from '../scripting';
+import connect, { setActions, subscribeToTicker, subscribeToOrderBook } from '../websocket';
+import { floor } from '../math';
 
 let nextScriptId = 2;
 
@@ -80,7 +72,7 @@ export const setLocation = location => ({ type: actionType.SET_LOCATION, locatio
 export const showCard = (card, content) => ({ type: actionType.SHOW_CARD, card, content });
 
 // api
-export const placeLimitOrder = (appOrderType, side, productId, price, amount) => {
+export const placeLimitOrder = (ex, appOrderType, side, productId, price, amount) => {
   return (dispatch, getState) => {
     if (appOrderType === 'bestPrice' || appOrderType === 'activeBestPrice') {
       const productWSData = getState().websocket.products.find(wsProduct => wsProduct.id === productId);
@@ -92,7 +84,7 @@ export const placeLimitOrder = (appOrderType, side, productId, price, amount) =>
         price = productWSData.asks[productWSData.asks.length - 1].price;
       }
     }
-    return postLimitOrder(side, productId, price, amount, getState().profile.session).then(res => {
+    return api[ex].postLimitOrder(side, productId, price, amount, getState().profile.session).then(res => {
       console.log('order response', res);
       // add order id to watched order id list, to replace order when needed
       dispatch(fetchOrders(productId));
@@ -105,11 +97,11 @@ export const placeLimitOrder = (appOrderType, side, productId, price, amount) =>
   }
 }
 
-export const cancelOrder = order => (
+export const cancelOrder = (ex, order) => (
   (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       // dispatch(setCancelling(order.product_id, order.id));
-      deleteOrder(order.id, getState().profile.session).then(() => {
+      api[ex].deleteOrder(order.id, getState().profile.session).then(() => {
         console.log('delete order request completed', order);
         dispatch(deleteActiveOrder(order.product_id, order.id));
         dispatch(fetchOrders(order.product_id));
@@ -120,10 +112,10 @@ export const cancelOrder = order => (
   }
 );
 
-export const fetchAccounts = (session) => (
+export const fetchAccounts = (ex, session) => (
   (dispatch, getState) => {
     session = session ? session : getState().profile.session;
-    return getAccounts(session).then((accounts) => {
+    return api[ex].getAccounts(session).then((accounts) => {
       if (accounts) {
         dispatch(updateAccounts(accounts));
         return true;
@@ -133,28 +125,28 @@ export const fetchAccounts = (session) => (
   }
 );
 
-export const fetchOrders = (product, session) => {
+export const fetchOrders = (ex, product, session) => {
   return (dispatch, getState) => {
     session = session ? session : getState().profile.session;
-    return getOrders(product, session).then((orders) => {
+    return api[ex].getOrders(product, session).then((orders) => {
       dispatch(setOrders(product, orders));
     })
   };
 }
 
-export const fetchFills = (product, session) => {
+export const fetchFills = (ex, product, session) => {
   return (dispatch, getState) => {
     session = session ? session : getState().profile.session;
-    return getFills(product, session).then((fills) => {
+    return api[ex].getFills(product, session).then((fills) => {
       dispatch(setFills(product, fills));
     })
   };
 }
 
-export const fetchProductData = (id, range, granularity) => (
+export const fetchProductData = (ex, id, range, granularity) => (
   (dispatch) => {
     dispatch(setFetchingStatus('fetching'));
-    return getProductData(id, range, granularity).then((data) => {
+    return api[ex].getProductData(id, range, granularity).then((data) => {
       dispatch(setProductData(id, data));
       dispatch(setFetchingStatus('success'));
     }).catch((err) => {
@@ -166,7 +158,7 @@ export const fetchProductData = (id, range, granularity) => (
 
 export const initProducts = () => (
   (dispatch, getState) => (
-    getProducts().then((products) => {
+    api['gdax'].getProducts().then((products) => {
       dispatch(setProducts(products.data));
       const state = getState();
       const selectedProductIds = state.profile.products.map(p => (p.id));
@@ -191,7 +183,7 @@ export const fetchSettings = acceptedFiles => (
   )
 );
 
-export const findSession = acceptedFiles => (
+export const findSession = (ex, acceptedFiles) => (
   (dispatch, getState) => (
     axios.create({ baseURL: '' }).get(acceptedFiles[0].preview).then((res) => {
       const content = res.data;
@@ -218,7 +210,7 @@ export const findSession = acceptedFiles => (
 
       // call accounts api with remainng session ids
       for (let i = 0; i < sessions.length; i += 1) {
-        getAccounts(sessions[i]).then((accounts) => {
+        api[ex].getAccounts(sessions[i]).then((accounts) => {
           if (accounts) {
             dispatch(saveSession(sessions[i]));
             dispatch(updateAccounts(accounts));

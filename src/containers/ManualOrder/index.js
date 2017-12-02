@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { placeLimitOrder } from '../../actions'
-import { floor } from '../../utils/math';
+import { floor } from '../../math';
 
 class ManualOrder extends Component {
   constructor(props) {

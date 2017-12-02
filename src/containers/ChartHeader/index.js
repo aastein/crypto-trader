@@ -23,7 +23,7 @@ import Input from '../../components/Input';
 import SliderDropdown from '../../components/SliderDropdown';
 import FetchButton from '../../components/FetchButton';
 import ObjectForm from '../../components/ObjectForm';
-import { INIT_GRANULARITY, INIT_RANGE } from '../../utils/constants';
+import { INIT_GRANULARITY, INIT_RANGE } from '../../constants/chart';
 
 class ChartHeader extends Component {
   constructor(props) {
