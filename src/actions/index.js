@@ -291,17 +291,17 @@ const handleUpdate = (dispatch, getState) => {
   return data => {
     dispatch(updateOrderBook(data.product_id, data.changes));
     const state = getState();
-    const scriptHeaderd = state.scripts.find(s => (s.id === 0));
-    const activeScripts = state.scripts.map(s => (s.active));
+    const scriptHeader = state.scripts.find(s => (s.id === 0));
+    const liveScripts = state.scripts.filter(s => (s.live));
     const activeOrders = state.profile.activeOrders[data.product_id];
     /*
       Run all scripts wich are live
     */
-    // for (let i = 0; i < activeScripts.length; i +=1 ) {
-    //   // run({
-    //   //   script: scriptHeaderd + ';' + activeScripts,
-    //   // });
-    // }
+    for (let i = 0; i < liveScripts.length; i +=1 ) {
+      run({
+        script: scriptHeader.script + ';' + liveScripts[i].script,
+      });
+    }
 
     // get best price and update active orders
     /*

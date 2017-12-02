@@ -24,6 +24,7 @@ const sellMarket = (id) => {
 
 const run = (props) => {
   try {
+    console.log('props', props);
     eval(props.script);
   } catch (err) {
     console.error(`Script encountered error: ${err}`);
