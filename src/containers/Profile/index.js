@@ -1,20 +1,18 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
 
 import ToggleSwitch from 'react-toggle-switch';
-import Dropzone from 'react-dropzone';
 
 import {
-  saveProfile,
   fetchAccounts,
-  setLocation,
-  findSession,
   fetchOrders,
-  saveSession,
-  initWebsocket,
   fetchFills,
+  initWebsocket,
+} from '../../actions/thunks';
+import {
+  setLocation,
 } from '../../actions';
+import { saveSession } from '../../actions'
 import Input from '../../components/Input';
 import Dropdown from '../../components/Dropdown';
 
@@ -98,10 +96,6 @@ class Profile extends Component {
     }
   }
 
-  handleFindSession = (acceptedFiles) => {
-    this.props.findSession(acceptedFiles);
-  }
-
   render() {
     console.log('rendering profile container', this.state);
     return (
@@ -133,43 +127,6 @@ class Profile extends Component {
                 onChange={this.handleInputChange}
               />
             </div>
-            <p className="col-12 text-light hide-md">
-              {'Can\'t find your session ID? Session data is stored by your browser. You can upload browser data and the app will try to find your session.'}
-            </p>
-            <table className="col-12 hide-md">
-                <tbody>
-                  <tr>
-                    <th className="text-light">OS</th>
-                    <th className="text-light">Browser</th>
-                    <th className="text-light">Path</th>
-                  </tr>
-                  {
-                    this.state.sessionIdPaths.map(s => (
-                      (
-                        <tr key={s.os}>
-                          <td className="text-light">{s.os}</td>
-                          <td className="text-light">{s.browser}</td>
-                          <td className="text-light">{s.path}</td>
-                          <td>
-                            <CopyToClipboard onCopy={() => {}} text={s.path} >
-                              <button className="btn" onClick={(e) => { e.preventDefault(); }}>
-                                Copy
-                              </button>
-                            </CopyToClipboard>
-                          </td>
-                        </tr>
-                      )
-                    ))
-                  }
-                </tbody>
-            </table>
-            <div className="form-group col-12 hide-md">
-              <button type="submit" className="btn" onClick={(e) => { e.preventDefault(); }}>
-                <Dropzone className="dropzone" onDrop={this.handleFindSession}>
-                  Find Session
-                </Dropzone>
-              </button>
-            </div>
             <div className="d-block">
               <label className="col-2 col-md-12 text-light" htmlFor="watched-products">Watched Products</label>
               <Dropdown
@@ -200,14 +157,8 @@ const mapStateToProps = state => (
 
 const mapDispatchToProps = dispatch => (
   {
-    saveProfile: (settigns) => {
-      dispatch(saveProfile(settigns));
-    },
     setLocation: (location) => {
       dispatch(setLocation(location));
-    },
-    findSession: (acceptedFiles) => {
-      dispatch(findSession(acceptedFiles));
     },
     fetchAccounts: (session) => (
       dispatch(fetchAccounts(session))

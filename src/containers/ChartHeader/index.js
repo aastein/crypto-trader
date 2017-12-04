@@ -2,19 +2,21 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  selectProduct,
-  selectDateRange,
-  setGranularity,
-  selectIndicator,
-  editIndicator,
-  setProductWSData,
-  setFetchingStatus,
   fetchProductData,
-  calculateIndicators,
-  saveTestResult,
   initWebsocket,
   fetchOrders,
   fetchFills
+} from '../../actions/thunks';
+
+import {
+  selectProduct,
+  setGranularity,
+  selectIndicator,
+  editIndicator,
+  setDateRange,
+  setFetchingStatus,
+  calculateIndicators,
+  saveTestResult,
 } from '../../actions';
 
 import Dropdown from '../../components/Dropdown';
@@ -33,6 +35,22 @@ class ChartHeader extends Component {
       showSlider: false,
       range: INIT_RANGE,
       editing: false,
+      dateRanges: [
+        { label: '1 minute', value: 1 },
+        { label: '5 minutes', value: 5 },
+        { label: '10 minute', value: 10 },
+        { label: '30 minutes', value: 30 },
+        { label: '1 hour', value: 60 },
+        { label: '3 hours', value: 180 },
+        { label: '6 hours', value: 360 },
+        { label: '1 day', value: 1440 },
+        { label: '5 days', value: 7200 },
+        { label: '10 days', value: 14400 },
+        { label: '1 Month', value: 43200 },
+        { label: '3 Months', value: 129600 },
+        { label: '6 Months', value: 259200 },
+        { label: '1 Year', value: 518400 },
+      ],
     };
   }
 
@@ -101,7 +119,7 @@ class ChartHeader extends Component {
 
   onApply = () => {
     this.props.setGranularity(this.props.productId, this.state.granularity);
-    this.props.selectDateRange(this.props.productId, this.state.range);
+    this.props.setDateRange(this.props.productId, this.state.range);
     this.props.fetchProductData(this.props.productId, this.state.range, this.state.granularity);
     this.props.saveTestResult({});
   }
@@ -131,7 +149,7 @@ class ChartHeader extends Component {
             />
             <Dropdown
               className="col-2 col-lg-4"
-              options={this.props.dateRanges}
+              options={this.state.dateRanges}
               onChange={this.onSelectDateRange}
               value={this.state.range}
             />
@@ -204,8 +222,6 @@ const mapStateToProps = state => {
 
   const fetchingStatus = state.chart.fetchingStatus;
 
-  const dateRanges = state.chart.dateRanges;
-
   const indicators = state.chart.indicators;
 
   return ({
@@ -213,7 +229,6 @@ const mapStateToProps = state => {
     dropdownProductOptions,
     dropdownIndicatorOptions,
     fetchingStatus,
-    dateRanges,
     indicators,
   })
 };
@@ -232,11 +247,8 @@ const mapDispatchToProps = dispatch => (
     editIndicator: (indicator) => {
       dispatch(editIndicator(indicator));
     },
-    selectDateRange: (id, range) => {
-      dispatch(selectDateRange(id, range));
-    },
-    setProductWSData: (id, data) => {
-      dispatch(setProductWSData(id, data));
+    setDateRange: (id, range) => {
+      dispatch(setDateRange(id, range));
     },
     setFetchingStatus: (status) => {
       dispatch(setFetchingStatus(status));

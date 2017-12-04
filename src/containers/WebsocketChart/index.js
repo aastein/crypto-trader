@@ -1,57 +1,11 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import {
-  setProductWSData,
-  addProductData,
-} from '../../actions';
-
 import LineChart from '../../components/LineChart';
 import Loader from '../../components/Loader';
 import ConnectedGlyph from '../../components/ConnectedGlyph';
 
 class WebsocketChart extends Component {
-  // bundle websocket data into OHLC and append to historical data given time conditions
-  // todo: move all of this logic to reduce or actions
-  componentWillReceiveProps = (nextProps) => {
-    // console.log('will receive props');
-    if (JSON.stringify(this.props) !== JSON.stringify(nextProps)) {
-      if (nextProps.websocketPriceData.length > 0 && nextProps.websocketVolumeData.length > 0) {
-        // add compiled ws data to historical data
-        // this works because latestWSDtime becomes latestHistDtime
-        if (nextProps.latestWebsocketDataTime - nextProps.latestHistoricalDataTime >= nextProps.granularity * 1000) {
-          // filter out data older than granularity time
-          const websocketData = nextProps.websocketPriceData.map((d, i) => {
-            return { time: d[0], price: d[1], size: nextProps.websocketVolumeData[i][1] }
-          }).filter((d, i)=> {
-            //return nextProps.latestWebsocketDataTime - d.time < nextProps.granularity * 1000;
-            return d.time > nextProps.latestHistoricalDataTime;
-          });
-          // pruning old websocket data in state
-          this.props.setProductWSData(nextProps.productId, websocketData);
-
-          // comile ws data to OHLC data
-          const wsOHLC = websocketData.reduce((ohlc, d) => (
-            {
-              ...ohlc,
-              high: d.price > ohlc.high ? d.price : ohlc.high,
-              low: d.price < ohlc.low ? d.price : ohlc.low,
-              volume: d.size + ohlc.volume,
-            }
-          ), {
-            open: websocketData[0].price,
-            high: Number.MIN_SAFE_INTEGER,
-            low: Number.MAX_SAFE_INTEGER,
-            close: websocketData[websocketData.length - 1].price,
-            time: nextProps.latestWebsocketDataTime,
-            volume: 0,
-          });
-          // add new slice of historical data
-          this.props.addProductData(nextProps.productId, wsOHLC);
-        }
-      }
-    }
-  }
 
   // return false, do update with child chart API via ref
   shouldComponentUpdate(nextProps) {
@@ -223,19 +177,11 @@ const mapStateToProps = state => {
   const websocketVolumeData = selectedWebsocket && selectedWebsocket.data ?
       selectedWebsocket.data.map(d => ([d.time, d.size])) : [];
 
-  const latestWebsocketDataTime = websocketPriceData.length > 0 && websocketPriceData[websocketPriceData.length - 1][0]
-    ? websocketPriceData[websocketPriceData.length - 1][0]
-    : null;
-
   const selectedProductData = state.chart.products.find(p => {
     return p.id === selectedProduct.id;
   });
 
   const historicalData = selectedProductData && selectedProductData.data ? selectedProductData.data : [];
-
-  const latestHistoricalDataTime = historicalData[historicalData.length - 1] && historicalData[historicalData.length - 1].time
-    ? historicalData[historicalData.length - 1].time
-    : null;
 
   const granularity = selectedProductData ? selectedProductData.granularity : null ;
 
@@ -250,28 +196,16 @@ const mapStateToProps = state => {
     websocketPriceData,
     websocketVolumeData,
     historicalData,
-    latestHistoricalDataTime,
-    latestWebsocketDataTime,
     granularity,
     connected,
     visible,
   })
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    setProductWSData: (id, data) => {
-      dispatch(setProductWSData(id, data));
-    },
-    addProductData: (id, data) => {
-      dispatch(addProductData(id, data));
-    },
-  }
-);
 
 const WebsocketChartContainer = connect(
   mapStateToProps,
-  mapDispatchToProps,
+  null,
 )(WebsocketChart);
 
 export default WebsocketChartContainer;

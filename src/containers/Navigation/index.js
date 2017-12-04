@@ -5,10 +5,10 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 
 import {
-  updateHeartbeat,
   fetchAccounts,
   initProducts,
-} from '../../actions';
+} from '../../actions/thunks';
+import { updateHeartbeat } from '../../actions';
 import { round } from '../../math';
 
 class Navigation extends Component {

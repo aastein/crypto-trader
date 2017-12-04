@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import {
   cancelOrder,
-} from '../../actions';
+} from '../../actions/thunks';
 
 class OrderHistory extends Component {
 

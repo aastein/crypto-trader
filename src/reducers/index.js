@@ -1,19 +1,18 @@
 import { combineReducers } from 'redux';
-import chart from './chart';
-import profile from './profile';
-import scripts from './scripts';
-import log from './log';
-import websocket from './websocket';
+
+import exchanges from './exchanges';
+import indicators from './indicators';
 import location from './location';
+import testData from './testData';
+import scripts from './scripts';
 import view from './view';
 
 const reducer = combineReducers({
-  chart,
-  profile,
-  scripts,
-  log,
-  websocket,
+  exchanges,
+  indicators,
   location,
+  scripts,
+  testData,
   view,
 });
 

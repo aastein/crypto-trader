@@ -11,8 +11,6 @@ import 'font-awesome/scss/font-awesome.scss';
 import App from './App';
 import reducer from './reducers';
 import './styles/styles.scss';
-import { INIT_CHART_STATE } from './reducers/chart';
-import { INIT_WEBSOCKET_STATE } from './reducers/websocket';
 
 const composeEnhancers = typeof window === 'object' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
@@ -41,8 +39,6 @@ const initialState = () => {
 
   const initState = {
     ...localStorageState(),
-    chart : INIT_CHART_STATE,
-    websocket: INIT_WEBSOCKET_STATE,
   }
   // console.log('initstate', initState);
   return initState;
