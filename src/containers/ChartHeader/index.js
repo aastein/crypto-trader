@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import {
+  calculateIndicators,
   fetchProductData,
   initWebsocket,
   fetchOrders,
@@ -15,7 +16,6 @@ import {
   editIndicator,
   setDateRange,
   setFetchingStatus,
-  calculateIndicators,
   saveTestResult,
 } from '../../actions';
 
@@ -27,7 +27,7 @@ import Input from '../../components/Input';
 import SliderDropdown from '../../components/SliderDropdown';
 import FetchButton from '../../components/FetchButton';
 import ObjectForm from '../../components/ObjectForm';
-import { INIT_GRANULARITY, INIT_RANGE } from '../../constants/chart';
+import { INIT_GRANULARITY, INIT_RANGE } from '../../constants/product';
 
 class ChartHeader extends Component {
   constructor(props) {
@@ -66,15 +66,15 @@ class ChartHeader extends Component {
     if (event) {
       const id = event.value;
       // fetch historical data
-      this.props.fetchProductData(id, this.state.range, this.state.granularity);
+      this.props.fetchProductData(this.props.exchangeId, id, this.state.range, this.state.granularity);
       // init websocket for product
-      this.props.initWebsocket(id, this.props.dropdownProductOptions.map(p => (p.value)));
+      this.props.initWebsocket(this.props.exchangeId, id, this.props.dropdownProductOptions.map(p => (p.value)));
       // fetch orders
-      this.props.fetchOrders(id);
+      this.props.fetchOrders(this.props.exchangeId, id);
       // fetch fills
-      this.props.fetchFills(id);
+      this.props.fetchFills(this.props.exchangeId, id);
       // set product
-      this.props.selectProduct(id);
+      this.props.selectProduct(this.props.exchangeId, id);
       // clear test result
       this.props.saveTestResult({});
     }
@@ -122,7 +122,7 @@ class ChartHeader extends Component {
   onApply = () => {
     this.props.setGranularity(this.props.productId, this.state.granularity);
     this.props.setDateRange(this.props.productId, this.state.range);
-    this.props.fetchProductData(this.props.productId, this.state.range, this.state.granularity);
+    this.props.fetchProductData(this.props.selectedExchange.id, this.props.productId, this.state.range, this.state.granularity);
     this.props.saveTestResult({});
   }
 
@@ -131,7 +131,7 @@ class ChartHeader extends Component {
   }
 
   render() {
-    // console.log('rendering chart header container');
+    // console.log('rendering chart header container', this.props);
     return (
       <div className="p-1 bg-dark">
         <div className="container">
@@ -207,6 +207,7 @@ class ChartHeader extends Component {
 
 const mapStateToProps = state => {
   const selectedExchange = selectors.selectedExchange(state);
+  const exchangeId = selectedExchange.id;
   const selectedProduct = selectors.selectedProduct(selectedExchange);
   const productId = selectors.productId(selectedProduct);
   const fetchingStatus = selectedExchange.fetching;
@@ -224,46 +225,47 @@ const mapStateToProps = state => {
     dropdownIndicatorOptions,
     fetchingStatus,
     indicators,
+    exchangeId,
   })
 };
 
 const mapDispatchToProps = dispatch => (
   {
-    selectProduct: (id) => {
-      dispatch(selectProduct(id));
+    selectProduct: (exchnage, id) => {
+      dispatch(selectProduct(exchnage, id));
     },
-    setGranularity: (id, granularity) => {
-      dispatch(setGranularity(id, granularity));
+    setGranularity: (exchnage, id, granularity) => {
+      dispatch(setGranularity(exchnage, id, granularity));
     },
-    selectIndicator: (id) => {
-      dispatch(selectIndicator(id));
+    selectIndicator: (exchnage, id) => {
+      dispatch(selectIndicator(exchnage, id));
     },
     editIndicator: (indicator) => {
       dispatch(editIndicator(indicator));
     },
-    setDateRange: (id, range) => {
-      dispatch(setDateRange(id, range));
+    setDateRange: (exchnage, id, range) => {
+      dispatch(setDateRange(exchnage, id, range));
     },
-    setFetchingStatus: (status) => {
-      dispatch(setFetchingStatus(status));
+    setFetchingStatus: (exchnage, status) => {
+      dispatch(setFetchingStatus(exchnage, status));
     },
-    fetchProductData: (id, range, granularity) => {
-      dispatch(fetchProductData(id, range, granularity));
+    fetchProductData: (exchange, id, range, granularity) => {
+      dispatch(fetchProductData(exchange, id, range, granularity));
     },
-    calculateIndicators: (id) => {
-      dispatch(calculateIndicators(id));
+    calculateIndicators: (exchnage, id) => {
+      dispatch(calculateIndicators(exchnage, id));
     },
     saveTestResult: result => {
       dispatch(saveTestResult(result));
     },
-    initWebsocket: (activeId, ids) => {
-      dispatch(initWebsocket(activeId, ids));
+    initWebsocket: (exchnage, activeId, ids) => {
+      dispatch(initWebsocket(exchnage, activeId, ids));
     },
-    fetchOrders: (id) => {
-      dispatch(fetchOrders(id));
+    fetchOrders: (exchnage, id) => {
+      dispatch(fetchOrders(exchnage, id));
     },
-    fetchFills: (id) => {
-      dispatch(fetchFills(id));
+    fetchFills: (exchnage, id) => {
+      dispatch(fetchFills(exchnage, id));
     },
   }
 );

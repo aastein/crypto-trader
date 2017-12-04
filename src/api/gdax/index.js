@@ -80,7 +80,7 @@ export const getFills = (productId, session) => {
 */
 
 export const serverTime = () => {
-  const url = '/time';
+  const url = getUrl('/time');
   return axios.get(url).then(res => (
     res.data
   )).catch(handleError);
@@ -88,7 +88,7 @@ export const serverTime = () => {
 
 export const getHistorialData = (product, startDate, endDate, gran) => {
   const granularity = Math.ceil(gran);
-  const url = `/products/${product}/candles?start=${startDate}&end=${endDate}&granularity=${granularity}`;
+  const url = getUrl(`/products/${product}/candles?start=${startDate}&end=${endDate}&granularity=${granularity}`);
   return axios.get(url).then(res => (
     res.data.map(d => (
       {
@@ -161,19 +161,19 @@ export const getProductData = (id, range, granularity) => (
 );
 
 export const getProducts = () => {
-  const url = '/products';
+  const url = getUrl('/products');
   return axios.get(url);
 };
 
 export const postMarketOrder = (side, productId, price, session) => {
-  const uri = '/orders';
+  const url = getUrl('/orders');
   const body = {
     type: 'market',
     side,
     product_id: productId,
     price,
   };
-  return authRequest(uri, '', 'post', body, session).then((res) => {
+  return authRequest(url, 'post', body, session).then((res) => {
     const data = res.data;
     return data;
   }).catch((error) => {
@@ -187,7 +187,7 @@ export const postMarketOrder = (side, productId, price, session) => {
 }
 
 export const postLimitOrder = (side, productId, price, size, session) => {
-  const uri = '/orders';
+  const url = getUrl('/orders');
   const body = {
     type: 'limit',
     side,
@@ -197,7 +197,7 @@ export const postLimitOrder = (side, productId, price, size, session) => {
     time_in_force: 'GTC',
     post_only: true,
   };
-  return authRequest(uri, '', 'post', body, session).then((res) => {
+  return authRequest(url, 'post', body, session).then((res) => {
     const data = res.data;
     return data;
   }).catch((error) => {

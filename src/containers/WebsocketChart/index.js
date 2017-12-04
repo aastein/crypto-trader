@@ -24,7 +24,7 @@ class WebsocketChart extends Component {
         }
       }
     }
-    return (this.props.websocketPriceData.length === 0 && nextProps.websocketPriceData.length > 0) || this.props.visible !== nextProps.visible
+    return (this.props.matches.length === 0 && nextProps.matches.length > 0) || this.props.visible !== nextProps.visible
       || this.props.connected !== nextProps.connected;
   }
 
@@ -112,7 +112,7 @@ class WebsocketChart extends Component {
       }],
       series: [{
         animation: false,
-        data: props.websocketPriceData,
+        data: props.matches,
         type: 'line',
         name: props.productId,
         tooltip: {
@@ -145,7 +145,7 @@ class WebsocketChart extends Component {
     return ( this.props.visible &&
       <div className="chart secondary-bg-dark">
         <ConnectedGlyph connected={this.props.connected}/>
-        { this.props.websocketPriceData.length > 0 ?
+        { this.props.matches.length > 0 ?
           <div className="">
             <LineChart ref={(c) => { this.lineChart = c; }} refName="wschart" config={this.wsConfig(this.props)} />
           </div>
@@ -168,7 +168,7 @@ const mapStateToProps = state => {
   const connected = selectedExchange.connected;
   const selectedProduct = selectors.selectedProduct(selectedExchange);
   const productId = selectors.productId(selectedProduct);
-  const productDisplayName = selectedProduct.name;
+  const productDisplayName = selectors.productName(selectedProduct);
   const matches = selectors.matches(selectedProduct);
   const historicalData = selectors.productData(selectedProduct);
   const granularity = selectors.granularity(selectedProduct);

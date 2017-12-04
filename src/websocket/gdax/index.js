@@ -91,7 +91,7 @@ export const unSubscribeFromOrderBook = (product, sessionId) => {
 };
 
 // connect to GDAX websocket
-const connect = () => (
+export const connect = () => (
   new Promise((resolve, reject) => {
     // check for exising connection
     if (connection) connection.close();
@@ -113,5 +113,3 @@ const connect = () => (
     }
   })
 );
-
-export default connect;

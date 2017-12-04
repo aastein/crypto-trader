@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import { initApp } from '../../actions/thunks';
 import * as selectors from '../../selectors';
@@ -9,7 +8,7 @@ import { round } from '../../math';
 
 class Navigation extends Component {
 
-  compnentDidMount() {
+  componentDidMount() {
     this.props.initApp();
   }
 
@@ -58,8 +57,8 @@ class Navigation extends Component {
             Profile
           </NavLink>
           {
-            this.props.tickers.map(a => (
-              <div className="ticker vcenter hide-md" key={a.name}>
+            this.props.tickers.map((a,i) => (
+              <div className="ticker vcenter hide-md" key={`${i}${a.name}`}>
                 <p>{a.name}</p>
                 <p>{`Bid: ${a.bid}`}</p>
                 <p>{`Ask: ${a.ask}`}</p>
@@ -67,24 +66,17 @@ class Navigation extends Component {
           ))}
         </section>
         <section className="navbar-section accounts hide-md">
-          {this.props.accounts.map(a => (
-            <div className="ticker vcenter" key={a.currency}>
+          {this.props.accounts.map((a, i) => {
+            return (<div className="ticker vcenter" key={`${i}${a.currency}`}>
               <p>{a.currency}</p>
               <p className="small">{`Available: ${round(a.available, 6)}`}</p>
               <p className="small">{`Balance: ${round(a.balance, 6)}`}</p>
-            </div>
-          ))}
+            </div>)
+          })}
         </section>
       </nav>
     );
   }
-}
-
-Navigation.propTypes = {
-  live: PropTypes.bool.isRequired,
-  accounts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  ticker: PropTypes.arrayOf(PropTypes.object),
-  location: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => {

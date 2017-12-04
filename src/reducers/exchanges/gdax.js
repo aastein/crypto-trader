@@ -2,6 +2,8 @@ import * as actionType from '../../actions/actionTypes';
 import calculateIndicators from '../../indicators';
 import moment from 'moment';
 
+import { INIT_RANGE, INIT_GRANULARITY } from '../../constants/product';
+
 // implicity defines avalable exchanges using
 export const INIT_GDAX_STATE = {
   id: 'gdax',
@@ -52,9 +54,10 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
         };
       // set initial products from /produts API response
       case actionType.SET_PRODUCTS:
+        // console.log(action);
         // form API response data to general format
-        const products = action.proudcts.map(_p => {
-          const p = { ..._p };
+        const products = action.products.map(_p => {
+          const p = { ..._p, range: INIT_RANGE, granularity: INIT_GRANULARITY };
           return p;
         });
         return { ...state, products };
@@ -70,12 +73,12 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
               const startDate = endDate - (product.range * 60000); // (minutes * ( ms / minute)*1000)
               const dates = [];
               let lastTime = 0;
-
+              // sort data
               data = data.sort((a, b) => {
                 if (a.time < b.time) return -1;
                 if (a.time > b.time) return 1;
                 return 0;
-              }).filter((d) => {
+              }).filter((d) => { // filter invalid data
                 const isDupe = dates.indexOf(d.time) > 0;
                 const isInTimeRange = d.time >= startDate && d.time <= endDate;
                 dates.push(d.time);
@@ -85,7 +88,8 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
                 }
                 return false;
               });
-              const inds = calculateIndicators(state.indicators, data);
+              console.log('1', calculateIndicators, action.indicators, data);
+              const inds = calculateIndicators(action.indicators, data);
               return { ...product,
                 data,
                 ...inds,
@@ -102,7 +106,8 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
             const product = { ...p };
             if (product.id === action.id) {
               const data = [...product.data, action.data];
-              const inds = calculateIndicators(state.indicators, data);
+              console.log('2', calculateIndicators, action.indicators, data);
+              const inds = calculateIndicators(action.indicators, data);
               return { ...product,
                 data,
                 ...inds,
@@ -117,7 +122,8 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
           products: state.products.map((p) => {
             const product = { ...p };
             if (product.id === action.id) {
-              const inds = calculateIndicators(state.indicators, [...product.data]);
+              console.log('3', calculateIndicators, action.indicators, [...product.data]);
+              const inds = calculateIndicators(action.indicators, [...product.data]);
               return { ...product, ...inds };
             }
             return product;
@@ -208,11 +214,13 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
         return { ...state, accounts: action.accounts };
       // add match data, also update heatbeattime and set websocketconnecetd to true
       case actionType.ADD_MATCH_DATA:
+        console.log(action, action.data);
         return { ...state,
           products: state.products.map((p) => {
             if (p.id === action.data.product_id) {
               const product = { ...p };
-              product.matches = [ ...product.matches,
+              const oldMatches = product.matches ? product.matches : []
+              product.matches = [ ...oldMatches,
                 {
                   ...action.data,
                   time: moment(action.data.time).valueOf(),
@@ -220,11 +228,12 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
                   price: Number(action.data.price),
                 }
               ];
+
               return product;
             }
             return p;
           }),
-          websocketConnected: true,
+          connected: true,
           heartbeatTime: action.time,
         };
       case actionType.SET_MATCH_DATA:

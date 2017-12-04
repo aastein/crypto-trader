@@ -19,44 +19,67 @@ export const tickers = (exchange) => {
   }) : [];
 }
 
-export const ticker = (product) => {
-  return product.ticker ? product.ticker : {};
-}
-
 export const accounts = (exchange) => {
   return exchange.accounts ? exchange.accounts : [];
 }
 
 export const selectedProduct = (exchange) => {
-  return exchange.products ? exchange.products.find(p => {
-    return p.active;
+  const product = exchange.products ? exchange.products.find(p => {
+    return p.selected;
   }) : {};
-}
-
-export const productId = (product) => {
-  return product.id ? product.id : '';
-}
-
-export const matches = (product) => {
-  return product.matches ? product.matches.map(d => ([d.time, d.price, d.size])) : [];
-}
-
-export const productData = (product) => {
-  return product.data ? product.data : [];
-}
-
-export const granularity = (product) => {
-  return product.granularity ? product.granularity : 0;
-}
-
-export const orders = (product) => {
-  return product.orders ? product.orders : [];
-}
-
-export const fills = (product) => {
-  return product.fills ? product.fills : [];
+  return product ? product : {};
 }
 
 export const currencyAccount = (exchange, currency) => {
   return exchange.accounts.find(a => (a.currency === currency));
+}
+
+export const ticker = (product) => {
+  return product && product.ticker ? product.ticker : {};
+}
+
+export const productId = (product) => {
+  return product && product.id ? product.id : '';
+}
+
+export const matches = (product) => {
+  return product && product.matches ? product.matches.map(d => ([d.time, d.price, d.size])) : [];
+}
+
+export const productData = (product) => {
+  return product && product.data ? product.data : [];
+}
+
+export const granularity = (product) => {
+  return product && product.granularity ? product.granularity : 0;
+}
+
+export const orders = (product) => {
+  return product && product.orders ? product.orders : [];
+}
+
+export const fills = (product) => {
+  return product && product.fills ? product.fills : [];
+}
+
+export const productName = (product) => {
+  return product && product.display_name ? product.display_name : '';
+}
+
+export const activeOrders = (product) => {
+  return product && product.activeOrders ? product.activeOrders : [];
+};
+
+export const exchangeActiveOrders = (exchange) => {
+  return exchange.products ?
+    exchange.products.reduce((orders, product) => {
+      return [ ...orders, activeOrders(product)]
+    }, [])
+    : [];
+}
+
+export const allExchangeActiveOrders = (state) => {
+  return Object.keys(state.exchanges).reduce((orders, exchange) => {
+    return [ ...orders, exchangeActiveOrders(state.exchanges[exchange]) ];
+  }, []);
 }

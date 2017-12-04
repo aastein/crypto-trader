@@ -28,12 +28,12 @@ export const setProducts = (exchange, products) => ({ type: actionType.SET_PRODU
 export const selectProduct = (exchange, id) => ({ type: actionType.SELECT_PRODUCT, exchange, id });
 
   // historical data
-export const setProductData = (exchange, id, data) => ({ type: actionType.SET_PRODUCT_DATA, exchange, id, data });
-export const addProductData = (exchange, id, data) => ({ type: actionType.ADD_PRODUCT_DATA, exchange, id, data });
+export const setProductData = (exchange, id, data, indicators) => ({ type: actionType.SET_PRODUCT_DATA, exchange, id, data, indicators });
+export const addProductData = (exchange, id, data, indicators) => ({ type: actionType.ADD_PRODUCT_DATA, exchange, id, data, indicators });
 export const setDateRange = (exchange, id, range) => ({ type: actionType.SET_DATE_RANGE, exchange, id, range });
 export const setGranularity = (exchange, id, granularity) => ({ type: actionType.SET_GRANULARITY, exchange, id, granularity });
 export const setFetchingStatus = (exchange, status) => ({ type: actionType.SET_FETCHING_STATUS, exchange, status });
-export const calculateIndicators = (exchange, id) => ({ type: actionType.CALCULATE_INDICATORS, exchange, id });
+export const _calculateIndicators = (exchange, id, indicators) => ({ type: actionType.CALCULATE_INDICATORS, exchange, id, indicators });
 
 // exchange: gdax
 export const saveSession = session => ({ type: actionType.SAVE_SESSION, exchange: 'gdax', session });

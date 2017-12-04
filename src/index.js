@@ -24,7 +24,7 @@ const getComposeEnhancers = () => {
   return compose(applyMiddleware(thunk));
 };
 
-const localStorageName = 'decentrav0.0.01'
+const localStorageName = 'decentrav0.0.02'
 
 const localStorageState = () => {
   const local = JSON.parse(localStorage.getItem(localStorageName))
@@ -57,12 +57,10 @@ store.subscribe(function () {
   // console.log('state length', JSON.stringify(state).length);
   try {
     const writenState = JSON.stringify({ ...state,
-      chart: null,
-      websocket: null,
     });
     if (writenState !== lastState) {
        // console.log('Writing new state to localStorage with length: ',writenState.length);
-       localStorage.setItem(localStorageName, writenState);
+       // localStorage.setItem(localStorageName, writenState);
        lastState = writenState;
     }
   } catch (e) {

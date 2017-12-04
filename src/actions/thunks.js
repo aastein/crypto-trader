@@ -1,18 +1,19 @@
 import moment from 'moment';
 
 import { floor } from '../math';
-import { INIT_RANGE, INIT_GRANULARITY } from '../constants/chart';
+import { INIT_RANGE, INIT_GRANULARITY } from '../constants/product';
 import run from '../scripting';
 import api from '../api';
-import connect, { setActions, subscribeToTicker, subscribeToOrderBook } from '../websocket';
+import ws from '../websocket';
+import * as selectors from '../selectors';
 import {
+  _calculateIndicators,
   addActiveOrder,
   addProductData,
   addMatchData,
   deleteActiveOrder,
   setOrders,
   setFills,
-  setFetchingStatus,
   setTickerData,
   setOrderBook,
   setProductData,
@@ -20,6 +21,7 @@ import {
   setProducts,
   selectProduct,
   setAccounts,
+  updateHeartbeat,
   updateOrderBook,
 } from './index';
 
@@ -31,54 +33,59 @@ export const initApp = () => {
   return (dispatch, getState) => {
     dispatch(initProducts());
     setInterval(() => {
+      const state = getState();
       // update account balances every 5 seconds
-      dispatch(fetchAccounts());
+      const exchange = selectors.selectedExchange(state);
+      const exchangeId = exchange.id ? exchange.id : 'gdax';
+      dispatch(fetchAccounts(exchangeId));
       // check if websocket is connected every 5 seconds
-      if (moment().unix() - moment(this.props.heartbeatTime).unix() > 30 && this.props.connected === true) {
-        this.props.updateHeartbeat(false);
+      if (moment().unix() - moment(exchange.heartbeatTime).unix() > 30 && exchange.connected === true) {
+        dispatch(updateHeartbeat(exchangeId, false));
       }
     }, 5000);
   }
 }
 
 export const initProducts = () => (
-  (dispatch, getState) => (
-    api['gdax'].getProducts().then((products) => {
-      dispatch(setProducts(products.data));
+  (dispatch, getState) => {
+    const exchange = 'gdax';
+    return api[exchange].getProducts().then((products) => {
+      dispatch(setProducts(exchange, products.data));
       const state = getState();
-      const selectedProductIds = state.profile.products.map(p => (p.id));
-      dispatch(selectProduct(selectedProductIds[0]));
-      dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
-      if (state.profile.session) {
-        dispatch(fetchOrders(selectedProductIds[0]));
-        dispatch(fetchFills(selectedProductIds[0]));
-        dispatch(fetchAccounts(state.profile.session));
+      const selectedProductIds = state.exchanges.gdax.products.map(p => (p.id));
+      dispatch(selectProduct(exchange, selectedProductIds[0]));
+      dispatch(fetchProductData(exchange, selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
+      if (state.exchanges[exchange].persistent.session) {
+        dispatch(fetchOrders(exchange, selectedProductIds[0]));
+        dispatch(fetchFills(exchange, selectedProductIds[0]));
+        dispatch(fetchAccounts(exchange, state.exchanges[exchange].persistent.session));
       }
-      dispatch(initWebsocket(selectedProductIds[0], selectedProductIds));
+      dispatch(initWebsocket(exchange, selectedProductIds[0], selectedProductIds));
     })
-  )
+  }
 )
 
 
 // initialize all websocket stuff
-export const initWebsocket = (activeId, ids) => (
-  (dispatch, getState) => (
-    connect().then(() => {
+export const initWebsocket = (exchange, activeId, ids) => (
+  (dispatch, getState) => {
+    // console.log(ws, exchange);
+    return ws[exchange].connect().then(() => {
       // pass in methods that the WS will need to call.
       // console.log('initwebsocker', activeId, ids);
       const exchange = 'gdax';
       // pass methods to the websocket onmessage callback to handle websocket data
-      setActions(
+      ws[exchange].setActions(
         handleMatch(exchange, dispatch, getState),
         handleSnapshot(exchange, dispatch),
         handleUpdate(exchange, dispatch, getState),
         handleTicker(exchange, dispatch),
         handleDeleteOrder(exchange, dispatch)
       );
-      subscribeToTicker(ids)
-      subscribeToOrderBook(activeId, getState().profile.session);
+      ws[exchange].subscribeToTicker(ids)
+      ws[exchange].subscribeToOrderBook(activeId, getState().exchanges[exchange].persistent.session);
     })
-  )
+  }
 );
 
 
@@ -102,10 +109,10 @@ export const placeLimitOrder = (exchange, appOrderType, side, productId, price, 
     return api[exchange].postLimitOrder(side, productId, price, amount, getState().profile.session).then(res => {
       console.log('order response', res);
       // add order id to watched order id list, to replace order when needed
-      dispatch(fetchOrders(productId));
-      dispatch(fetchFills(productId));
+      dispatch(fetchOrders(exchange, productId));
+      dispatch(fetchFills(exchange, productId));
       if (res && appOrderType === 'activeBestPrice') {
-        dispatch(addActiveOrder(res.product_id, res));
+        dispatch(addActiveOrder(exchange, res.product_id, res));
       }
       return res;
     });
@@ -117,10 +124,10 @@ export const cancelOrder = (exchange, order) => (
     return new Promise((resolve, reject) => {
       // dispatch(setCancelling(order.product_id, order.id));
       api[exchange].deleteOrder(order.id, getState().profile.session).then(() => {
-        console.log('delete order request completed', order);
-        dispatch(deleteActiveOrder(order.product_id, order.id));
-        dispatch(fetchOrders(order.product_id));
-        dispatch(fetchFills(order.product_id));
+        console.log('delete order request completed', order, exchange);
+        dispatch(deleteActiveOrder(exchange, order.product_id, order.id));
+        dispatch(fetchOrders(exchange, order.product_id));
+        dispatch(fetchFills(exchange, order.product_id));
         resolve();
       })
     });
@@ -129,18 +136,18 @@ export const cancelOrder = (exchange, order) => (
 
 export const fetchOrders = (exchange, product, session) => {
   return (dispatch, getState) => {
-    session = session ? session : getState().profile.session;
+    session = session ? session : getState().exchanges[exchange].persistent.session;
     return api[exchange].getOrders(product, session).then((orders) => {
-      dispatch(setOrders(product, orders));
+      dispatch(setOrders(exchange, product, orders));
     })
   };
 }
 
 export const fetchFills = (exchange, product, session) => {
   return (dispatch, getState) => {
-    session = session ? session : getState().profile.session;
+    session = session ? session : getState().exchanges[exchange].persistent.session;
     return api[exchange].getFills(product, session).then((fills) => {
-      dispatch(setFills(product, fills));
+      dispatch(setFills(exchange, product, fills));
     })
   };
 }
@@ -151,11 +158,11 @@ export const fetchFills = (exchange, product, session) => {
 
 export const fetchAccounts = (exchange, session) => (
   (dispatch, getState) => {
-    session = session ? session : getState().profile.session;
+    session = session ? session : getState().exchanges[exchange].persistent.session;
     if (session.length > 0) {
       return api[exchange].getAccounts(session).then((accounts) => {
         if (accounts) {
-          dispatch(setAccounts(accounts));
+          dispatch(setAccounts(exchange, accounts));
           return true;
         }
         return false;
@@ -169,17 +176,22 @@ export const fetchAccounts = (exchange, session) => (
 */
 
 export const fetchProductData = (exchange, id, range, granularity) => (
-  (dispatch) => {
-    dispatch(setFetchingStatus('fetching'));
+  (dispatch, getState) => {
+    const indicators = getState().indicators;
     return api[exchange].getProductData(id, range, granularity).then((data) => {
-      dispatch(setProductData(id, data));
-      dispatch(setFetchingStatus('success'));
+      dispatch(setProductData(exchange, id, data, indicators));
     }).catch((err) => {
       console.warn(err);
-      dispatch(setFetchingStatus('failure'));
     });
   }
 )
+
+export const calculateIndicators = (exchange, id) => {
+  return (dispatch, getState) => {
+    const indicators = getState().indicators;
+    dispatch(_calculateIndicators(exchange, id, indicators));
+  }
+}
 
 /*
  * Websocket
@@ -213,22 +225,24 @@ const handleMatch = (exchange, dispatch, getState) => {
     const product = state.exchanges[exchange].products.find(p => {
       return p.id === data.product_id;
     });
-    const granularity = product.granularity;
-    const historicalData = product.data;
-    const matchData = product.matches;
-    const latestMatchTime = matchData[matchData.length - 1].time;
-    const latestHistoricalDataTime = historicalData[historicalData.length - 1].time;
+    const granularity = selectors.granularity(product);
+    const historicalData = selectors.productData(product);
+    const matchData = selectors.matches(product);
+    const latestMatchTime = matchData.length > 0  ? matchData[matchData.length - 1].time : 0;
+    const latestHistoricalDataTime = historicalData.length > 0 ? historicalData[historicalData.length - 1].time : 0;
 
+    console.log('match', latestMatchTime - latestHistoricalDataTime < granularity * 1000);
     if (latestMatchTime - latestHistoricalDataTime < granularity * 1000) {
+      console.log('dispatch add match data');
       dispatch(addMatchData(exchange, data));
     } else {
       // bundle websocket data into OHLC and append to historical data given time conditions
-
+      console.log('bundle match data');
       // get data that fits in the next granularity slice
       const matchDataFiltered = matchData.filter((d, i)=> {
-        return d.time > latestHistoricalDataTime && d.time < latestHistoricalDataTime + (granularity * 1000) ;
+        return d.time > latestHistoricalDataTime;
       });
-
+      console.log('matchDataFiltered', matchDataFiltered);
       // prune old websocket data in state
       dispatch(setMatchData(exchange, data.product_id, matchData.filter((d, i)=> {
         return d.time > latestHistoricalDataTime;
@@ -250,8 +264,10 @@ const handleMatch = (exchange, dispatch, getState) => {
         time: matchDataFiltered[matchDataFiltered.length - 1].time,
         volume: 0,
       });
+      const indicators = getState().indicators;
       // add new slice of historical data
-      dispatch(addProductData(exchange, data.product_id, wsOHLC));
+      console.log('dispatch add product data', exchange, data.product_id, wsOHLC, indicators);
+      dispatch(addProductData(exchange, data.product_id, wsOHLC, indicators));
     }
   }
 }
@@ -288,7 +304,7 @@ const handleUpdate = (exchange, dispatch, getState) => {
     const state = getState();
     const scriptHeader = state.scripts.find(s => (s.id === 0));
     const liveScripts = state.scripts.filter(s => (s.live));
-    const activeOrders = state.profile.activeOrders[data.product_id];
+    const activeOrders = selectors.allExchangeActiveOrders(state);
     /*
       Run all scripts wich are live
     */
