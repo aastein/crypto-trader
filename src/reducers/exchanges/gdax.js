@@ -9,6 +9,7 @@ export const INIT_GDAX_STATE = {
   persistent: { // this object is persisted in the local state
     session: '', // the secret session ID used to make authenticated requests
   },
+  selected: true,
   /* data of this form will be filled in when data is fetched for these categories.
   accounts: [{ available: 0, balance: 0, currency: 'USD' }],
   products: [

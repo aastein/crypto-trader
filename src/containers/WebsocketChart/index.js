@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
+import * as selectors from '../../selectors';
 import LineChart from '../../components/LineChart';
 import Loader from '../../components/Loader';
 import ConnectedGlyph from '../../components/ConnectedGlyph';
@@ -161,40 +162,21 @@ class WebsocketChart extends Component {
 
 
 const mapStateToProps = state => {
-  const selectedProduct = state.profile.products.find(p => {
-    return p.active;
-  });
-  const selectedWebsocket = state.websocket.products.find(p => {
-    return p.id === selectedProduct.id;
-  });
-  const productId = selectedProduct.id;
-
-  const productDisplayName = selectedProduct.label;
-
-  const websocketPriceData =  selectedWebsocket && selectedWebsocket.data ?
-      selectedWebsocket.data.map(d => ([d.time, d.price])) : [];
-
-  const websocketVolumeData = selectedWebsocket && selectedWebsocket.data ?
-      selectedWebsocket.data.map(d => ([d.time, d.size])) : [];
-
-  const selectedProductData = state.chart.products.find(p => {
-    return p.id === selectedProduct.id;
-  });
-
-  const historicalData = selectedProductData && selectedProductData.data ? selectedProductData.data : [];
-
-  const granularity = selectedProductData ? selectedProductData.granularity : null ;
-
-  const connected = state.websocket.connected;
-
   const content = 'Price';
   const visible = state.view.topCenter.find(c => (c.id === content)).selected;
+  const selectedExchange = selectors.selectedExchange(state);
+  const connected = selectedExchange.connected;
+  const selectedProduct = selectors.selectedProduct(selectedExchange);
+  const productId = selectors.productId(selectedProduct);
+  const productDisplayName = selectedProduct.name;
+  const matches = selectors.matches(selectedProduct);
+  const historicalData = selectors.productData(selectedProduct);
+  const granularity = selectors.granularity(selectedProduct);
 
   return ({
     productId,
     productDisplayName,
-    websocketPriceData,
-    websocketVolumeData,
+    matches,
     historicalData,
     granularity,
     connected,

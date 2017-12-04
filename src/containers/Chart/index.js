@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
+import * as selectors from '../../selectors';
 import Loader from '../../components/Loader';
 import PriceChart from '../../components/PriceChart';
 import { round } from '../../math';
@@ -366,17 +367,15 @@ class Chart extends Component {
 
 const mapStateToProps = state => {
 
-  const selectedProduct = state.profile.products.find(p => {
-    return p.active;
-  });
+  const selectedExchange = selectors.selectedExchange(state);
 
-  const selectedProductData = state.chart.products.find(p => {
-    return p.id === selectedProduct.id;
-  });
+  const selectedProduct = selectors.selectedProduct(selectedExchange);
 
-  const productDisplayName = selectedProduct ? selectedProduct.label : '';
+  const selectedProductData = selectedProduct.data ? selectedProduct.data : [];
 
-  const selectedIndicators = state.chart.indicators.filter(i => (i.active));
+  const productDisplayName = selectedProduct ? selectedProduct.name : '';
+
+  const selectedIndicators = state.indicators.filter(i => (i.active));
 
   const selectedIndicatorsData = selectedIndicators.reduce((indicatorIds, i) => {
     indicatorIds = [ ...indicatorIds, i.id ];
@@ -392,7 +391,7 @@ const mapStateToProps = state => {
   const selectedProductVolumeData = selectedProductData && selectedProductData.data ?
       selectedProductData.data.map(d => ([d.time, round(d.volume, 2)])) : [];
 
-  const testResultData = state.chart.testResult.data;
+  const testResultData = state.testData.data ? state.testData.data : [];
 
   return ({
     productDisplayName,

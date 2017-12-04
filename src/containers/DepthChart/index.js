@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import * as selectors from '../../selectors';
 import LineChart from '../../components/LineChart';
 import Loader from '../../components/Loader';
 import ConnectedGlyph from '../../components/ConnectedGlyph';
@@ -231,28 +232,23 @@ class DepthChart extends Component {
 }
 
 const mapStateToProps = state => {
+
   const content = 'Depth';
   const visible = state.view.topCenter.find(c => (c.id === content)).selected;
-  const connected = state.websocket.connected;
-
-  const selectedProduct = state.profile.products.find(p => {
-    return p.active;
-  });
-
-  const selectedWebsocket = state.websocket.products.find(p => {
-    return p.id === selectedProduct.id;
-  });
+  const selectedExchange = selectors.selectedExchange(state);
+  const connected = selectedExchange.connected;
+  const selectedProduct = selectors.selectedProduct(selectedExchange);
 
   let asks = [];
   let bids = [];
 
-  if (selectedWebsocket && selectedWebsocket.asks && selectedWebsocket.bids && selectedWebsocket.asks.length > 0 && selectedWebsocket.bids.length > 0) {
+  if (selectedProduct.asks && selectedProduct.bids && selectedProduct.asks.length > 0 && selectedProduct.bids.length > 0) {
 
-    const minAsk = parseFloat(selectedWebsocket.asks[selectedWebsocket.asks.length - 1].price);
-    const maxAsk = parseFloat(selectedWebsocket.asks[0].price);
+    const minAsk = parseFloat(selectedProduct.asks[selectedProduct.asks.length - 1].price);
+    const maxAsk = parseFloat(selectedProduct.asks[0].price);
 
-    const minBid = parseFloat(selectedWebsocket.bids[selectedWebsocket.bids.length - 1].price);
-    const maxBid = parseFloat(selectedWebsocket.bids[0].price);
+    const minBid = parseFloat(selectedProduct.bids[selectedProduct.bids.length - 1].price);
+    const maxBid = parseFloat(selectedProduct.bids[0].price);
 
     // get the minimum range for the order book, so that the longer data set can be truncated
     const minRange = Math.min(
@@ -264,7 +260,7 @@ const mapStateToProps = state => {
     const minAllowedBid = maxBid - minRange;
 
     // add up the size of the orders at each price level to create a volume
-    asks = selectedWebsocket.asks.slice().reverse().reduce((data, ask) => {
+    asks = selectedProduct.asks.slice().reverse().reduce((data, ask) => {
         const volume = data.length > 0 ? parseFloat(ask.size) + data[data.length - 1][1] : parseFloat(ask.size);
         const price = parseFloat(ask.price);
         if (price <= maxAllowedAsk) {
@@ -276,7 +272,7 @@ const mapStateToProps = state => {
       }, []);
 
     // add up the size of the orders at each price level to create a volume
-    bids = selectedWebsocket.bids.slice().reduce((data, bid) => {
+    bids = selectedProduct.bids.slice().reduce((data, bid) => {
         const volume = data.length > 0 ? parseFloat(bid.size) + data[0][1] : parseFloat(bid.size);
         const price = parseFloat(bid.price);
         if (price >= minAllowedBid) {

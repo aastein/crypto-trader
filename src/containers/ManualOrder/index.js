@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { placeLimitOrder } from '../../actions/thunks'
 import { floor } from '../../math';
 
+import * as selectors from '../../selectors';
+
 class ManualOrder extends Component {
   constructor(props) {
     super(props);
@@ -168,29 +170,25 @@ class ManualOrder extends Component {
 const mapStateToProps = state => {
   const content = 'Trade';
   const visible = state.view.bottomRight.find(c => (c.id === content)).selected;
-  const selectedProduct = state.profile.products.find(p => {
-    return p.active;
-  });
-  const selectedProductData = state.chart.products.find(p => {
-    return p.id === selectedProduct.id;
-  });
-  const selectedProductId = selectedProduct.id;
-
+  const selectedExchange = selectors.selectedExchange(state);
+  const selectedProduct = selectors.selectedProduct(selectedExchange);
+  const selectedProductData = selectors.productData(selectedProduct)
+  const selectedProductId = selectors.productId(selectedProduct);
   let bid = '';
   let ask = '';
   let baseCurrency = '';
   let quoteCurrency = '';
   let amountQuoteCurrency = 0;
   let amountBaseCurrency = 0;
-  if (selectedProductData) {
-    const ticker = state.websocket.products.find(wsProduct => wsProduct.id === selectedProductId).ticker;
-    bid = ticker ? ticker.bestBid : bid;
-    ask = ticker ? ticker.bestAsk : ask;
+  if (selectedProductData.base_currency) {
+    const ticker = selectors.ticker(selectedProduct);
+    bid = ticker.bestBid ? ticker.bestBid : bid;
+    ask = ticker.bestAsk ? ticker.bestAsk : ask;
     baseCurrency = selectedProductData.base_currency;
     quoteCurrency = selectedProductData.quote_currency;
-    const baseAccount = state.profile.accounts.find(a => (a.currency === baseCurrency));
+    const baseAccount = selectors.currencyAccount(selectedExchange, baseCurrency);
     amountBaseCurrency = baseAccount ? baseAccount.available : amountQuoteCurrency;
-    const quoteAccount = state.profile.accounts.find(a => (a.currency === quoteCurrency));
+    const quoteAccount = selectors.currencyAccount(selectedExchange, quoteCurrency);
     amountQuoteCurrency = quoteAccount ? quoteAccount.available: amountQuoteCurrency;
   }
 

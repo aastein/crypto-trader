@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 
+import * as selectors from '../../selectors';
+
 class Orderbook extends Component {
   constructor(props) {
     super(props);
@@ -91,18 +93,10 @@ class Orderbook extends Component {
 const mapStateToProps = state => {
   const content = 'Order Book';
   const visible = state.view.topRight.find(c => (c.id === content)).selected;
-
-  const selectedProduct = state.profile.products.find(p => {
-    return p.active;
-  });
-
-  const selectedWebsocket = state.websocket.products.find(p => {
-    return p.id === selectedProduct.id;
-  });
-
-  const asks = selectedWebsocket && selectedWebsocket.asks ? selectedWebsocket.asks.slice(selectedWebsocket.asks.length - 25, selectedWebsocket.asks.length - 0) : [];
-  const bids = selectedWebsocket && selectedWebsocket.bids ? selectedWebsocket.bids.slice(0, 25) : [];
-
+  const selectedExchange = selectors.selectedExchange(state);
+  const selectedProduct = selectors.selectedProduct(selectedExchange);
+  const asks = selectedProduct.asks ? selectedProduct.asks.slice(selectedProduct.asks.length - 25, selectedProduct.asks.length - 0) : [];
+  const bids = selectedProduct.bids ? selectedProduct.bids.slice(0, 25) : [];
   return ({
     content,
     visible,

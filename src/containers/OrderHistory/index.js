@@ -6,6 +6,8 @@ import {
   cancelOrder,
 } from '../../actions/thunks';
 
+import * as selectors from '../../selectors';
+
 class OrderHistory extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -73,11 +75,10 @@ class OrderHistory extends Component {
 const mapStateToProps = state => {
   const content = 'Orders';
   const visible = state.view.bottomLeft.find(c => (c.id === content)).selected;
-  const selectedProduct = state.profile.products.find(p => {
-    return p.active;
-  });
-  const orders = state.profile.orders[selectedProduct.id];
-  const fills = state.profile.fills[selectedProduct.id];
+  const selectedExchange = selectors.selectedExchange(state);
+  const selectedProduct = selectors.selectedProduct(selectedExchange);
+  const orders = selectors.orders(selectedProduct);
+  const fills = selectors.fills(selectedProduct);
 
   return ({
     content,

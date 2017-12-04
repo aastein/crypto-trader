@@ -1,33 +1,16 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 
-import {
-  fetchAccounts,
-  initProducts,
-} from '../../actions/thunks';
-import { updateHeartbeat } from '../../actions';
+import { initApp } from '../../actions/thunks';
+import * as selectors from '../../selectors';
 import { round } from '../../math';
 
 class Navigation extends Component {
 
-  componentDidMount() {
-    this.props.initProducts();
-
-    setInterval(() => {
-      if (this.props.session.length > 5) {
-        this.props.fetchAccounts(this.props.session);
-      }
-    }, 5000);
-
-    setInterval(() => {
-      if (moment().unix() - moment(this.props.heartbeatTime).unix() > 30
-          && this.props.connected === true) {
-        this.props.updateHeartbeat(false);
-      }
-    }, 5000);
+  compnentDidMount() {
+    this.props.initApp();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -35,8 +18,8 @@ class Navigation extends Component {
       !== JSON.stringify(nextProps.accounts);
     const locationChanged = JSON.stringify(this.props.location)
       !== JSON.stringify(nextProps.location);
-    const tickerChanged = JSON.stringify(this.props.ticker)
-      !== JSON.stringify(nextProps.ticker);
+    const tickerChanged = JSON.stringify(this.props.tickers)
+      !== JSON.stringify(nextProps.tickers);
     const liveChanged = JSON.stringify(this.props.live)
       !== JSON.stringify(nextProps.live);
     return accountsChanged || locationChanged || tickerChanged || liveChanged;
@@ -64,7 +47,7 @@ class Navigation extends Component {
             activeClassName="text-dark"
             to="/"
           >
-              Dashboard
+            Dashboard
           </NavLink>
           <NavLink
             className="btn vcenter"
@@ -75,7 +58,7 @@ class Navigation extends Component {
             Profile
           </NavLink>
           {
-            this.props.ticker.map(a => (
+            this.props.tickers.map(a => (
               <div className="ticker vcenter hide-md" key={a.name}>
                 <p>{a.name}</p>
                 <p>{`Bid: ${a.bid}`}</p>
@@ -100,46 +83,31 @@ class Navigation extends Component {
 Navigation.propTypes = {
   live: PropTypes.bool.isRequired,
   accounts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  session: PropTypes.string.isRequired,
-  products: PropTypes.arrayOf(PropTypes.object).isRequired,
-  connected: PropTypes.bool.isRequired,
   ticker: PropTypes.arrayOf(PropTypes.object),
   location: PropTypes.object.isRequired,
 }
 
-const mapStateToProps = state => {                    // p.value == id, p.label == naem
+const mapStateToProps = state => {
+  const selectedExchange = selectors.selectedExchange(state);
+  const tickers = selectors.tickers(selectedExchange);
+  const accounts = selectors.accounts(selectedExchange);
 
   return {
-    live: state.profile.live,
-    accounts: state.profile.accounts,
-    session: state.profile.session,
-    products: state.chart.products,
-    connected: state.websocket.connected,
-    heartbeatTime: state.websocket.heartbeatTime,
-    ticker: state.profile.products.map(selectedProduct => {
-      const t = state.websocket.products.find(wsProduct => wsProduct.id === selectedProduct.id).ticker;
-      return { name: selectedProduct.label,
-          bid: t ? t.bestBid : '',
-          ask: t ? t.bestAsk : '',
-        }
-    }),
+    accounts,
+    live: selectedExchange.live,
     location: state.location,
+    tickers,
   }
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    updateHeartbeat: (status) => {
-      dispatch(updateHeartbeat(status));
-    },
-    fetchAccounts: (session) => {
-      dispatch(fetchAccounts(session));
-    },
-    initProducts: () => {
-      dispatch(initProducts());
-    },
+const mapDispatchToProps = dispatch => {
+  return {
+    initApp: () => {
+      dispatch(initApp());
+    }
   }
-);
+}
+
 
 export default connect(
   mapStateToProps,

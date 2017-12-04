@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import { floor } from '../math';
 import { INIT_RANGE, INIT_GRANULARITY } from '../constants/chart';
 import run from '../scripting';
@@ -21,6 +23,68 @@ import {
   updateOrderBook,
 } from './index';
 
+/*
+* Initalization Thunks
+*/
+
+export const initApp = () => {
+  return (dispatch, getState) => {
+    dispatch(initProducts());
+    setInterval(() => {
+      // update account balances every 5 seconds
+      dispatch(fetchAccounts());
+      // check if websocket is connected every 5 seconds
+      if (moment().unix() - moment(this.props.heartbeatTime).unix() > 30 && this.props.connected === true) {
+        this.props.updateHeartbeat(false);
+      }
+    }, 5000);
+  }
+}
+
+export const initProducts = () => (
+  (dispatch, getState) => (
+    api['gdax'].getProducts().then((products) => {
+      dispatch(setProducts(products.data));
+      const state = getState();
+      const selectedProductIds = state.profile.products.map(p => (p.id));
+      dispatch(selectProduct(selectedProductIds[0]));
+      dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
+      if (state.profile.session) {
+        dispatch(fetchOrders(selectedProductIds[0]));
+        dispatch(fetchFills(selectedProductIds[0]));
+        dispatch(fetchAccounts(state.profile.session));
+      }
+      dispatch(initWebsocket(selectedProductIds[0], selectedProductIds));
+    })
+  )
+)
+
+
+// initialize all websocket stuff
+export const initWebsocket = (activeId, ids) => (
+  (dispatch, getState) => (
+    connect().then(() => {
+      // pass in methods that the WS will need to call.
+      // console.log('initwebsocker', activeId, ids);
+      const exchange = 'gdax';
+      // pass methods to the websocket onmessage callback to handle websocket data
+      setActions(
+        handleMatch(exchange, dispatch, getState),
+        handleSnapshot(exchange, dispatch),
+        handleUpdate(exchange, dispatch, getState),
+        handleTicker(exchange, dispatch),
+        handleDeleteOrder(exchange, dispatch)
+      );
+      subscribeToTicker(ids)
+      subscribeToOrderBook(activeId, getState().profile.session);
+    })
+  )
+);
+
+
+/*
+* Order Thunks
+*/
 
 export const placeLimitOrder = (exchange, appOrderType, side, productId, price, amount) => {
   return (dispatch, getState) => {
@@ -63,19 +127,6 @@ export const cancelOrder = (exchange, order) => (
   }
 );
 
-export const fetchAccounts = (exchange, session) => (
-  (dispatch, getState) => {
-    session = session ? session : getState().profile.session;
-    return api[exchange].getAccounts(session).then((accounts) => {
-      if (accounts) {
-        dispatch(setAccounts(accounts));
-        return true;
-      }
-      return false;
-    })
-  }
-);
-
 export const fetchOrders = (exchange, product, session) => {
   return (dispatch, getState) => {
     session = session ? session : getState().profile.session;
@@ -94,6 +145,29 @@ export const fetchFills = (exchange, product, session) => {
   };
 }
 
+/*
+* Account Thunks
+*/
+
+export const fetchAccounts = (exchange, session) => (
+  (dispatch, getState) => {
+    session = session ? session : getState().profile.session;
+    if (session.length > 0) {
+      return api[exchange].getAccounts(session).then((accounts) => {
+        if (accounts) {
+          dispatch(setAccounts(accounts));
+          return true;
+        }
+        return false;
+      })
+    }
+  }
+);
+
+/*
+* Products Thunks
+*/
+
 export const fetchProductData = (exchange, id, range, granularity) => (
   (dispatch) => {
     dispatch(setFetchingStatus('fetching'));
@@ -105,25 +179,7 @@ export const fetchProductData = (exchange, id, range, granularity) => (
       dispatch(setFetchingStatus('failure'));
     });
   }
-);
-
-export const initProducts = () => (
-  (dispatch, getState) => (
-    api['gdax'].getProducts().then((products) => {
-      dispatch(setProducts(products.data));
-      const state = getState();
-      const selectedProductIds = state.profile.products.map(p => (p.id));
-      dispatch(selectProduct(selectedProductIds[0]));
-      dispatch(fetchProductData(selectedProductIds[0], INIT_RANGE, INIT_GRANULARITY));
-      if (state.profile.session) {
-        dispatch(fetchOrders(selectedProductIds[0]));
-        dispatch(fetchFills(selectedProductIds[0]));
-        dispatch(fetchAccounts(state.profile.session));
-      }
-      dispatch(initWebsocket(selectedProductIds[0], selectedProductIds));
-    })
-  )
-);
+)
 
 /*
  * Websocket
@@ -312,24 +368,3 @@ const handleDeleteOrder = (exchange, dispatch) => {
     dispatch(fetchFills(exchange, data.product_id));
   }
 }
-
-// initialize all websocket stuff
-export const initWebsocket = (activeId, ids) => (
-  (dispatch, getState) => (
-    connect().then(() => {
-      // pass in methods that the WS will need to call.
-      // console.log('initwebsocker', activeId, ids);
-      const exchange = 'gdax';
-      // pass methods to the websocket onmessage callback to handle websocket data
-      setActions(
-        handleMatch(exchange, dispatch, getState),
-        handleSnapshot(exchange, dispatch),
-        handleUpdate(exchange, dispatch, getState),
-        handleTicker(exchange, dispatch),
-        handleDeleteOrder(exchange, dispatch)
-      );
-      subscribeToTicker(ids)
-      subscribeToOrderBook(activeId, getState().profile.session);
-    })
-  )
-);

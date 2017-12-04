@@ -19,6 +19,8 @@ import {
   saveTestResult,
 } from '../../actions';
 
+import * as selectors from '../../selectors';
+
 import Dropdown from '../../components/Dropdown';
 import Select from '../../components/Select';
 import Input from '../../components/Input';
@@ -204,26 +206,18 @@ class ChartHeader extends Component {
 
 
 const mapStateToProps = state => {
-
-  const selectedProduct = state.profile.products.find(p => {
-    return p.active;
-  });
-
-  const productId = selectedProduct ? selectedProduct.id : '';
-
+  const selectedExchange = selectors.selectedExchange(state);
+  const selectedProduct = selectors.selectedProduct(selectedExchange);
+  const productId = selectors.productId(selectedProduct);
+  const fetchingStatus = selectedExchange.fetching;
+  const indicators = state.indicators;
   // create data to populate product dropdown items
-  const dropdownProductOptions = state.profile.products.map(product => (
-    { value: product.id, label: product.label, active: product.active }
-  ));
-
-  const dropdownIndicatorOptions = state.chart.indicators.map(indicator => (
+  const dropdownProductOptions = selectedExchange.products ? selectedExchange.products.map(product => (
+    { value: product.id, label: product.display_name, active: product.active }
+  )) : [];
+  const dropdownIndicatorOptions = state.indicators.map(indicator => (
     { value: indicator.id, label: indicator.name, active: indicator.active }
   ));
-
-  const fetchingStatus = state.chart.fetchingStatus;
-
-  const indicators = state.chart.indicators;
-
   return ({
     productId,
     dropdownProductOptions,
