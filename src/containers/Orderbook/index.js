@@ -61,7 +61,7 @@ class Orderbook extends Component {
             <div className="columns px-1 orderbook-row asks" key={i} >
               <div className="col-2"><div className="ask bar-container"><span style={this.barWidth(ask.size)} className="bar"/></div></div>
               <div className="col-5"><span className="col-6 ask size">{`${(ask.size)}`}</span></div>
-              <div className="col-5"><span className="col-3 ask price">{`$ ${ask.price}`}</span></div>
+              <div className="col-5"><span className="col-3 ask price">{`${this.props.priceSymbol} ${ask.price}`}</span></div>
             </div>
           ))}
           { this.props.asks && this.props.asks.length > 0 &&
@@ -70,7 +70,7 @@ class Orderbook extends Component {
                 <span className="col-2" />
                 <span className="col-5">SPREAD</span>
                 <span className="col-5">
-                  ${(this.props.asks[this.props.asks.length - 1].price
+                  {this.props.priceSymbol} {(this.props.asks[this.props.asks.length - 1].price
                       - this.props.bids[0].price).toFixed(2) }
                 </span>
               </div>
@@ -81,7 +81,7 @@ class Orderbook extends Component {
             <div className="columns px-1 orderbook-row bids" key={i} ref={(c) => { if (i === 11) this.focus = c; }}>
               <div className="col-2"><div className="bid bar-container"><span style={this.barWidth(bid.size)} className="bar"/></div></div>
               <div className="col-5"><span className="bid size">{`${bid.size}`}</span></div>
-              <div className="col-5"><span className="bid price">{`$ ${bid.price}`}</span></div>
+              <div className="col-5"><span className="bid price">{`${this.props.priceSymbol} ${bid.price}`}</span></div>
             </div>
           ))}
         </div>
@@ -95,6 +95,11 @@ const mapStateToProps = state => {
   const visible = state.view.topRight.find(c => (c.id === content)).selected;
   const selectedExchange = selectors.selectedExchange(state);
   const selectedProduct = selectors.selectedProduct(selectedExchange);
+  const quoteCurrency = selectedProduct.quote_currency;
+  const priceSymbol = quoteCurrency === 'USD' ? '$'
+    : quoteCurrency === 'EUR' ? '€'
+    : quoteCurrency === 'GBP' ? '£'
+    : '';
   const asks = selectedProduct.asks ? selectedProduct.asks.slice(selectedProduct.asks.length - 25, selectedProduct.asks.length - 0) : [];
   const bids = selectedProduct.bids ? selectedProduct.bids.slice(0, 25) : [];
   return ({
@@ -102,6 +107,7 @@ const mapStateToProps = state => {
     visible,
     asks,
     bids,
+    priceSymbol,
   })
 };
 

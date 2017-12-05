@@ -11,7 +11,7 @@ export default class ScriptList extends Component {
   }
 
   render() {
-    // console.log('rendering ScriptList');
+    // console.log('rendering ScriptList', this.props);
     return (
       <div className={this.props.className}>
         <button

@@ -69,9 +69,9 @@ export default class ObjectForm extends Component {
                   inputs = [<input className="form-input" key={`${k}-input`} value={this.state.object[k]} onChange={(e) => { this.handleChange(e, k); }} />];
                 } else if (typeof (this.state.object[k]) === 'boolean') {
                   inputs = [(
-                    <label class="form-checkbox text-dark col-3">
+                    <label className="form-checkbox text-dark col-3" key={`${k}-input`}>
                       <input key={`${k}-input`} defaultChecked={this.state.object[k]} className="form-checkbox" type="checkbox" onChange={(e) => { this.handleCheck(k); }}/>
-                      <i class="form-icon"></i>
+                      <i className="form-icon"></i>
                     </label>
                   )];
                 }
@@ -110,7 +110,7 @@ export default class ObjectForm extends Component {
           })
         }
         <div className="form-group">
-          <button className="btn col-3 col-mr-auto" onClick={(e) => { this.props.onSave(this.state.object); }}>Save</button>
+          <button className="btn col-3 col-mr-auto" onClick={(e) => { this.props.onSave(e, this.state.object); }}>Save</button>
           { this.props.closeButton }
         </div>
       </form>

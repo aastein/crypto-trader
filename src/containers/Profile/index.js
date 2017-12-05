@@ -14,7 +14,8 @@ import {
 } from '../../actions';
 import { saveSession } from '../../actions'
 import Input from '../../components/Input';
-import Dropdown from '../../components/Dropdown';
+// import Dropdown from '../../components/Dropdown';
+import * as selectors from '../../selectors';
 
 class Profile extends Component {
   constructor(props) {
@@ -22,15 +23,6 @@ class Profile extends Component {
     this.state = {
       session: this.props.session,
       live: this.props.live,
-      selectedProducts: this.props.selectedProducts,
-      productOptions: this.props.productOptions,
-      sessionIdPaths: [
-        {
-          os: 'OSX',
-          browser: 'Chrome',
-          path: '~/Library/Application Support/Google/Chrome/Default/Web Data',
-        },
-      ],
     };
   }
 
@@ -72,28 +64,25 @@ class Profile extends Component {
 
   handleSave = (event) => {
     event.preventDefault();
-    // save all data not session
-    this.props.saveProfile({
-      live: this.state.live,
-      products: this.state.selectedProducts.map(p => (
-        { label: p.label, id: p.value, active: p.value === this.props.activeProductId }
-      )),
-    });
-    // save session if it is valid
-    console.log('profile session', this.state.session);
-    if (this.state.session.length > 0) {
-      this.props.fetchAccounts(this.state.session).then(res => {
-        if (res) {
-          this.props.saveSession(this.state.session);
-          const selectedProductIds = this.state.selectedProducts.map(p => (p.value));
-          this.props.initWebsocket(this.props.activeProductId, selectedProductIds);
-        }
-      })
-      for (let i = 0; i < this.state.selectedProducts.length; i += 1) {
-        this.props.fetchOrders(this.state.selectedProducts[i].value, this.state.session);
-        this.props.fetchFills(this.state.selectedProducts[i].value, this.state.session);
-      }
-    }
+    // // save all data not session
+    // this.props.saveProfile({
+    //   live: this.state.live,
+    // });
+    // // save session if it is valid
+    // console.log('profile session', this.state.session);
+    // if (this.state.session.length > 0) {
+    //   this.props.fetchAccounts(this.state.session).then(res => {
+    //     if (res) {
+    //       this.props.saveSession(this.state.session);
+    //       const selectedProductIds = this.state.selectedProducts.map(p => (p.value));
+    //       this.props.initWebsocket(this.props.activeProductId, selectedProductIds);
+    //     }
+    //   })
+    //   for (let i = 0; i < this.state.selectedProducts.length; i += 1) {
+    //     this.props.fetchOrders(this.state.selectedProducts[i].value, this.state.session);
+    //     this.props.fetchFills(this.state.selectedProducts[i].value, this.state.session);
+    //   }
+    // }
   }
 
   render() {
@@ -103,7 +92,7 @@ class Profile extends Component {
         <div className="columns">
           <form className="form-horizontal col-mx-auto col-6 col-md-10" onSubmit={this.props.onSaveClick}>
             <div className="form-group">
-              <button type="submit" className="col-3 col-mx-auto btn btn-primary" onClick={this.handleSave}>
+              <button type="submit" className="col-3 col-mx-auto btn" onClick={this.handleSave}>
                 Save
               </button>
             </div>
@@ -127,17 +116,17 @@ class Profile extends Component {
                 onChange={this.handleInputChange}
               />
             </div>
-            <div className="d-block">
-              <label className="col-2 col-md-12 text-light" htmlFor="watched-products">Watched Products</label>
-              <Dropdown
-                className="col-10 col-md-12"
-                multi
-                simpleValue
-                options={this.state.productOptions}
-                onChange={this.onSelectProducts}
-                value={this.state.selectedProducts}
-              />
-            </div>
+            { /*<div className="d-block">
+                  <label className="col-2 col-md-12 text-light" htmlFor="watched-products">Watched Products</label>
+                  <Dropdown
+                    className="col-10 col-md-12"
+                    multi
+                    simpleValue
+                    options={this.state.productOptions}
+                    onChange={this.onSelectProducts}
+                    value={this.state.selectedProducts}
+                  />
+                </div> */ }
           </form>
         </div>
       </div>
@@ -145,15 +134,17 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = state => (
-  {
-    activeProductId: state.profile.products.find(p => (p.active)).id,
-    selectedProducts: state.profile.products.map(p => ({ label: p.label, value: p.id })),
-    live: state.profile.live,
-    session: state.profile.session,
-    productOptions: state.chart.products ? state.chart.products.map(p => ({ label: p.display_name, value: p.id })) : [],
+const mapStateToProps = state => {
+  const selectedExchange = selectors.selectedExchange(state);
+  const exchangeId = selectedExchange.id;
+  const selectedProduct = selectors.selectedProduct(selectedExchange);
+  const productId = selectors.productId(selectedProduct);
+  return {
+    activeProductId: productId,
+    live: selectedExchange.live,
+    session: selectedExchange.persistent.session,
   }
-);
+};
 
 const mapDispatchToProps = dispatch => (
   {

@@ -69,7 +69,7 @@ export const initProducts = () => (
 // initialize all websocket stuff
 export const initWebsocket = (exchange, activeId, ids) => (
   (dispatch, getState) => {
-    // console.log(ws, exchange);
+    // console.log('init websocket', exchange, activeId, ids);
     return ws[exchange].connect().then(() => {
       // pass in methods that the WS will need to call.
       // console.log('initwebsocker', activeId, ids);
@@ -197,9 +197,9 @@ export const calculateIndicators = (exchange, id) => {
  * Websocket
 */
 
-const transformOrderData = order => {
+const transformOrderData = (decimals, order) => {
   return {
-    price: parseFloat(order[0]).toFixed(2),
+    price: parseFloat(order[0]).toFixed(decimals),
     size: parseFloat(order[1]).toFixed(8),
   }
 }
@@ -221,35 +221,41 @@ const ordersBeingHandled = [];
 // handles realtime price data
 const handleMatch = (exchange, dispatch, getState) => {
   return data => {
+    // console.log('handleMatch', exchange);
     const state = getState();
+
+    // get event's product product data
     const product = state.exchanges[exchange].products.find(p => {
       return p.id === data.product_id;
     });
-    const granularity = selectors.granularity(product);
     const historicalData = selectors.productData(product);
     const matchData = selectors.matches(product);
+
+    // console.log('matchData', matchData);
+
+    // get paramters needed to determine if realtime data should be bundled into OHLC data
+    const granularity = selectors.granularity(product);
     const latestMatchTime = matchData.length > 0  ? matchData[matchData.length - 1].time : 0;
     const latestHistoricalDataTime = historicalData.length > 0 ? historicalData[historicalData.length - 1].time : 0;
 
-    console.log('match', latestMatchTime - latestHistoricalDataTime < granularity * 1000);
+    // console.log('match', latestMatchTime, latestHistoricalDataTime, granularity * 1000);
     if (latestMatchTime - latestHistoricalDataTime < granularity * 1000) {
-      console.log('dispatch add match data');
+      // console.log('dispatch add match data', data);
       dispatch(addMatchData(exchange, data));
     } else {
       // bundle websocket data into OHLC and append to historical data given time conditions
-      console.log('bundle match data');
-      // get data that fits in the next granularity slice
+
+      // remove data from a time covered by the last historical data chunk
       const matchDataFiltered = matchData.filter((d, i)=> {
         return d.time > latestHistoricalDataTime;
       });
+
       console.log('matchDataFiltered', matchDataFiltered);
       // prune old websocket data in state
-      dispatch(setMatchData(exchange, data.product_id, matchData.filter((d, i)=> {
-        return d.time > latestHistoricalDataTime;
-      })));
+      dispatch(setMatchData(exchange, data.product_id, matchDataFiltered));
 
       // compile ws data to OHLC data
-      const wsOHLC = matchDataFiltered.reduce((ohlc, d) => (
+      const matchesOhlc = matchDataFiltered.reduce((ohlc, d) => (
         {
           ...ohlc,
           high: d.price > ohlc.high ? d.price : ohlc.high,
@@ -266,8 +272,7 @@ const handleMatch = (exchange, dispatch, getState) => {
       });
       const indicators = getState().indicators;
       // add new slice of historical data
-      console.log('dispatch add product data', exchange, data.product_id, wsOHLC, indicators);
-      dispatch(addProductData(exchange, data.product_id, wsOHLC, indicators));
+      dispatch(addProductData(exchange, data.product_id, matchesOhlc, indicators));
     }
   }
 }
@@ -275,13 +280,17 @@ const handleMatch = (exchange, dispatch, getState) => {
 // handles initial orderbook data
 const handleSnapshot = (exchange, dispatch) => {
   return data => {
-    // console.log('actions/index.js handleSnapshot', data);
+    // set price decimals to 2 if quote currency is fiat, or 8 if not
+    const quote = data.product_id.substring(4).toLowerCase();
+    const quoteIsFiat = quote === 'usd' || quote === 'eur' || quote === 'gbp' ;
+    const decimals = quoteIsFiat ? 2 : 8;
+
     let bids = [];
     for (let i = 0; i < data.bids.length; i +=1 ) {
       if (bids.length > 0 && bids[bids.length - 1][0] === data.bids[i][0]) {
         bids[bids.length - 1].size += parseFloat(data.bids[i][1]).toFixed(8);
       } else if (parseFloat(data.bids[i][1]) > 0) {
-        bids.push(transformOrderData(data.bids[i]));
+        bids.push(transformOrderData(decimals, data.bids[i]));
       }
     }
     let asks = [];
@@ -289,7 +298,7 @@ const handleSnapshot = (exchange, dispatch) => {
       if (asks.length > 0 && asks[asks.length - 1][0] === data.asks[i][0]) {
         asks[asks.length - 1].size += parseFloat(data.asks[i][1]).toFixed(8);
       } else if (parseFloat(data.asks[i][1]) > 0) {
-        asks.push(transformOrderData(data.asks[i]));
+        asks.push(transformOrderData(decimals, data.asks[i]));
       }
     }
     dispatch(setOrderBook(exchange, data.product_id, { bids: bids, asks: asks }))
@@ -300,11 +309,14 @@ const handleSnapshot = (exchange, dispatch) => {
 // BUG - active orders do not get deleted!
 const handleUpdate = (exchange, dispatch, getState) => {
   return data => {
+    // console.log('handleing update');
     dispatch(updateOrderBook(exchange, data.product_id, data.changes));
+
     const state = getState();
     const scriptHeader = state.scripts.find(s => (s.id === 0));
     const liveScripts = state.scripts.filter(s => (s.live));
-    const activeOrders = selectors.allExchangeActiveOrders(state);
+
+
     /*
       Run all scripts wich are live
     */
@@ -318,6 +330,8 @@ const handleUpdate = (exchange, dispatch, getState) => {
     /*
       All of the code below this line is for handling canelling and re-placing of active orders
     */
+
+    const activeOrders = selectors.allExchangeActiveOrders(state);
 
     if (activeOrders && activeOrders.length > 0) {
       // for each active order

@@ -41,10 +41,11 @@ export default class CodeEditor extends Component {
   deleteScript = (event) => {
     event.preventDefault();
     this.props.deleteScript(this.props.script.id);
+    this.props.selectScript(0);
   }
 
   render() {
-    // console.log('rendering CodeEditor');
+    // console.log('rendering CodeEditor', this.props);
     return (
       <div className={this.props.className}>
         <form className="form-horizontal flex-column flex-1" onSubmit={this.handleSave}>

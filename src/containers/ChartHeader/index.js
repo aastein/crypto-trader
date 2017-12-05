@@ -90,12 +90,13 @@ class ChartHeader extends Component {
     ));
   }
 
-  onSave = (indicator) => {
+  onSave = (e, indicator) => {
+    e.preventDefault();
     this.setState(() => (
       { editing: false }
     ));
     this.props.editIndicator(indicator);
-    this.props.calculateIndicators(this.props.productId);
+    this.props.calculateIndicators(this.props.exchangeId, this.props.productId);
   }
 
   // set editing to indicator object
@@ -120,9 +121,9 @@ class ChartHeader extends Component {
   }
 
   onApply = () => {
-    this.props.setGranularity(this.props.productId, this.state.granularity);
-    this.props.setDateRange(this.props.productId, this.state.range);
-    this.props.fetchProductData(this.props.selectedExchange.id, this.props.productId, this.state.range, this.state.granularity);
+    this.props.setGranularity(this.props.exchangeId, this.props.productId, this.state.granularity);
+    this.props.setDateRange(this.props.exchangeId, this.props.productId, this.state.range);
+    this.props.fetchProductData(this.props.exchangeId, this.props.productId, this.state.range, this.state.granularity);
     this.props.saveTestResult({});
   }
 

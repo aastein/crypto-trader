@@ -33,6 +33,7 @@ class WebsocketChart extends Component {
     for (let i = 0; i < nextConfig.series.length; i += 1) {
       if (lastConfig.series[i]) {
         // if start data, last data, or name is not equal to previous
+        // console.log('nextConfig', nextConfig);
         const lastIndex = nextConfig.series[i].data.length - 1;
         const earliestDataChanged = JSON.stringify(lastConfig.series[i].data[0])
           !== JSON.stringify(nextConfig.series[i].data[0]);
@@ -123,7 +124,7 @@ class WebsocketChart extends Component {
         animation: false,
         type: 'column',
         name: 'Volume',
-        data: props.websocketVolumeData,
+        data: props.matches.map(d => ([d[0], d[2]])),
         yAxis: 1,
       }],
       navigator: {
@@ -141,7 +142,7 @@ class WebsocketChart extends Component {
   }
 
   render() {
-   //  console.log('rendering WebsocketChart');
+    // console.log('rendering WebsocketChart', this.props);
     return ( this.props.visible &&
       <div className="chart secondary-bg-dark">
         <ConnectedGlyph connected={this.props.connected}/>
@@ -169,15 +170,13 @@ const mapStateToProps = state => {
   const selectedProduct = selectors.selectedProduct(selectedExchange);
   const productId = selectors.productId(selectedProduct);
   const productDisplayName = selectors.productName(selectedProduct);
-  const matches = selectors.matches(selectedProduct);
-  const historicalData = selectors.productData(selectedProduct);
+  const matches = selectors.matchesForChart(selectedProduct);
   const granularity = selectors.granularity(selectedProduct);
 
   return ({
     productId,
     productDisplayName,
     matches,
-    historicalData,
     granularity,
     connected,
     visible,

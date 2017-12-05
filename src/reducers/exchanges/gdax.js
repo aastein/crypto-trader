@@ -28,6 +28,9 @@ export const INIT_GDAX_STATE = {
   */
 };
 
+// WARNING: Application performance heavly dependeny on this value.
+const maxOrderbookLength = 50;
+
 const gdax = (state = INIT_GDAX_STATE, action) => {
   if (action.exchange === state.id) {
     switch (action.type) {
@@ -88,7 +91,7 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
                 }
                 return false;
               });
-              console.log('1', calculateIndicators, action.indicators, data);
+              // console.log('1', calculateIndicators, action.indicators, data);
               const inds = calculateIndicators(action.indicators, data);
               return { ...product,
                 data,
@@ -106,7 +109,7 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
             const product = { ...p };
             if (product.id === action.id) {
               const data = [...product.data, action.data];
-              console.log('2', calculateIndicators, action.indicators, data);
+              // console.log('2', calculateIndicators, action.indicators, data);
               const inds = calculateIndicators(action.indicators, data);
               return { ...product,
                 data,
@@ -122,7 +125,7 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
           products: state.products.map((p) => {
             const product = { ...p };
             if (product.id === action.id) {
-              console.log('3', calculateIndicators, action.indicators, [...product.data]);
+              // console.log('3', calculateIndicators, action.indicators, [...product.data]);
               const inds = calculateIndicators(action.indicators, [...product.data]);
               return { ...product, ...inds };
             }
@@ -214,7 +217,7 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
         return { ...state, accounts: action.accounts };
       // add match data, also update heatbeattime and set websocketconnecetd to true
       case actionType.ADD_MATCH_DATA:
-        console.log(action, action.data);
+        // console.log(action, action.data);
         return { ...state,
           products: state.products.map((p) => {
             if (p.id === action.data.product_id) {
@@ -241,7 +244,7 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
           products: state.products.map((p) => {
             const product = { ...p };
             if (p.id === action.id) {
-              product.data = action.data;
+              product.matches = action.data;
             }
             return product;
           }),
@@ -259,7 +262,7 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
                     if (aPrice > bPrice) return -1;
                     if (aPrice < bPrice) return 1;
                     return 0;
-                  }) // .slice(action.orderBook.asks.length - maxOrderbookLength, action.orderBook.asks.length - 1)
+                  }).slice(action.orderBook.asks.length - maxOrderbookLength, action.orderBook.asks.length - 1)
                 : p.asks,
               bids: p.id === action.id
               ? action.orderBook.bids.sort((a, b) => {
@@ -268,7 +271,7 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
                   if (aPrice > bPrice) return -1;
                   if (aPrice < bPrice) return 1;
                   return 0;
-                }) // .slice(0, maxOrderbookLength)
+                }).slice(0, maxOrderbookLength)
               : p.bids,
             }
           )),
@@ -343,8 +346,8 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
           }
         }
 
-        //let deleteCount = asks.length - maxOrderbookLength;
-        //if (deleteCount > 0) asks.splice(0, deleteCount)
+        let deleteCount = asks.length - maxOrderbookLength;
+        if (deleteCount > 0) asks.splice(0, deleteCount)
 
         if (asks[asks.length - 1].price > asks[asks.length - 2].price) {
           console.error('asks book broken', asks[asks.length - 1].price, asks[asks.length - 2].price);
@@ -369,7 +372,7 @@ const gdax = (state = INIT_GDAX_STATE, action) => {
                 ? asks
                 : p.asks,
               bids: p.id === action.id
-                ? bids //.slice(0, maxOrderbookLength)
+                ? bids.slice(0, maxOrderbookLength)
                 : p.bids,
             }
           )),

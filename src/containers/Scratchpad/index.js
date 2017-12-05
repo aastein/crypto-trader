@@ -16,7 +16,7 @@ class Scratchpad extends Component {
   render() {
     // console.log('rendering scratchpad container');
     const activeScript = this.props.scripts.reduce((a, b) => (
-      b.active ? b : a
+      b.selected ? b : a
     ), {});
     const scriptHeader = this.props.scripts[0].script;
     return ( this.props.visible &&
@@ -33,6 +33,7 @@ class Scratchpad extends Component {
             className="col-9 flex-column"
             scriptHeader={scriptHeader}
             script={activeScript}
+            selectScript={this.props.selectScript}
             deleteScript={this.props.deleteScript}
             saveScript={this.props.saveScript}
           />

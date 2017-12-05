@@ -46,8 +46,9 @@ class DepthChart extends Component {
     // eslint disable next line
     const getMidMarketPriceChanged = this.getMidMarketPrice(nextProps) !== this.getMidMarketPrice(this.props);
 
+    // CHAOS
     return  (
-              ( // order book changes that happen a lot
+              ( // order book changes that happen a lot...
                 (this.props.asks.length === 0 && nextProps.asks.length > 0)
                 || getMidMarketPriceChanged
               )
@@ -114,7 +115,7 @@ class DepthChart extends Component {
         enableButtons: false,
       },
       xAxis: [{
-        minRange: 10,
+        // minRange: 10,
         allowDecimals: false,
         labels: {
           y: 13,
@@ -238,6 +239,7 @@ const mapStateToProps = state => {
   const selectedExchange = selectors.selectedExchange(state);
   const connected = selectedExchange.connected;
   const selectedProduct = selectors.selectedProduct(selectedExchange);
+  const productDisplayName = selectors.productName(selectedProduct);
 
   let asks = [];
   let bids = [];
@@ -293,7 +295,8 @@ const mapStateToProps = state => {
     visible,
     asks,
     bids,
-    connected
+    connected,
+    productDisplayName,
   })
 };
 

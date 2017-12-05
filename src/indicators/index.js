@@ -202,7 +202,7 @@ const commodityChannelIndex = (data, params) => {
 };
 
 const calculateIndicators = (indicators, data) => {
-  console.log('calculateIndicators', indicators, data);
+//  console.log('calculateIndicators', indicators, data);
   let indicatorData = {};
   for (let i = 0; i < indicators.length; i += 1) {
     switch (indicators[i].id) {

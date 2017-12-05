@@ -239,16 +239,14 @@ const indicators = (state = INIT_INDICATORS_STATE, action) => {
   switch (action.type) {
     // mark an iundicator as selected
     case actionType.SELECT_INDICATOR:
-      return state.indicators.map(i => (
-        { ...i, selected: i.id === action.id ? !i.active : i.active }
+      return state.map(i => (
+        { ...i, selected: i.id === action.id ? !i.selected : i.selected }
       ));
     // edit an indicators parameters by updating the entire indicator object
     case actionType.EDIT_INDICATOR:
-      return { ...state,
-        indicators: state.indicators.map(i => (
-          i.id === action.indicator.id ? action.indicator : i
-        )),
-      };
+      return state.map(i => (
+        i.id === action.indicator.id ? action.indicator : i
+      ));
     default:
       return state;
   }

@@ -348,7 +348,7 @@ class Chart extends Component {
   }
 
   render() {
-    console.log('rendering chart container', this.props);
+    // console.log('rendering chart container', this.props);
     return (
       <div className="chart secondary-bg-dark">
         { this.props.selectedProductPriceData.length > 0 ?
@@ -371,19 +371,23 @@ const mapStateToProps = state => {
 
   const selectedProduct = selectors.selectedProduct(selectedExchange);
 
-  const selectedProductData = selectors.productData(selectedProduct)
+  const selectedProductData = selectors.productData(selectedProduct);
+
+  // console.log('selectedProductData', selectedProductData);
 
   const productDisplayName = selectedProduct ? selectedProduct.display_name : '';
 
-  const selectedIndicators = state.indicators.filter(i => (i.active));
+  const selectedIndicators = state.indicators.filter(i => (i.selected));
 
   const selectedIndicatorsData = selectedIndicators.reduce((indicatorIds, i) => {
     indicatorIds = [ ...indicatorIds, i.id ];
     return indicatorIds;
   }, []).reduce((data, indicatorId) => {
-    data[indicatorId] = { data: selectedProductData[indicatorId] };
+    data[indicatorId] = { data: selectors.productIndicatorData(selectedProduct, indicatorId) };
     return data;
   }, {});
+
+  // console.log('selectedIndicatorsData', selectedIndicatorsData);
 
   const selectedProductPriceData = selectedProductData ?
       selectedProductData.map(d => ([d.time, d.open, d.high, d.low, d.close])) : [];

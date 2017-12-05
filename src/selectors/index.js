@@ -42,8 +42,12 @@ export const productId = (product) => {
   return product && product.id ? product.id : '';
 }
 
-export const matches = (product) => {
+export const matchesForChart = (product) => {
   return product && product.matches ? product.matches.map(d => ([d.time, d.price, d.size])) : [];
+}
+
+export const matches = (product) => {
+  return product && product.matches ? product.matches : [];
 }
 
 export const productData = (product) => {
@@ -82,4 +86,8 @@ export const allExchangeActiveOrders = (state) => {
   return Object.keys(state.exchanges).reduce((orders, exchange) => {
     return [ ...orders, exchangeActiveOrders(state.exchanges[exchange]) ];
   }, []);
+}
+
+export const productIndicatorData = (product, indicatorId) => {
+  return product[indicatorId] ? product[indicatorId] : [];
 }
