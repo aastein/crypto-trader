@@ -4,7 +4,7 @@
 
 Stand alone client side automated trading for crypto-currency exchanges.
 
-Similar to <a target="_blank" href="https://coinbase.github.io/gdax-tt/gtt_about.html">GTT</a>, Decentra's purpose is to provide a unified dashboard for all crypto-currency exchanges. Decentra is a user friendly, pure frontend implementation which  elimainates the need for a trusted third party to store API keys and access tokens. Dentra prioritizes onborading truly decentralized exchanges.
+Similar to <a target="_blank" href="https://coinbase.github.io/gdax-tt/gtt_about.html">GTT</a>, Decentra's purpose is to provide a unified dashboard for all crypto-currency exchanges. Decentra is a user friendly, pure frontend implementation which  elimainates the need for a trusted third party to store API keys and access tokens.
 </br>
 </br>
 WIP @ <a target="_blank" href="https://decentra.exchange">decentra.exchange</a>
