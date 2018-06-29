@@ -1,5 +1,3 @@
-[![CircleCI](https://circleci.com/gh/aastein/crypto-trader/tree/master.svg?style=svg&circle-token=ed13989cea476fd5f00e9e3abaa47c6bcc563c6f)](https://circleci.com/gh/aastein/crypto-trader/tree/master)
-
 # Decentra
 
 Stand alone client side automated trading for crypto-currency exchanges.
